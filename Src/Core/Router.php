@@ -36,7 +36,7 @@ class Router
     public function map(string $route, string $method, string $url, string $controller, string $view): void
     {
         $this->route[$route] = array(
-            'key' => $method,
+            'method' => $method,
             'url' => $url,
             'controller' => ucFirst($controller) . 'Controller',
             'view' => $view . 'Action'
@@ -50,6 +50,8 @@ class Router
      */
     private function match()
     {
+        $method_exist = false;
+
         if ($this->uri === '/') {
             $name[] = 'home';
         } else {
@@ -58,7 +60,9 @@ class Router
         }
         
         if (key_exists($name[0], $this->route)) {
-            if ($this->route[$name[0]]['key'] === 'GET') {
+            if ($this->route[$name[0]]['method'] === 'GET') {
+                $method_exist = true;
+
                 if (!empty($_GET)) {
                     $this->route[$name[0]]['datas']['GET'] = $_GET;
                 }
@@ -67,7 +71,9 @@ class Router
             }
             
   
-            if ($this->route[$name[0]]['key'] === 'POST') {
+            if ($this->route[$name[0]]['method'] === 'POST') {
+                $method_exist = true;
+
                 if (!empty($_GET)) {
                     $this->route[$name[0]]['datas']['GET'] = $_GET;
                 }
@@ -75,13 +81,33 @@ class Router
                 if (!empty($_POST)) {
                     $this->route[$name[0]]['datas']['POST'] = $_POST;
                 } else {
-                    throw new Exception("Une donnée en POST est attendue");
+                    throw new Exception("POST data is expected");
                 }
 
                 $this->makeDatasUrl($name[0]);
             }
 
+            if ($this->route[$name[0]]['method'] === 'GET|POST') {
+                $method_exist = true;
+
+                if (!empty($_GET)) {
+                    $this->route[$name[0]]['datas']['GET'] = $_GET;
+                }
+                
+                if (!empty($_POST)) {
+                    $this->route[$name[0]]['datas']['POST'] = $_POST;
+                }
+
+                $this->makeDatasUrl($name[0]);
+            }
+
+            if(!$method_exist) {
+                throw new Exception("The method for sending data does not exist");
+            }
+
             return $this->route[$name[0]];
+        } else {
+            throw new Exception("No match route");
         }
 
         return false;
@@ -101,9 +127,9 @@ class Router
             $params = $this->getParamsUri($name);
 
             if (sizeof($url) < sizeof($params)) {
-                throw new Exception("L\'URL comporte trop de données");
+                throw new Exception("URL has too much data");
             } elseif (sizeof($url) !== sizeof($params)) {
-                throw new Exception("L\'URL comporte pas assez de données");
+                throw new Exception("URL has insufficient data");
             } else {
                 $datas_url = array_combine($url, $params);
                 foreach ($datas_url as $key => $data) {
@@ -114,7 +140,7 @@ class Router
             $params = $this->getParamsUri($name);
             
             if (!empty($params)) {
-                throw new Exception("L\'URL ne correspond pas a l\'URL attendue");
+                throw new Exception("The URL does not match the expected URL");
             }
         }
     }
@@ -176,7 +202,7 @@ class Router
             $controller = $namespace . $match['controller'];
             $controller = new $controller;
 
-            if (isset($match['datas'])) {
+            if (!empty($match['datas'])) {
                 $controller->{$match['view']}($match['datas']);
             } else {
                 $controller->{$match['view']}();
