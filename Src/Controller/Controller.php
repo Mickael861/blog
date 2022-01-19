@@ -64,12 +64,23 @@ class Controller
 
         return $datasForm;
     }
-
-    public function getErrors()
+    
+    /**
+     * Returns the error array
+     *
+     * @return array
+     */
+    public function getErrors(): array
     {
         return $this->errors;
     }
-
+    
+    /**
+     * Add errors
+     *
+     * @param  array $errors array of errors
+     * @return void
+     */
     public function setErrors(array $errors)
     {
         foreach($errors as $key => $message) {

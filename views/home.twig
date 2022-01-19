@@ -15,21 +15,7 @@
 <h2 class='text-center border-bottom' style="margin:100px 0 100px 0">Vous voulez me contacter ?</h2>
 
 <form action="/home" method="POST" class="mx-auto w-75" style="margin-top:25px">
-        <label for="last_name" class="form-label">Nom</label>
-        <input type="text" class="form-control" name="last_name" id="last_name" required>
-
-        <label for="first_name" class="form-label">Prénom</label>
-        <input type="text" class="form-control" name="first_name" id="first_name" required>
-
-        <label for="email" class="form-label">Adresse e-mail</label>
-        <input type="email" class="form-control" name="email" id="email" required>
-
-        <label for="content" class="form-label">Votre message</label>
-        <textarea class="form-control" name="content" id="content" rows="3" required></textarea>
-
-        <div class='text-center' style="margin-top:50px">
-            <button type="submit" class="btn btn-primary">Envoyer</button>
-        </div>
+        {{ formContact|raw }}
 </form>
 
 <h2 class='text-center border-bottom' style="margin-top:100px">Téléchargez mon CV</h2>
