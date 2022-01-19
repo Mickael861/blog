@@ -25,42 +25,40 @@ class HomeController extends Controller
 
         //Contact form fields
         $datasContactExpected = array(
-            "last_name",
             "first_name",
+            "last_name",
             "email",
             "content"
         );
-
-        //Add datas contact form
-        $formContact = $this->getFormContact();
-        $this->datas['formContact'] = $formContact;
-
-        //Add datas form contact
-        $is_good = parent::verifDatasPost($datasPost, $datasContactExpected);
-
-        if(!$is_good) {
-            //Add contact form errors to data
-            $this->datas['form_errors'] = parent::getErrors();
+        $formContactHome = new Form('/home', 'POST', $datasPost);
+        //verification form data
+        $is_valide = $formContactHome->verifDatasForm($datasPost, $datasContactExpected);
+        if($is_valide) {
+            //Envoie du mail
+            $this->datas['success_contact'] = 'L\'email a été envoyé avec succes';
         }
         
+        //Add datas contact form
+        $formContact = $this->getFormContact($formContactHome);
+        $this->datas['formContactHome'] = $formContact;
+
         echo parent::viewsRender($this->view, $this->datas);
     }
-    
+        
     /**
      * Creation of the contact form
      *
+     * @param  Objet $formContact Objet of the Form
      * @return string
      */
-    public function getFormContact()
+    public function getFormContact(Form $formContactHome): string
     {
-        $formContact = new Form('/home', 'POST');
-        
-        $form = $formContact->addInputText('last_name', 'last_name', 'Prénom', true);
-        $form .= $formContact->addInputText('first_name', 'first_name', 'Nom', true);
-        $form .= $formContact->addInputText('email', 'email', 'Adresse e-mail', true);
-        $form .= $formContact->addTextArea('content', 'content', 'Message', true);
-        $form .= $formContact->addButton();
+        $fields = $formContactHome->addInputText('first_name', 'first_name', 'Prénom', false);
+        $fields .= $formContactHome->addInputText('last_name', 'last_name', 'Nom', false);
+        $fields .= $formContactHome->addInputText('email', 'email', 'Adresse e-mail', false);
+        $fields .= $formContactHome->addTextArea('content', 'content', 'Message', false);
+        $fields .= $formContactHome->addButton();
 
-        return $formContact->createForm($form);
+        return $formContactHome->createForm($fields);
     }
 }

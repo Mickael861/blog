@@ -119,7 +119,7 @@ class Router
      * @param  string $name Le nom
      * @return void
      */
-    private function makeDatasUrl(string $name)
+    private function makeDatasUrl(string $name): void
     {
         $url = $this->getParamsUrl($name);
 

@@ -1,9 +1,6 @@
 <?php
 namespace App\Utils;
 
-/**
- * Creation of forms
- */
 class Form 
 {        
     /**
@@ -16,10 +13,18 @@ class Form
      */
     private $method;
 
-    public function __construct($action, $method)
+    private $datasPost = array();
+    
+    /**
+     * @var array
+     */
+    private $errorsForm = array();
+
+    public function __construct($action, $method, $datasPost)
     {
         $this->action = $action;
         $this->method = $method;
+        $this->datasPost = $datasPost;
     }
     
     /**
@@ -50,12 +55,21 @@ class Form
     public function addInputText(string $name, string $id, string $labelValue, bool $required = false, bool $with_label = true): string
     {
         $required = $required ? 'required' : '';
+        $errors_field = !empty($this->errorsForm[$name]) ? 'errors-field' : '';
 
+        $valueField = !empty($this->datasPost[$name]) ? $this->datasPost[$name] : '';
+        
         $field = '';
         if ($with_label) {
-            $field = '<label for="' . $name . '" class="form-label">' . $labelValue . '</label>';
+            $field = '<label for="' . $name . '" class="form-label fw-bold mt-3">' . $labelValue . '</label>';
         }
-        $field .= '<input type="text" class="form-control" name="' . $name . '" id="' . $id . '" ' . $required . '>';
+        $field .= '<input type="text" class="form-control ' .
+        $errors_field . '" name="' . $name . '" id="' . $id . '" value="' . $valueField . '" ' . $required .
+        '>';
+
+        if (!empty($this->errorsForm[$name])) {
+            $field .= '<div class="invalid">' . $this->errorsForm[$name] . '</div>';
+        }
         
         return $field;
     }
@@ -73,14 +87,51 @@ class Form
     public function addTextArea(string $name, string $id, string $labelValue, bool $required = false, bool $with_label = true): string
     {
         $required = $required ? 'required' : '';
+        $errors_field = !empty($this->errorsForm[$name]) ? 'errors-field' : '';
+        $valueField = !empty($this->datasPost[$name]) ? $this->datasPost[$name] : '';
 
         $field = '';
         if ($with_label) {
-            $field = '<label for="' . $name . '" class="form-label">' . $labelValue . '</label>';
+            $field = '<label for="' . $name . '" class="form-label fw-bold mt-3">' . $labelValue . '</label>';
         }
-        $field .= '<textarea type="text" class="form-control" name="' . $name . '" id="' . $id . '" ' . $required . '></textarea>';
+        $field .= '<textarea type="text" class="form-control ' .
+        $errors_field . '" name="' . $name . '" id="' . $id . '" ' . $required .
+        '>' . $valueField . '</textarea>';
+
+        if (!empty($this->errorsForm[$name])) {
+            $field .= '<div class="invalid">' . $this->errorsForm[$name] . '</div>';
+        }
 
         return $field;
+    }
+
+    /**
+     * Verification of data passed in POST
+     *
+     * @param  array $datasPost Data retrieved in POST
+     * @param  array $keysExpected Expected datas
+     * @return array|bool un tableau de données, false si un champ est manquant
+     */
+    public function verifDatasForm(array $datasPost, array $keysExpected)
+    {
+        $datasForm = array();
+        $errors = array();
+
+        foreach($datasPost as $field => $data) {
+            if(in_array($field, $keysExpected) && !empty($data)) {
+                $datasForm[$field] = htmlentities($data);
+            } else {
+                $errors[$field] = sprintf('Le champ "%s" est obligatoire', $field);
+            }
+        }
+        
+        if(!empty($errors)) {
+            $this->setErrorsForm($errors);
+
+            return false;
+        }
+
+        return $datasForm;
     }
     
     /**
@@ -95,5 +146,16 @@ class Form
         $button .= '<button type="submit" class="btn btn-primary">' . $buttonValue . '</button></div>';
         
         return $button;
+    }
+    
+    /**
+     * Handle form errors
+     *
+     * @param  mixed $errors Form errors
+     * @return void
+     */
+    public function setErrorsForm(array $errors): void
+    {
+        $this->errorsForm = $errors;
     }
 }

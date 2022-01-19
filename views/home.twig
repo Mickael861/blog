@@ -2,6 +2,12 @@
 
 {% block content %}
 
+{% if success_contact %}
+<div class="alert alert-success" role="alert">
+    {{ success_contact }}
+</div>
+{% endif %}
+
 <h1 class='text-center border-bottom' style="margin-bottom:100px">Bienvenue sur mon blog</h1>
 
 <div class="card mx-auto" style="width: 18rem;">
@@ -14,9 +20,7 @@
 
 <h2 class='text-center border-bottom' style="margin:100px 0 100px 0">Vous voulez me contacter ?</h2>
 
-<form action="/home" method="POST" class="mx-auto w-75" style="margin-top:25px">
-        {{ formContact|raw }}
-</form>
+{{ formContactHome|raw }}
 
 <h2 class='text-center border-bottom' style="margin-top:100px">Téléchargez mon CV</h2>
 
