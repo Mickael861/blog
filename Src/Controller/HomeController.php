@@ -15,12 +15,22 @@ class HomeController extends Controller
      */
     public function homeAction(array $datas = array()): void
     {
+        $this->datas['title'] = $this->title;
+
         $datasPost = empty($datas['POST']) ? array() : $datas['POST'];
-
-        $this->datas = array(
-            'title' => $this->title
+        $keysExpected = array(
+            "last_name",
+            "first_name",
+            "email",
+            "content"
         );
+        $is_good = parent::verifDatasPost($datasPost, $keysExpected);
 
+        if(!$is_good) {
+            $this->datas['form_errors'] = parent::getErrors();
+        } else {
+        }
+        
         echo parent::viewsRender($this->view, $this->datas);
     }
 }
