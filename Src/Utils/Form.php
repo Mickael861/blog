@@ -139,7 +139,7 @@ class Form
         }
 
         if (!empty($errors)) {
-            $this->setErrorsForm($errors);
+            $this->errorsForm = $errors;
 
             return false;
         }
@@ -159,16 +159,5 @@ class Form
         $button .= '<button type="submit" class="btn btn-primary">' . $buttonValue . '</button></div>';
         
         return $button;
-    }
-    
-    /**
-     * Handle form errors
-     *
-     * @param  mixed $errors Form errors
-     * @return void
-     */
-    public function setErrorsForm(array $errors): void
-    {
-        $this->errorsForm = $errors;
     }
 }

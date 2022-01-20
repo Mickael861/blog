@@ -6,3 +6,9 @@
    color: #E74C3C;
    padding: 5px 0 10px 0;
 }
+
+.test {
+   display:flex;
+   flex-direction: column;
+   flex-wrap: nowrap;
+}
