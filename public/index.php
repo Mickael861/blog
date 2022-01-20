@@ -6,5 +6,6 @@ require_once dirname(__DIR__) . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPAR
 $router = new Router();
 
 $router->map('home', 'GET|POST', '/home', 'home', 'home');
+$router->map('posts', 'GET', '/posts/:page/:id', 'posts', 'posts');
 
 $router->run();
