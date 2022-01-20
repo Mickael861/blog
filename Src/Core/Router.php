@@ -4,9 +4,6 @@ namespace App\Core;
 
 use App\Exception\RouterException;
 
-/**
- * Router
- */
 class Router
 {
 

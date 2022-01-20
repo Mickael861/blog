@@ -13,7 +13,10 @@ class Form
      * @var string
      */
     private $method;
-
+    
+    /**
+     * @var array
+     */
     private $datasPost = array();
     
     /**
@@ -32,7 +35,7 @@ class Form
      * Creation form
      *
      * @param  string $fields fields of the form
-     * @return string
+     * @return string form in HTML
      */
     public function createForm($fields): string
     {
@@ -51,10 +54,15 @@ class Form
      * @param  string $labelValue value of the label
      * @param  bool $required Add "required" for the field
      * @param  bool $with_label Add label to the field
-     * @return string
+     * @return string input in HTML
      */
-    public function addInputText(string $name, string $id, string $labelValue, bool $required = false, bool $with_label = true): string
-    {
+    public function addInputText(
+        string $name,
+        string $id,
+        string $labelValue,
+        bool $required = false,
+        bool $with_label = true
+    ): string {
         $required = $required ? 'required' : '';
         $errors_field = !empty($this->errorsForm[$name]) ? 'errors-field' : '';
 
@@ -83,10 +91,15 @@ class Form
      * @param  string $labelValue value of the label
      * @param  bool $required Add "required" for the field
      * @param  bool $with_label Add label to the field
-     * @return string
+     * @return string textarea in HTML
      */
-    public function addTextArea(string $name, string $id, string $labelValue, bool $required = false, bool $with_label = true): string
-    {
+    public function addTextArea(
+        string $name,
+        string $id,
+        string $labelValue,
+        bool $required = false,
+        bool $with_label = true
+    ): string {
         $required = $required ? 'required' : '';
         $errors_field = !empty($this->errorsForm[$name]) ? 'errors-field' : '';
         $valueField = !empty($this->datasPost[$name]) ? $this->datasPost[$name] : '';
@@ -118,8 +131,8 @@ class Form
         $errors = array();
         
         foreach ($this->datasPost as $field => $data) {
-            if (!empty($keysExpected[$field]) && !empty($data)) {
-                $datasForm[$field] = htmlentities($data);
+            if (!empty($keysExpected[$field]) && !empty(trim(htmlentities($data)))) {
+                $datasForm[$field] = trim(htmlentities($data));
             } else {
                 $errors[$field] = sprintf('Le champ "%s" est obligatoire', $keysExpected[$field]);
             }
@@ -138,7 +151,7 @@ class Form
      * getButton
      *
      * @param  string $buttonValue Value of the button
-     * @return string
+     * @return string button in HTML
      */
     public function addButton($buttonValue = 'Envoyer'): string
     {
