@@ -2,8 +2,7 @@
 
 namespace App\Core;
 
-use App\Controller\Controller;
-use Exception;
+use App\Exception\RouterException;
 
 /**
  * Router
@@ -81,7 +80,7 @@ class Router
                 if (!empty($_POST)) {
                     $this->route[$name[0]]['datas']['POST'] = $_POST;
                 } else {
-                    throw new Exception("POST data is expected");
+                    throw new RouterException("POST data is expected");
                 }
 
                 $this->makeDatasUrl($name[0]);
@@ -101,13 +100,13 @@ class Router
                 $this->makeDatasUrl($name[0]);
             }
 
-            if(!$method_exist) {
-                throw new Exception("The method for sending data does not exist");
+            if (!$method_exist) {
+                throw new RouterException("The method for sending data does not exist");
             }
 
             return $this->route[$name[0]];
         } else {
-            throw new Exception("No match route");
+            throw new RouterException("No match route");
         }
 
         return false;
@@ -127,9 +126,9 @@ class Router
             $params = $this->getParamsUri($name);
 
             if (sizeof($url) < sizeof($params)) {
-                throw new Exception("URL has too much data");
+                throw new RouterException("URL has too much data");
             } elseif (sizeof($url) !== sizeof($params)) {
-                throw new Exception("URL has insufficient data");
+                throw new RouterException("URL has insufficient data");
             } else {
                 $datas_url = array_combine($url, $params);
                 foreach ($datas_url as $key => $data) {
@@ -140,7 +139,7 @@ class Router
             $params = $this->getParamsUri($name);
             
             if (!empty($params)) {
-                throw new Exception("The URL does not match the expected URL");
+                throw new RouterException("The URL does not match the expected URL");
             }
         }
     }
@@ -195,9 +194,9 @@ class Router
      */
     public function run(): void
     {
-        $match = $this->match();
+        try {
+            $match = $this->match();
 
-        if (!empty($match)) {
             $namespace = 'App\Controller\\';
             $controller = $namespace . $match['controller'];
             $controller = new $controller;
@@ -207,7 +206,7 @@ class Router
             } else {
                 $controller->{$match['view']}();
             }
-        } else {
+        } catch (RouterException $e) {
             require_once dirname(__DIR__, 2) . '/views/error404.twig';
         }
     }

@@ -5,7 +5,8 @@ use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 
 class Controller
-{    
+{
+
     /**
      * Returns the rendering of a view
      *

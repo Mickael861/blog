@@ -1,8 +1,9 @@
 <?php
 namespace App\Utils;
 
-class Form 
-{        
+class Form
+{
+
     /**
      * @var string
      */
@@ -108,24 +109,23 @@ class Form
     /**
      * Verification of data passed in POST
      *
-     * @param  array $datasPost Data retrieved in POST
      * @param  array $keysExpected Expected datas
      * @return array|bool un tableau de données, false si un champ est manquant
      */
-    public function verifDatasForm(array $datasPost, array $keysExpected)
+    public function verifDatasForm(array $keysExpected)
     {
         $datasForm = array();
         $errors = array();
-
-        foreach($datasPost as $field => $data) {
-            if(in_array($field, $keysExpected) && !empty($data)) {
+        
+        foreach ($this->datasPost as $field => $data) {
+            if (!empty($keysExpected[$field]) && !empty($data)) {
                 $datasForm[$field] = htmlentities($data);
             } else {
-                $errors[$field] = sprintf('Le champ "%s" est obligatoire', $field);
+                $errors[$field] = sprintf('Le champ "%s" est obligatoire', $keysExpected[$field]);
             }
         }
-        
-        if(!empty($errors)) {
+
+        if (!empty($errors)) {
             $this->setErrorsForm($errors);
 
             return false;
