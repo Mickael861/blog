@@ -39,12 +39,14 @@ class PostsController extends Controller
             'titre' => 'modifié',
             'chapo' => 'un chapo modifié',
             'content' => 'un contenu modifié',
+            'path_img' => 'un contenu modifié',
             'statut' => 'publie'
         );
-        $post = $modelPosts->fetchAll();
         
-        if ($post) {
-            $this->datas['posts'] = $post;
+        $posts = $modelPosts->fetchAll();
+
+        if (!empty($posts)) {
+            $this->datas['posts'] = $posts;
         }
         
         echo parent::viewsRender($this->view, $this->datas);

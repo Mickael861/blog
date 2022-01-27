@@ -46,6 +46,11 @@ class PostsModel extends Model
             'type' => 'string',
             'required' => true
         ),
+        'path_img' => array(
+            'name' => 'L\image de l\'article',
+            'type' => 'string',
+            'required' => true
+        ),
         'statut' => array(
             'name' => 'Le statut de l\'article',
             'required' => true

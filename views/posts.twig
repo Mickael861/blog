@@ -2,24 +2,30 @@
 
 {% block content %}
 
-<h1 class='text-center border-bottom' style="margin-bottom:100px">Mes articles postés</h1>
+<div>
+  <h1 class='text-center border-bottom' style="margin: 100px 0 100px 0">Mes articles postés</h1>
+</div>
 
-{% for post in posts %}
-    <div class="card mb-3" style="max-width: 540px;">
-        <div class="row g-0">
-          <div class="col-md-4">
-            <img src="/pictures/mickael.jpg" class="img-fluid rounded-start" alt="...">
-          </div>
-          <div class="col-md-8">
-            <div class="card-body">
-              <h5 class="card-title">{{ post.titre }}</h5>
-              <p class="card-text">{{ post.chapo }}</p>
-              <p class="card-text"><small class="text-muted">{{ post.content }}</small></p>
-              <a href="/post/id/{{ post.post_id }}" class="btn btn-primary">Voir plus</a>
+<div class='row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4'>
+    {% for post in posts %}
+    <div>
+      <div class="col">
+        <div class="card shadow-sm">
+            <img src="{{ post.path_img }}" class="img-fluid rounded-start" alt="...">
+            <div class="">
+                <div class="card-body">
+                    <h5 class="card-title">{{ post.titre }}</h5>
+                    <p class="card-text text-muted">{{ post.chapo }}</p>
+                    <p class="card-text"><small>{{ post.content }}</small></p>
+                    <div class='d-flex justify-content-end'>
+                      <a href="/post/id/{{ post.post_id }}" class="btn btn-primary align-right">Voir plus</a>
+                    </div>
+                </div>
             </div>
-          </div>
         </div>
     </div>
-{% endfor %}
+    </div>
+    {% endfor %}
+</div>
 
 {% endblock content %}
