@@ -46,6 +46,11 @@ class PostsModel extends Model
             'type' => 'string',
             'required' => true
         ),
+        'path_img' => array(
+            'name' => 'L\image de l\'article',
+            'type' => 'string',
+            'required' => true
+        ),
         'statut' => array(
             'name' => 'Le statut de l\'article',
             'required' => true
@@ -68,4 +73,9 @@ class PostsModel extends Model
             'type' => 'int'
         )
     );
+
+    /**
+     * @var int
+     */
+    protected $nbrs_page = 0;
 }
