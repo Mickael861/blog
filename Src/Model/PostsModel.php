@@ -73,4 +73,9 @@ class PostsModel extends Model
             'type' => 'int'
         )
     );
+
+    /**
+     * @var int
+     */
+    protected $nbrs_page = 0;
 }

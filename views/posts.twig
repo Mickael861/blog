@@ -28,4 +28,18 @@
     {% endfor %}
 </div>
 
+<nav aria-label="navigation pagination">
+  <ul class="pagination justify-content-center">
+    <li class="page-item {{ pagination_before }}">
+      <a class="page-link" href="/posts/{{ page - 1}}">Précédent</a>
+    </li>
+    {% for page in 1 .. nbrs_page %}
+      <li class="page-item"><a class="page-link" href="/posts/{{ page }}">{{ page }}</a></li>
+    {% endfor %}
+    <li class="page-item {{ pagination_next }}">
+      <a class="page-link" href="/posts/{{ page + 1 }}">Suivant</a>
+    </li>
+  </ul>
+</nav>
+
 {% endblock content %}

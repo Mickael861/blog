@@ -34,6 +34,11 @@ abstract class Model
      * @var array
      */
     protected $errors = array();
+
+    /**
+     * @var int
+     */
+    protected $nbrs_page = 0;
     
     /**
      * save items
@@ -178,9 +183,22 @@ abstract class Model
      *
      * @return array items
      */
-    public function fetchAll(): array
+    public function fetchAll(bool $total, string $field, int $page, string $order = 'DESC', $item_per_page = 20): array
     {
-        $query = 'SELECT * FROM ' . $this->table;
+        if ($total) {
+            $query = 'SELECT count(*) FROM ' . $this->table;
+
+            $nbrs_items = (int) self::request($query)->fetch()[0];
+
+            $this->nbrs_page = (int) ceil($nbrs_items / $item_per_page);
+
+            $page_view = ($page - 1) *  $item_per_page;
+
+            $query = 'SELECT * FROM ' . $this->table . ' ORDER BY ' . $field . ' ' . $order .
+                ' LIMIT ' . $page_view . ',' . $item_per_page;
+        } else {
+            $query = 'SELECT * FROM ' . $this->table;
+        }
 
         return self::request($query)->fetchAll(PDO::FETCH_CLASS, $this->class);
     }
@@ -263,5 +281,15 @@ abstract class Model
     public function getErrors(): array
     {
         return $this->errors;
+    }
+
+    /**
+     * Get numbers of page
+     *
+     * @return int numbers of page
+     */
+    public function getNbrsPage(): int
+    {
+        return $this->nbrs_page;
     }
 }
