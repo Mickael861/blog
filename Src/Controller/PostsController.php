@@ -1,7 +1,6 @@
 <?php
 namespace App\Controller;
 
-use App\Core\Connexion;
 use App\Model\PostsModel;
 
 class PostsController extends Controller
@@ -36,14 +35,14 @@ class PostsController extends Controller
         $modelPosts = new PostsModel();
 
         $params = array(
-            'utilisateur_id' => 1,
+            'utilisateur_id' => 0,
             'titre' => 'modifié',
             'chapo' => 'un chapo modifié',
             'content' => 'un contenu modifié',
             'statut' => 'publie'
         );
         $post = $modelPosts->fetchAll();
-
+        
         if ($post) {
             $this->datas['posts'] = $post;
         }

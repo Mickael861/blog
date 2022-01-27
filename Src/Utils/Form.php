@@ -65,7 +65,6 @@ class Form
     ): string {
         $required = $required ? 'required' : '';
         $errors_field = !empty($this->errorsForm[$name]) ? 'errors-field' : '';
-
         $valueField = !empty($this->datasPost[$name]) ? $this->datasPost[$name] : '';
         
         $field = '';
