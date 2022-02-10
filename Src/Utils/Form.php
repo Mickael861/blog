@@ -52,6 +52,7 @@ class Form
      * @param  string $name name of the field
      * @param  string $id l'ID of the field
      * @param  string $labelValue value of the label
+     * @param  string $type type of field
      * @param  bool $required Add "required" for the field
      * @param  bool $with_label Add label to the field
      * @return string input in HTML
@@ -60,6 +61,7 @@ class Form
         string $name,
         string $id,
         string $labelValue,
+        string $type = 'text',
         bool $required = false,
         bool $with_label = true
     ): string {
@@ -72,7 +74,7 @@ class Form
             $field = '<label for="' . $name . '" class="form-label fw-bold mt-3">' . $labelValue .
             ' ' . $required . '</label>';
         }
-        $field .= '<input type="text" class="form-control ' .
+        $field .= '<input type=' . $type . ' class="form-control ' .
         $errors_field . '" name="' . $name . '" id="' . $id . '" value="' . $valueField . '">';
 
         if (!empty($this->errorsForm[$name])) {

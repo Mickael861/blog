@@ -41,33 +41,34 @@ class PostController extends Controller
         $post_id = (int) $datasGet['id'];
 
         $modelPosts = new PostsModel();
-        $post = $modelPosts->fetchId($post_id);
+        $itemPost = $modelPosts->fetchId($post_id);
   
-        if (!empty($post)) {
+        if (!empty($itemPost)) {
             //verification on the slug
             $slug_url = $datasGet['slug'];
-            $slug_post = $post['slug'];
+            $slug_post = $itemPost['slug'];
             if ($slug_url !== $slug_post) {
                 $this->datas['errors'] = 'L\'url est différente de celle attendue';
-                $post['titre'] = 'Aucun résultat';
+                $itemPost['titre'] = 'Aucun résultat';
             }
 
             //comment form fields
             $datasContactExpected = array(
                 "content" => 'Contenu'
             );
-            $formCommentPost = new Form('/post/' . $post['slug'] . '/' . $post['post_id'] . '#comment_form', 'POST', $datasPost);
+            $action = '/post/' . $itemPost['slug'] . '/' . $itemPost['post_id'] . '/#comment_form';
+            $formCommentPost = new Form($action, 'POST', $datasPost);
             //verification form data
             $is_valide = $formCommentPost->verifDatasForm($datasContactExpected);
             if ($is_valide) {
-                //sauvegarde
+                //sauvegarde du commentaire TODO
             }
 
             //create comment form
             $formComment = $this->getFormComment($formCommentPost);
             $this->datas['formCommentPost'] = $formComment;
 
-            $this->datas['post'] = $post;
+            $this->datas['post'] = $itemPost;
         } else {
             $this->datas['errors'] = 'L\'identifiant de l\'article est incorrecte';
         }
@@ -76,7 +77,7 @@ class PostController extends Controller
     }
         
     /**
-     * Creation of the contact form
+     * Creation of the comment form
      *
      * @param  Objet $formContact Objet of the Form
      * @return string form contact in HTML
@@ -86,6 +87,6 @@ class PostController extends Controller
         $fields = $formContactHome->addTextArea('content', 'content', 'Votre commentaire', true);
         $fields .= $formContactHome->addButton();
 
-        return $formContactHome->createForm($fields, 'form_comment');
+        return $formContactHome->createForm($fields);
     }
 }

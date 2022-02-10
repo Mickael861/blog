@@ -118,7 +118,6 @@ class Router
     private function makeDatasUrl(string $name): void
     {
         $url = $this->getParamsUrl($name);
-
         if (!empty($url)) {
             $params = $this->getParamsUri($name);
 

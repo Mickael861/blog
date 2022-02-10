@@ -48,7 +48,8 @@ class HomeController extends Controller
             "message" => 'Message'
         );
 
-        $formContactHome = new Form('/home/#contact_form', 'POST', $datasPost);
+        $action = '/home/#contact_form';
+        $formContactHome = new Form($action, 'POST', $datasPost);
         //verification form data
         $is_valide = $formContactHome->verifDatasForm($datasContactExpected);
         if ($is_valide) {
@@ -145,6 +146,6 @@ class HomeController extends Controller
         $fields .= $formContactHome->addTextArea('message', 'message', 'Message', true);
         $fields .= $formContactHome->addButton();
 
-        return $formContactHome->createForm($fields, 'form_contact');
+        return $formContactHome->createForm($fields);
     }
 }
