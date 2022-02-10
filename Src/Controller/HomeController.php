@@ -40,13 +40,12 @@ class HomeController extends Controller
         $datasPost = empty($datas['POST']) ? array() : $datas['POST'];
         $datasGet = empty($datas['GET']) ? array() : $datas['GET'];
 
-        $this->datas['login'] = false;
         if (!empty($datasGet['login']) && $datasGet['login']) {
             $this->datas['success_login'] = 'Connexion réussi !';
-            $this->datas['login'] = true;
         }
         if (!empty($datasGet['logout']) && $datasGet['logout']) {
             $this->datas['success_logout'] = 'Déconnexion réussi !';
+            unset($this->datas['user_session']);
             session_destroy();
         }
 

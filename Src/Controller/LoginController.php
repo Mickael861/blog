@@ -36,6 +36,11 @@ class LoginController extends Controller
 
         //Datas POST
         $datasPost = empty($datas['POST']) ? array() : $datas['POST'];
+  
+        if (!empty($this->datas['user_session'])) {
+            header('Location: /');
+            exit();
+        }
 
         //login form fields
         $datasContactExpected = array(

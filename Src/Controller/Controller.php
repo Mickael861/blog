@@ -15,6 +15,9 @@ class Controller
      */
     protected function init()
     {
+        $user_session = !empty($_SESSION['utilisateur_id']) ? $_SESSION : array();
+        $this->datas['user_session'] = $user_session;
+        
         $this->datas['title'] = $this->title;
         $this->datas['view'] = $this->view;
     }
@@ -35,9 +38,6 @@ class Controller
 
         $view = $view . '.twig';
 
-        $user_session = !empty($_SESSION['utilisateur_id']) ? $_SESSION : array();
-        $datas['datas_session'] = $user_session;
-        
         return $twig->render($view, $datas);
     }
 }

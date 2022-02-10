@@ -32,7 +32,7 @@ class PostsController extends Controller
     public function postsAction(array $datas = array()): void
     {
         parent::init();
-
+        
         //Datas POST
         $datasGet = empty($datas['GET']) ? array() : $datas['GET'];
         $page = empty($datasGet['page']) ? 1 : (int) $datasGet['page'];

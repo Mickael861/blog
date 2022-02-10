@@ -197,6 +197,10 @@ class Router
             $controller = new $controller;
 
             if (!empty($match['datas'])) {
+                //Add user_session in datas
+                $user_session = !empty($_SESSION['utilisateur_id']) ? $_SESSION : array();
+                $match['datas']['datas_session'] = $user_session;
+
                 $controller->{$match['view']}($match['datas']);
             } else {
                 $controller->{$match['view']}();
