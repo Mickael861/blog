@@ -144,9 +144,9 @@ abstract class Model
      * Retrieve an element using its identifier
      *
      * @param  int $item_id identifier sought
-     * @return stdClass item
+     * @return array|bool item
      */
-    public function fetchId(int $item_id): stdClass
+    public function fetchId(int $item_id)
     {
         $query = 'SELECT * FROM ' . $this->table . ' WHERE ';
 
@@ -156,7 +156,7 @@ abstract class Model
             $this->primary_key => $item_id
         );
 
-        return self::request($query, $params)->fetch(PDO::FETCH_CLASS, $this->class);
+        return self::request($query, $params)->fetch();
     }
     
     /**
@@ -178,9 +178,15 @@ abstract class Model
         return self::request($query, $params)->fetchAll(PDO::FETCH_CLASS, $this->class);
     }
     
+        
     /**
      * returns all elements of a table
      *
+     * @param  mixed $total total article for pagination
+     * @param  mixed $field sort by which field
+     * @param  mixed $page The current page
+     * @param  mixed $order sort order
+     * @param  mixed $item_per_page Number of items per page
      * @return array|bool the items or false if it finds an error
      */
     public function fetchAll(bool $total, string $field, int $page, string $order = 'DESC', $item_per_page = 20)

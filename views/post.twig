@@ -1,0 +1,38 @@
+{% extends "layout.twig" %}
+
+{% block content %}
+
+<div style="margin: 50px 0 100px 0">
+  <h1 class='text-center border-bottom'>{{ post.titre }}</h1>
+  {% if errors %}
+  <p class='text-center border-bottom alert alert-danger'>{{ errors }}</p>
+  {% endif %}
+</div>
+
+
+<!-- Post -->
+{% if not errors %}
+<div class='row m-auto' style="max-width:25rem; padding-bottom:75px">
+    <div>
+      <div class="col">
+        <div class="card shadow-sm">
+            <img src="{{ post.path_img }}" class="img-fluid rounded-start" alt="...">
+            <div class="">
+                <div class="card-body">
+                    <p class="card-text text-muted">{{ post.chapo }}</p>
+                    <p class="card-text"><small>{{ post.content }}</small></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+</div>
+{% endif %}
+
+<div style="max-width:650px" class="m-auto">
+  <h2 class='text-center'>Laissez un commentaire &#128071;&#127996;</h2>
+  <!-- comment form -->
+  {{ formCommentPost|raw }}
+</div>
+
+{% endblock content %}

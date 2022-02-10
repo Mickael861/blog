@@ -2,15 +2,15 @@
 
 {% block content %}
 
-<div style="margin: 100px 0 100px 0">
+<div style="margin: 50px 0 100px 0">
   <h1 class='text-center border-bottom'>Mes articles</h1>
-  <!-- Success message for sending mail -->
+  <!-- errors message page -->
   {% if errors %}
   <p class='text-center border-bottom alert alert-danger'>{{ errors }}</p>
   {% endif %}
 </div>
 
-
+<!-- Posts -->
 <div class='row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4'>
     {% for post in posts %}
     <div>
@@ -23,7 +23,7 @@
                     <p class="card-text text-muted">{{ post.chapo }}</p>
                     <p class="card-text"><small>{{ post.content }}</small></p>
                     <div class='d-flex justify-content-end'>
-                      <a href="/post/id/{{ post.post_id }}" class="btn btn-primary align-right">Voir plus</a>
+                      <a href="/post/{{ post.slug }}/{{ post.post_id }}" class="btn btn-primary align-right">Voir plus</a>
                     </div>
                 </div>
             </div>
@@ -33,6 +33,7 @@
     {% endfor %}
 </div>
 
+<!-- paging -->
 {% if not errors %}
 <nav aria-label="navigation pagination" style='margin-top:100px'>
   <ul class="pagination justify-content-center">

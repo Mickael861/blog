@@ -7,5 +7,6 @@ $router = new Router();
 
 $router->map('home', 'GET|POST', '/home', 'home', 'home');
 $router->map('posts', 'GET', '/posts/:page', 'posts', 'posts');
+$router->map('post', 'GET|POST', '/post/:slug/:id', 'post', 'post');
 
 $router->run();

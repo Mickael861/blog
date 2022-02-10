@@ -94,13 +94,13 @@ class Router
                     $this->route[$name[0]]['datas']['POST'] = $_POST;
                 }
 
-                $this->makeDatasUrl($name[0]);
+                $this->makeDatasUrl($name[0]); 
             }
 
             if (!$method_exist) {
                 throw new RouterException("The method for sending data does not exist");
             }
-
+            
             return $this->route[$name[0]];
         } else {
             throw new RouterException("No match route");
@@ -151,14 +151,13 @@ class Router
     {
         $uri = explode('?', trim($this->uri, '/'));
         $uri = explode('/', $uri[0]);
-
         $params = array();
         foreach ($uri as $param) {
             if ($param !== $name && $param !== "") {
                 $params[] = $param;
             }
         }
-
+        
         return $params;
     }
     

@@ -34,7 +34,7 @@ class Controller
         $twig = new Environment($loader);
 
         $view = $view . '.twig';
-
+        
         return $twig->render($view, $datas);
     }
 }
