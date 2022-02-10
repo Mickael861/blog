@@ -1,6 +1,7 @@
 <?php
 namespace App\Controller;
 
+use App\Model\UtilisateursModel;
 use App\Utils\Form;
 
 class LoginController extends Controller
@@ -46,7 +47,19 @@ class LoginController extends Controller
         //verification form data
         $is_valide = $formLogin->verifDatasForm($datasContactExpected);
         if ($is_valide) {
-            //verification de connexion
+            $modelUtilisateurs = new UtilisateursModel;
+            $parameters = array(
+                'email' => $datasPost['email']
+            );
+            $utilisateur = $modelUtilisateurs->getAllWithParams($parameters);
+            if (!empty($utilisateur)) {
+                $is_correct = password_verify($datasPost['password'], $utilisateur[0]->password);
+                if ($is_correct) {
+                    header('Location: /home/?login=1');
+                    exit();
+                }
+            }
+            $this->datas['errors'] = 'Votre adresse E-mail ou votre mot de passe est incorrecte';
         }
 
         //create login form

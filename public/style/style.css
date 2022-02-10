@@ -6,3 +6,7 @@
    color: #E74C3C;
    padding: 5px 0 10px 0;
 }
+
+.errors_login form input  {
+   border: 2px solid #E74C3C;
+}

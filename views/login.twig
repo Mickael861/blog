@@ -2,14 +2,14 @@
 
 {% block content %}
 
-<div style="margin: 50px 0 100px 0">
+<div style="margin: 50px 0 50px 0">
   <h1 class='text-center border-bottom' id="'login_form">Page de connexion</h1>
   {% if errors %}
   <p class='text-center border-bottom alert alert-danger'>{{ errors }}</p>
   {% endif %}
 </div>
 
-<div style="max-width:350px" class="m-auto">
+<div style="max-width:350px;" class="m-auto {% if errors %} errors_login {% endif %}">
   <!-- comment form -->
   {{ formLogin|raw }}
 </div>

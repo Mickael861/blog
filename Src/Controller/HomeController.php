@@ -38,7 +38,12 @@ class HomeController extends Controller
 
         //Datas POST
         $datasPost = empty($datas['POST']) ? array() : $datas['POST'];
+        $datasGet = empty($datas['GET']) ? array() : $datas['GET'];
 
+        if ($datasGet['login']) {
+            $this->datas['success_login'] = 'Connexion réussi !';
+        }
+        dump($_SESSION);
         //Contact form fields
         $datasContactExpected = array(
             "first_name" => 'Prénom',
