@@ -2,9 +2,14 @@
 
 {% block content %}
 
-<div>
-  <h1 class='text-center border-bottom' style="margin: 100px 0 100px 0">Mes articles postés</h1>
+<div style="margin: 100px 0 100px 0">
+  <h1 class='text-center border-bottom'>Mes articles</h1>
+  <!-- Success message for sending mail -->
+  {% if errors %}
+  <p class='text-center border-bottom alert alert-danger'>{{ errors }}</p>
+  {% endif %}
 </div>
+
 
 <div class='row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4'>
     {% for post in posts %}
@@ -28,7 +33,8 @@
     {% endfor %}
 </div>
 
-<nav aria-label="navigation pagination">
+{% if not errors %}
+<nav aria-label="navigation pagination" style='margin-top:100px'>
   <ul class="pagination justify-content-center">
     <li class="page-item {{ pagination_before }}">
       <a class="page-link" href="/posts/{{ page - 1}}">Précédent</a>
@@ -41,5 +47,6 @@
     </li>
   </ul>
 </nav>
+{% endif %}
 
 {% endblock content %}

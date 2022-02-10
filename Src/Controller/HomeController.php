@@ -18,11 +18,14 @@ class HomeController extends Controller
      * @var string
      */
     private $view = 'home';
-        
+
+    
     /**
+     * Datas
+     *
      * @var array
      */
-    private $datas = array();
+    protected $datas = array();
 
     /**
      * view of action

@@ -181,19 +181,31 @@ abstract class Model
     /**
      * returns all elements of a table
      *
-     * @return array items
+     * @return array|bool the items or false if it finds an error
      */
-    public function fetchAll(bool $total, string $field, int $page, string $order = 'DESC', $item_per_page = 20): array
+    public function fetchAll(bool $total, string $field, int $page, string $order = 'DESC', $item_per_page = 20)
     {
         if ($total) {
+            if ($page < 1) {
+                $this->setErrors('page', 'La page demandée est inférieure aux nombres de page');
+
+                return false;
+            }
+
             $query = 'SELECT count(*) FROM ' . $this->table;
 
             $nbrs_items = (int) self::request($query)->fetch()[0];
 
             $this->nbrs_page = (int) ceil($nbrs_items / $item_per_page);
 
-            $page_view = ($page - 1) *  $item_per_page;
+            if ($page > $this->nbrs_page) {
+                $this->setErrors('page', 'La page demandée est supérieure aux nombres de page');
 
+                return false;
+            }
+
+            $page_view = ($page - 1) *  $item_per_page;
+            
             $query = 'SELECT * FROM ' . $this->table . ' ORDER BY ' . $field . ' ' . $order .
                 ' LIMIT ' . $page_view . ',' . $item_per_page;
         } else {
@@ -281,6 +293,16 @@ abstract class Model
     public function getErrors(): array
     {
         return $this->errors;
+    }
+
+    /**
+     * set errors
+     *
+     * @return void
+     */
+    public function setErrors($key, $error): void
+    {
+        $this->errors[$key] = $error;
     }
 
     /**
