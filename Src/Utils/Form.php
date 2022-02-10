@@ -63,17 +63,17 @@ class Form
         bool $required = false,
         bool $with_label = true
     ): string {
-        $required = $required ? 'required' : '';
+        $required = $required ? '*' : '';
         $errors_field = !empty($this->errorsForm[$name]) ? 'errors-field' : '';
         $valueField = !empty($this->datasPost[$name]) ? $this->datasPost[$name] : '';
         
         $field = '';
         if ($with_label) {
-            $field = '<label for="' . $name . '" class="form-label fw-bold mt-3">' . $labelValue . '</label>';
+            $field = '<label for="' . $name . '" class="form-label fw-bold mt-3">' . $labelValue .
+            ' ' . $required . '</label>';
         }
         $field .= '<input type="text" class="form-control ' .
-        $errors_field . '" name="' . $name . '" id="' . $id . '" value="' . $valueField . '" ' . $required .
-        '>';
+        $errors_field . '" name="' . $name . '" id="' . $id . '" value="' . $valueField . '">';
 
         if (!empty($this->errorsForm[$name])) {
             $field .= '<div class="invalid">' . $this->errorsForm[$name] . '</div>';
@@ -99,17 +99,17 @@ class Form
         bool $required = false,
         bool $with_label = true
     ): string {
-        $required = $required ? 'required' : '';
+        $required = $required ? '*' : '';
         $errors_field = !empty($this->errorsForm[$name]) ? 'errors-field' : '';
         $valueField = !empty($this->datasPost[$name]) ? $this->datasPost[$name] : '';
 
         $field = '';
         if ($with_label) {
-            $field = '<label for="' . $name . '" class="form-label fw-bold mt-3">' . $labelValue . '</label>';
+            $field = '<label for="' . $name . '" class="form-label fw-bold mt-3">' . $labelValue .
+            ' ' . $required . '</label>';
         }
         $field .= '<textarea type="text" class="form-control ' .
-        $errors_field . '" name="' . $name . '" id="' . $id . '" ' . $required .
-        '>' . $valueField . '</textarea>';
+        $errors_field . '" name="' . $name . '" id="' . $id . '">' . $valueField . '</textarea>';
 
         if (!empty($this->errorsForm[$name])) {
             $field .= '<div class="invalid">' . $this->errorsForm[$name] . '</div>';

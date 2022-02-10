@@ -12,14 +12,13 @@ class HomeController extends Controller
     /**
      * @var string
      */
-    private $title = 'Accueil';
+    protected $title = 'Accueil';
 
     /**
      * @var string
      */
-    private $view = 'home';
+    protected $view = 'home';
 
-    
     /**
      * Datas
      *
@@ -35,8 +34,7 @@ class HomeController extends Controller
      */
     public function homeAction(array $datas = array()): void
     {
-        //Title name view
-        $this->datas['title'] = $this->title;
+        parent::init();
 
         //Datas POST
         $datasPost = empty($datas['POST']) ? array() : $datas['POST'];

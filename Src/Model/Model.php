@@ -187,7 +187,7 @@ abstract class Model
     {
         if ($total) {
             if ($page < 1) {
-                $this->setErrors('page', 'La page demandée est inférieure aux nombres de page');
+                $this->errors['page'] = 'La page demandée est inférieure aux nombres de page';
 
                 return false;
             }
@@ -199,7 +199,7 @@ abstract class Model
             $this->nbrs_page = (int) ceil($nbrs_items / $item_per_page);
 
             if ($page > $this->nbrs_page) {
-                $this->setErrors('page', 'La page demandée est supérieure aux nombres de page');
+                $this->errors['page'] = 'La page demandée est supérieure aux nombres de page';
 
                 return false;
             }
@@ -293,16 +293,6 @@ abstract class Model
     public function getErrors(): array
     {
         return $this->errors;
-    }
-
-    /**
-     * set errors
-     *
-     * @return void
-     */
-    public function setErrors($key, $error): void
-    {
-        $this->errors[$key] = $error;
     }
 
     /**

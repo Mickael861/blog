@@ -9,12 +9,12 @@ class PostsController extends Controller
     /**
      * @var string
      */
-    private $title = 'Articles';
+    protected $title = 'Articles';
 
     /**
      * @var string
      */
-    private $view = 'posts';
+    protected $view = 'posts';
     
     /**
      * Datas
@@ -31,8 +31,7 @@ class PostsController extends Controller
      */
     public function postsAction(array $datas = array()): void
     {
-        //Title name view
-        $this->datas['title'] = $this->title;
+        parent::init();
 
         //Datas POST
         $datasGet = empty($datas['GET']) ? array() : $datas['GET'];

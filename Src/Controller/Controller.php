@@ -1,11 +1,24 @@
 <?php
 namespace App\Controller;
 
+use App\Core\Router;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 
 class Controller
 {
+
+    /**
+     * important data initialization
+     *
+     * @return void
+     */
+    protected function init()
+    {
+        $this->datas['title'] = $this->title;
+        $this->datas['view'] = $this->view;
+    }
+
     /**
      * Returns the rendering of a view
      *
