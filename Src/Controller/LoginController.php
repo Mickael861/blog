@@ -55,6 +55,8 @@ class LoginController extends Controller
             if (!empty($utilisateur)) {
                 $is_correct = password_verify($datasPost['password'], $utilisateur[0]->password);
                 if ($is_correct) {
+                    $_SESSION['utilisateur_id'] = $utilisateur[0]->utilisateur_id;
+                    $_SESSION['user_name'] = $utilisateur[0]->pseudo;
                     header('Location: /home/?login=1');
                     exit();
                 }
@@ -78,7 +80,7 @@ class LoginController extends Controller
     public function getFormLogin(Form $formLogin): string
     {
         $fields = $formLogin->addInputText('email', 'email', 'Votre adresse e-mail', 'email', true);
-        $fields .= $formLogin->addInputText('password', 'password', 'Votre mot de passe', true);
+        $fields .= $formLogin->addInputText('password', 'password', 'Votre mot de passe', 'password', true);
         $fields .= $formLogin->addButton('Se connecter');
 
         return $formLogin->createForm($fields);

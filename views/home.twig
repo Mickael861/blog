@@ -4,10 +4,17 @@
 
 <h1 class='text-center border-bottom' style="margin: 50px 0 50px 0">Projet blog OpenClassroom</h1>
 
-<!-- Success message for sending mail -->
+<!-- Connexion success -->
 {% if success_login %}
 <div class="alert alert-success text-center" role="alert">
-    {{ success_login }}
+    {{ success_login }} bienvenue {{ user_name }}
+</div>
+{% endif %}
+
+<!-- Déconnexion success -->
+{% if success_logout %}
+<div class="alert alert-success text-center" role="alert">
+    {{ success_logout }}
 </div>
 {% endif %}
 

@@ -34,6 +34,9 @@ class Controller
         $twig = new Environment($loader);
 
         $view = $view . '.twig';
+
+        $user_session = !empty($_SESSION['utilisateur_id']) ? $_SESSION : array();
+        $datas['datas_session'] = $user_session;
         
         return $twig->render($view, $datas);
     }
