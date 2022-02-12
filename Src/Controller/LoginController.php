@@ -1,7 +1,7 @@
 <?php
 namespace App\Controller;
 
-use App\Model\UtilisateursModel;
+use App\Model\UserModel;
 use App\Utils\Form;
 
 class LoginController extends Controller
@@ -52,7 +52,7 @@ class LoginController extends Controller
         //verification form data
         $is_valide = $formLogin->verifDatasForm($datasContactExpected);
         if ($is_valide) {
-            $modelUtilisateurs = new UtilisateursModel;
+            $modelUtilisateurs = new UserModel;
             $parameters = array(
                 'email' => $datasPost['email']
             );
@@ -86,7 +86,7 @@ class LoginController extends Controller
     {
         $fields = $formLogin->addInputText('email', 'email', 'Votre adresse e-mail', 'email', true);
         $fields .= $formLogin->addInputText('password', 'password', 'Votre mot de passe', 'password', true);
-        $fields .= $formLogin->addButton('Se connecter');
+        $fields .= $formLogin->addButton('Se connecter', 'margin-btn-form');
 
         return $formLogin->createForm($fields);
     }

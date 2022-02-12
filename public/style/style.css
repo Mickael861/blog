@@ -1,3 +1,7 @@
+body {
+   overflow-x: hidden;
+}
+
 .errors-field {
    border: 2px solid #E74C3C;
 }
@@ -9,4 +13,28 @@
 
 .errors_login form input  {
    border: 2px solid #E74C3C;
+}
+
+.margin-btn-form {
+   margin-top:50px;
+}
+
+.btn-comment {
+   width: 100%;
+}
+
+.block-comment {
+   border: 1px solid RGBa(44, 62, 80, .3);
+   margin-top: 25px;
+   padding: 25px;
+   border-radius: 3px 40px 3px 40px;
+}
+.comment-footer {
+   float:right;
+}
+
+.block-logo {
+   position:relative;
+   top: -49px;
+   left: -50px;
 }

@@ -1,7 +1,7 @@
 <?php
 namespace App\Model;
 
-class UtilisateursModel extends Model
+class UserModel extends Model
 {
     /**
      * @var string
@@ -28,7 +28,7 @@ class UtilisateursModel extends Model
         ),
         'role' => array(
             'name' => 'Le rôle de l\'utilisateur',
-            'type' => 'enum',
+            'type' => 'string',
             'required' => true
         ),
         'pseudo' => array(
@@ -58,7 +58,7 @@ class UtilisateursModel extends Model
         ),
         'statut' => array(
             'name' => 'Le statut de l\'article',
-            'type' => 'enum',
+            'type' => 'string',
             'required' => true
         ),
         'date_add' => array(

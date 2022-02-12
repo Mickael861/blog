@@ -12,7 +12,7 @@
 
 <!-- Post -->
 {% if not errors %}
-<div class='row m-auto' style="max-width:25rem; padding-bottom:75px">
+<div class='row m-auto' style="max-width:25rem; padding-bottom:10px">
     <div>
       <div class="col">
         <div class="card shadow-sm">
@@ -29,12 +29,32 @@
 </div>
 {% endif %}
 
+
+  <!-- comment form -->
 {% if user_session %}
 <div style="max-width:650px" class="m-auto">
-  <h2 class='text-center' id='comment_form'>Laissez un commentaire &#128071;&#127996;</h2>
-  <!-- comment form -->
   {{ formCommentPost|raw }}
 </div>
 {% endif %}
+
+<div class="container mt-5">
+  <div class="row d-flex justify-content-center">
+      <div class="col-md-8">
+        {% for comment in comments %}
+        <div class="d-flex flex-row comment-row block-comment">
+          <div class="block-logo">
+            <img src="https://i.imgur.com/Ur43esv.jpg" alt="user" width="50" class="rounded-circle">
+          </div>
+          <div class="comment-text w-100">
+            <h6 class="font-medium">{{ comment.pseudo }}</h6> <span class="m-b-15 d-block">{{ comment.content }}</span>
+            <div class="comment-footer"> 
+              <span class="text-muted">Ajouté le : {{ comment.date_add }}</span> 
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+  </div>
+</div>
 
 {% endblock content %}

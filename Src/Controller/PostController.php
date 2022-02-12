@@ -1,8 +1,10 @@
 <?php
 namespace App\Controller;
 
+use App\Model\CommentsModel;
 use App\Model\PostsModel;
 use App\Utils\Form;
+use DateTime;
 
 class PostController extends Controller
 {
@@ -40,6 +42,7 @@ class PostController extends Controller
         $datasPost = empty($datas['POST']) ? array() : $datas['POST'];
         $post_id = (int) $datasGet['id'];
 
+        $ModelComments = new CommentsModel();
         $modelPosts = new PostsModel();
         $itemPost = $modelPosts->fetchId($post_id);
   
@@ -61,7 +64,33 @@ class PostController extends Controller
             //verification form data
             $is_valide = $formCommentPost->verifDatasForm($datasContactExpected);
             if ($is_valide) {
-                //sauvegarde du commentaire TODO
+                $datas = array(
+                    'post_id' => (int) $itemPost['post_id'],
+                    'utilisateur_id' => (int) $_SESSION['utilisateur_id'],
+                    'content' => $datasPost['content'],
+                    'statut' => 'en_attente',
+                    'date_add' => date('Y-m-d')
+                );
+
+                $ModelComments->save($datas);
+                header('Location:' . htmlspecialchars($_SERVER['REQUEST_URI']));
+                exit();
+            }
+
+            //View Comments post
+            $itemsComments = $ModelComments->getCommentsUser($itemPost['post_id']);
+            if (!empty($itemsComments)) {
+                $this->datas['comments'] = $itemsComments;
+                foreach ($itemsComments as &$comment) {
+                    $date = (new DateTime($comment->date_add))->format('d/m/Y');
+                    $comment->date_add = $date;
+
+                    $content = $comment->content;
+                    $nbrs_letter = strlen($content);
+                    if ($nbrs_letter > 150) {
+                        $comment->content = $nbrs_letter;
+                    }
+                }
             }
 
             //create comment form
@@ -84,8 +113,8 @@ class PostController extends Controller
      */
     public function getFormComment(Form $formContactHome): string
     {
-        $fields = $formContactHome->addTextArea('content', 'content', 'Votre commentaire', true);
-        $fields .= $formContactHome->addButton();
+        $fields = $formContactHome->addTextArea('content', 'content', 'Besoin de vous éxprimer ?', true);
+        $fields .= $formContactHome->addButton('Publier', 'btn-comment');
 
         return $formContactHome->createForm($fields);
     }

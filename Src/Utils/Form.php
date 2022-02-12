@@ -152,12 +152,13 @@ class Form
      * getButton
      *
      * @param  string $buttonValue Value of the button
+     * @param  string $class Value of class
      * @return string button in HTML
      */
-    public function addButton($buttonValue = 'Envoyer'): string
+    public function addButton($buttonValue = 'Envoyer', $class = ''): string
     {
-        $button = '<div class="text-center" style="margin-top:50px">';
-        $button .= '<button type="submit" class="btn btn-primary">' . $buttonValue . '</button></div>';
+        $button = '<div class="text-center">';
+        $button .= '<button type="submit" class="btn btn-primary ' . $class . '">' . $buttonValue . '</button></div>';
         
         return $button;
     }

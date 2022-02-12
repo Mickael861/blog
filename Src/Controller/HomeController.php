@@ -154,7 +154,7 @@ class HomeController extends Controller
         $fields .= $formContactHome->addInputText('email', 'email', 'Adresse e-mail', true);
         $fields .= $formContactHome->addInputText('subject', 'subject', 'Objet', true);
         $fields .= $formContactHome->addTextArea('message', 'message', 'Message', true);
-        $fields .= $formContactHome->addButton();
+        $fields .= $formContactHome->addButton('Envoyer', 'margin-btn-form');
 
         return $formContactHome->createForm($fields);
     }

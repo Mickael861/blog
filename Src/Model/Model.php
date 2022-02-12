@@ -277,7 +277,7 @@ abstract class Model
      * @param  array $params parameters
      * @return PDOStatement instance of PDOStatement
      */
-    private static function request(string $query, array $params = []): PDOStatement
+    protected static function request(string $query, array $params = []): PDOStatement
     {
         $pdo = new Connexion;
 
