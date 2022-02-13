@@ -240,7 +240,7 @@ abstract class Model
                 if (!empty($this->fields[$field]['sizemax'])) {
                     if (strlen($params[$field]) > $this->fields[$field]['sizemax']) {
                         $this->errors[$field] = sprintf(
-                            '"%s" doit être supérieure à %s',
+                            '"%s" doit être inférieur ou égal à %s caractéres',
                             $this->fields[$field]['name'],
                             $this->fields[$field]['sizemax']
                         );

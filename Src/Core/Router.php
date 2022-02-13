@@ -153,7 +153,7 @@ class Router
         $params = array();
         foreach ($uri as $param) {
             if ($param !== $name && $param !== "") {
-                $params[] = $param;
+                $params[] = htmlentities($param);
             }
         }
         

@@ -71,6 +71,6 @@ class CommentsModel extends Model
             'post_id' => $post_id
         );
         
-        return parent::request($query, $params)->fetchAll(PDO::FETCH_CLASS, $this->class);
+        return $this->request($query, $params)->fetchAll(PDO::FETCH_CLASS, $this->class);
     }
 }

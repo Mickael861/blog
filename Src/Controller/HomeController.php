@@ -34,20 +34,13 @@ class HomeController extends Controller
      */
     public function homeAction(array $datas = array()): void
     {
-        parent::init();
+        $this->init();
 
         //Datas POST
         $datasPost = empty($datas['POST']) ? array() : $datas['POST'];
         $datasGet = empty($datas['GET']) ? array() : $datas['GET'];
 
-        if (!empty($datasGet['login']) && $datasGet['login']) {
-            $this->datas['success_login'] = 'Connexion réussi !';
-        }
-        if (!empty($datasGet['logout']) && $datasGet['logout']) {
-            $this->datas['success_logout'] = 'Déconnexion réussi !';
-            unset($this->datas['user_session']);
-            session_destroy();
-        }
+        $this->getSuccessUserAccount($datasGet);
 
         //Contact form fields
         $datasContactExpected = array(
@@ -77,7 +70,30 @@ class HomeController extends Controller
         $formContact = $this->getFormContact($formContactHome);
         $this->datas['formContactHome'] = $formContact;
 
-        echo parent::viewsRender($this->view, $this->datas);
+        echo $this->viewsRender($this->view, $this->datas);
+    }
+    
+    /**
+     * Manage account errors
+     *
+     * @param  mixed $datasGet datas of GET
+     * @return void
+     */
+    private function getSuccessUserAccount(array $datasGet): void
+    {
+        if (!empty($datasGet['login']) && $datasGet['login']) {
+            $this->datas['success'] = 'Connexion réussi !';
+        }
+
+        if (!empty($datasGet['signup']) && $datasGet['signup']) {
+            $this->datas['success'] = 'Compte crée avec succés et en attente d\'acceptation';
+        }
+
+        if (!empty($datasGet['logout']) && $datasGet['logout']) {
+            $this->datas['success'] = 'Déconnexion réussi !';
+            unset($this->datas['user_session']);
+            session_destroy();
+        }
     }
     
     /**

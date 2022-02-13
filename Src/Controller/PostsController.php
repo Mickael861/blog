@@ -31,7 +31,7 @@ class PostsController extends Controller
      */
     public function postsAction(array $datas = array()): void
     {
-        parent::init();
+        $this->init();
         
         //Datas POST
         $datasGet = empty($datas['GET']) ? array() : $datas['GET'];
@@ -54,8 +54,8 @@ class PostsController extends Controller
         if (!empty($modelPosts->getErrors())) {
             $this->datas['errors'] = $modelPosts->getErrors()['page'];
         }
-        
-        echo parent::viewsRender($this->view, $this->datas);
+
+        echo $this->viewsRender($this->view, $this->datas);
     }
     
     /**

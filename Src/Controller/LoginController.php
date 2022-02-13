@@ -32,22 +32,17 @@ class LoginController extends Controller
      */
     public function loginAction(array $datas = array()): void
     {
-        parent::init();
+        $this->init(true);
 
         //Datas POST
         $datasPost = empty($datas['POST']) ? array() : $datas['POST'];
-  
-        if (!empty($this->datas['user_session'])) {
-            header('Location: /');
-            exit();
-        }
 
         //login form fields
         $datasContactExpected = array(
             "email" => 'E-mail',
             "password" => 'Mot de passe'
         );
-        $action = '/login/#login_form';
+        $action = '/login';
         $formLogin = new Form($action, 'POST', $datasPost);
         //verification form data
         $is_valide = $formLogin->verifDatasForm($datasContactExpected);
@@ -61,7 +56,8 @@ class LoginController extends Controller
                 $is_correct = password_verify($datasPost['password'], $utilisateur[0]->password);
                 if ($is_correct) {
                     $_SESSION['utilisateur_id'] = $utilisateur[0]->utilisateur_id;
-                    $_SESSION['user_name'] = $utilisateur[0]->pseudo;
+                    $_SESSION['role'] = $utilisateur[0]->role;
+                    $_SESSION['user_pseudo'] = $utilisateur[0]->pseudo;
                     header('Location: /home/?login=1');
                     exit();
                 }
@@ -73,7 +69,7 @@ class LoginController extends Controller
         $formLogin = $this->getFormLogin($formLogin);
         $this->datas['formLogin'] = $formLogin;
 
-        echo parent::viewsRender($this->view, $this->datas);
+        echo $this->viewsRender($this->view, $this->datas);
     }
         
     /**

@@ -72,7 +72,7 @@ class Form
         $field = '';
         if ($with_label) {
             $field = '<label for="' . $name . '" class="form-label fw-bold mt-3">' . $labelValue .
-            ' ' . $required . '</label>';
+            ' <span class="text-danger">' . $required . '</span></label>';
         }
         $field .= '<input type=' . $type . ' class="form-control ' .
         $errors_field . '" name="' . $name . '" id="' . $id . '" value="' . $valueField . '">';
@@ -108,7 +108,7 @@ class Form
         $field = '';
         if ($with_label) {
             $field = '<label for="' . $name . '" class="form-label fw-bold mt-3">' . $labelValue .
-            ' ' . $required . '</label>';
+            ' <span class="text-danger">' . $required . '</span></label>';
         }
         $field .= '<textarea type="text" class="form-control ' .
         $errors_field . '" name="' . $name . '" id="' . $id . '">' . $valueField . '</textarea>';

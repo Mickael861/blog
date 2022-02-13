@@ -34,7 +34,7 @@ class PostController extends Controller
      */
     public function postAction(array $datas = array()): void
     {
-        parent::init();
+        $this->init();
 
         //Datas GET
         $datasGet = empty($datas['GET']) ? array() : $datas['GET'];
@@ -72,11 +72,19 @@ class PostController extends Controller
                     'date_add' => date('Y-m-d')
                 );
 
-                $ModelComments->save($datas);
-                header('Location:' . htmlspecialchars($_SERVER['REQUEST_URI']));
-                exit();
+                $is_save = $ModelComments->save($datas);
+                if ($is_save) {
+                    header('Location: ' . $_SESSION['REQUEST_URI'] . '?success=1');
+                    exit();
+                } else {
+                    $this->datas['errors_comment'] = implode('</br>', $ModelComments->getErrors());
+                }
             }
 
+            if (!empty($datasGet['success'])) {
+                $this->datas['success_comment'] = 'Commentaire enregistré et en attente de validation';
+            }
+            
             //View Comments post
             $itemsComments = $ModelComments->getCommentsUser($itemPost['post_id']);
             if (!empty($itemsComments)) {
@@ -84,12 +92,6 @@ class PostController extends Controller
                 foreach ($itemsComments as &$comment) {
                     $date = (new DateTime($comment->date_add))->format('d/m/Y');
                     $comment->date_add = $date;
-
-                    $content = $comment->content;
-                    $nbrs_letter = strlen($content);
-                    if ($nbrs_letter > 150) {
-                        $comment->content = $nbrs_letter;
-                    }
                 }
             }
 
@@ -102,7 +104,7 @@ class PostController extends Controller
             $this->datas['errors'] = 'L\'identifiant de l\'article est incorrecte';
         }
         
-        echo parent::viewsRender($this->view, $this->datas);
+        echo $this->viewsRender($this->view, $this->datas);
     }
         
     /**

@@ -1,6 +1,8 @@
 <?php
 namespace App\Model;
 
+use PDO;
+
 class UserModel extends Model
 {
     /**
@@ -79,4 +81,67 @@ class UserModel extends Model
             'type' => 'int'
         )
     );
+    
+    /**
+     * Check that the username and password do not already exist
+     *
+     * @param  string $pseudo
+     * @param  string $email
+     * @return ?array if there is a match return errors, otherwise false
+     */
+    public function getErrorsSameDatas(string $pseudo, string $email)
+    {
+        $sameDatas = array();
+        $samePseudo = $this->getSamePseudo($pseudo);
+        if ($samePseudo) {
+            $sameDatas[] = sprintf('Le pseudo "%s" éxiste dêjà', $pseudo);
+        }
+
+        $sameEmail = $this->getSameEmail($email);
+        if ($sameEmail) {
+            $sameDatas[] = sprintf('L\'e-mail "%s" éxiste dêjà', $email);
+        }
+
+        if (!empty($sameDatas)) {
+            return implode('</br>', $sameDatas);
+        }
+
+        return false;
+    }
+    
+    /**
+     * Get same pseudo
+     *
+     * @param  string $pseudo Pseudo of form
+     * @return bool If a pseudo is found return true otherwise false
+     */
+    private function getSamePseudo(string $pseudo)
+    {
+        $query_pseudo = 'SELECT utilisateur_id FROM ' . $this->table .
+        ' WHERE pseudo = :pseudo';
+
+        $params = array(
+            'pseudo' => $pseudo
+        );
+        
+        return !empty($this->request($query_pseudo, $params)->fetchAll(PDO::FETCH_CLASS, $this->class)) ? true : false;
+    }
+    
+    /**
+     * Get same email
+     *
+     * @param  string $email Email of form
+     * @return bool If a email is found return true otherwise false
+     */
+    private function getSameEmail(string $email)
+    {
+        $query_email = 'SELECT utilisateur_id FROM ' . $this->table .
+        ' WHERE email = :email';
+
+        $params = array(
+            'email' => $email
+        );
+        
+        return !empty($this->request($query_email, $params)->fetchAll(PDO::FETCH_CLASS, $this->class)) ? true : false;
+    }
 }
