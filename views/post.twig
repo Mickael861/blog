@@ -1,0 +1,70 @@
+{% extends "layout.twig" %}
+
+{% block content %}
+
+<!-- Post -->
+{% if not errors %}
+<div class='row m-auto' style="max-width:25rem; padding-bottom:10px">
+    <div>
+      <div class="col">
+        <div class="card shadow-sm">
+            <img src="{{ post.path_img }}" class="img-fluid rounded-start">
+            <div>
+                <div class="card-body">
+                    <p class="card-text text-muted">{{ post.chapo }}</p>
+                    <p class="card-text"><small>{{ post.content }}</small></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+</div>
+{% endif %}
+
+<div style="margin: 50px 0 50px 0"></div>
+  <h2 id='comment_form' class='text-center border-bottom'>Espace commentaires</h2>
+
+  <!-- comment success -->
+  {% if errors_comment %}
+  <div class="alert alert-danger text-center" role="alert">
+      {{ errors_comment }}
+  </div>
+  {% endif %}
+
+  <!-- comment success -->
+  {% if success_comment %}
+  <div class="alert alert-success text-center" role="alert">
+      {{ success_comment }}
+  </div>
+  {% endif %}
+</div>
+
+  <!-- comment form -->
+{% if user_session %}
+<div style="max-width:650px" class="m-auto">
+  {{ formCommentPost|raw }}
+</div>
+{% endif %}
+
+<div class="container mt-5">
+  <div class="row d-flex justify-content-center">
+      <div class="col-md-8">
+        {% for comment in comments %}
+        <div class="d-flex flex-row comment-row block-comment">
+          <div class="block-logo">
+            <img src="https://i.imgur.com/Ur43esv.jpg" alt="user" width="50" class="rounded-circle">
+          </div>
+          <div class="comment-text w-100 text-break">
+            <h6 class="font-medium">{{ comment.pseudo }}</h6> 
+            <span class="m-b-15 d-block">{{ comment.content }}</span>
+            <div class="comment-footer"> 
+              <span class="text-muted">Ajouté le : {{ comment.date_add }}</span> 
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+  </div>
+</div>
+
+{% endblock content %}

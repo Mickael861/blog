@@ -9,12 +9,19 @@ class PostsController extends Controller
     /**
      * @var string
      */
-    private $title = 'Articles';
+    protected $title = 'Articles';
 
     /**
      * @var string
      */
-    private $view = 'posts';
+    protected $view = 'posts';
+    
+    /**
+     * Datas
+     *
+     * @var array
+     */
+    protected $datas = array();
 
     /**
      * view of action
@@ -24,27 +31,31 @@ class PostsController extends Controller
      */
     public function postsAction(array $datas = array()): void
     {
-        //Title name view
-        $this->datas['title'] = $this->title;
-
+        $this->init();
+        
         //Datas POST
         $datasGet = empty($datas['GET']) ? array() : $datas['GET'];
         $page = empty($datasGet['page']) ? 1 : (int) $datasGet['page'];
+        
         $this->datas['page'] = $page;
 
         $modelPosts = new PostsModel();
 
         $posts = $modelPosts->fetchAll(true, 'post_id', $page, 'ASC', 4);
-
+        
         $nbrs_page = $modelPosts->getNbrsPage();
         $this->disabledPagination($page, $nbrs_page);
         $this->datas['nbrs_page'] = $nbrs_page;
-        
+
         if (!empty($posts)) {
             $this->datas['posts'] = $posts;
         }
+        
+        if (!empty($modelPosts->getErrors())) {
+            $this->datas['errors'] = $modelPosts->getErrors()['page'];
+        }
 
-        echo parent::viewsRender($this->view, $this->datas);
+        echo $this->viewsRender($this->view, $this->datas);
     }
     
     /**

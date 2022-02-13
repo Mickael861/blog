@@ -12,17 +12,19 @@ class HomeController extends Controller
     /**
      * @var string
      */
-    private $title = 'Accueil';
+    protected $title = 'Accueil';
 
     /**
      * @var string
      */
-    private $view = 'home';
-        
+    protected $view = 'home';
+
     /**
+     * Datas
+     *
      * @var array
      */
-    private $datas = array();
+    protected $datas = array();
 
     /**
      * view of action
@@ -32,11 +34,13 @@ class HomeController extends Controller
      */
     public function homeAction(array $datas = array()): void
     {
-        //Title name view
-        $this->datas['title'] = $this->title;
+        $this->init();
 
         //Datas POST
         $datasPost = empty($datas['POST']) ? array() : $datas['POST'];
+        $datasGet = empty($datas['GET']) ? array() : $datas['GET'];
+
+        $this->getSuccessUserAccount($datasGet);
 
         //Contact form fields
         $datasContactExpected = array(
@@ -47,7 +51,8 @@ class HomeController extends Controller
             "message" => 'Message'
         );
 
-        $formContactHome = new Form('/home/#contact_form', 'POST', $datasPost);
+        $action = '/home/#contact_form';
+        $formContactHome = new Form($action, 'POST', $datasPost);
         //verification form data
         $is_valide = $formContactHome->verifDatasForm($datasContactExpected);
         if ($is_valide) {
@@ -65,7 +70,30 @@ class HomeController extends Controller
         $formContact = $this->getFormContact($formContactHome);
         $this->datas['formContactHome'] = $formContact;
 
-        echo parent::viewsRender($this->view, $this->datas);
+        echo $this->viewsRender($this->view, $this->datas);
+    }
+    
+    /**
+     * Manage account errors
+     *
+     * @param  mixed $datasGet datas of GET
+     * @return void
+     */
+    private function getSuccessUserAccount(array $datasGet): void
+    {
+        if (!empty($datasGet['login']) && $datasGet['login']) {
+            $this->datas['success'] = 'Connexion réussi !';
+        }
+
+        if (!empty($datasGet['signup']) && $datasGet['signup']) {
+            $this->datas['success'] = 'Compte crée avec succés et en attente d\'acceptation';
+        }
+
+        if (!empty($datasGet['logout']) && $datasGet['logout']) {
+            $this->datas['success'] = 'Déconnexion réussi !';
+            unset($this->datas['user_session']);
+            session_destroy();
+        }
     }
     
     /**
@@ -142,8 +170,8 @@ class HomeController extends Controller
         $fields .= $formContactHome->addInputText('email', 'email', 'Adresse e-mail', true);
         $fields .= $formContactHome->addInputText('subject', 'subject', 'Objet', true);
         $fields .= $formContactHome->addTextArea('message', 'message', 'Message', true);
-        $fields .= $formContactHome->addButton();
+        $fields .= $formContactHome->addButton('Envoyer', 'margin-btn-form');
 
-        return $formContactHome->createForm($fields, 'form_contact');
+        return $formContactHome->createForm($fields);
     }
 }

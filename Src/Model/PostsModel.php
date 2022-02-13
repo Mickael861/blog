@@ -36,6 +36,11 @@ class PostsModel extends Model
             'type' => 'string',
             'required' => true
         ),
+        'slug' => array(
+            'name' => 'Le slug de l\'article',
+            'type' => 'string',
+            'required' => true
+        ),
         'chapo' => array(
             'name' => 'Le chapô  de l\'article',
             'type' => 'string',

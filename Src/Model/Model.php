@@ -144,9 +144,9 @@ abstract class Model
      * Retrieve an element using its identifier
      *
      * @param  int $item_id identifier sought
-     * @return stdClass item
+     * @return array|bool item
      */
-    public function fetchId(int $item_id): stdClass
+    public function fetchId(int $item_id)
     {
         $query = 'SELECT * FROM ' . $this->table . ' WHERE ';
 
@@ -156,7 +156,7 @@ abstract class Model
             $this->primary_key => $item_id
         );
 
-        return self::request($query, $params)->fetch(PDO::FETCH_CLASS, $this->class);
+        return self::request($query, $params)->fetch();
     }
     
     /**
@@ -178,22 +178,40 @@ abstract class Model
         return self::request($query, $params)->fetchAll(PDO::FETCH_CLASS, $this->class);
     }
     
+        
     /**
      * returns all elements of a table
      *
-     * @return array items
+     * @param  mixed $total total article for pagination
+     * @param  mixed $field sort by which field
+     * @param  mixed $page The current page
+     * @param  mixed $order sort order
+     * @param  mixed $item_per_page Number of items per page
+     * @return array|bool the items or false if it finds an error
      */
-    public function fetchAll(bool $total, string $field, int $page, string $order = 'DESC', $item_per_page = 20): array
+    public function fetchAll(bool $total, string $field, int $page, string $order = 'DESC', $item_per_page = 20)
     {
         if ($total) {
+            if ($page < 1) {
+                $this->errors['page'] = 'La page demandée est inférieure aux nombres de page';
+
+                return false;
+            }
+
             $query = 'SELECT count(*) FROM ' . $this->table;
 
             $nbrs_items = (int) self::request($query)->fetch()[0];
 
             $this->nbrs_page = (int) ceil($nbrs_items / $item_per_page);
 
-            $page_view = ($page - 1) *  $item_per_page;
+            if ($page > $this->nbrs_page) {
+                $this->errors['page'] = 'La page demandée est supérieure aux nombres de page';
 
+                return false;
+            }
+
+            $page_view = ($page - 1) *  $item_per_page;
+            
             $query = 'SELECT * FROM ' . $this->table . ' ORDER BY ' . $field . ' ' . $order .
                 ' LIMIT ' . $page_view . ',' . $item_per_page;
         } else {
@@ -222,7 +240,7 @@ abstract class Model
                 if (!empty($this->fields[$field]['sizemax'])) {
                     if (strlen($params[$field]) > $this->fields[$field]['sizemax']) {
                         $this->errors[$field] = sprintf(
-                            '"%s" doit être supérieure à %s',
+                            '"%s" doit être inférieur ou égal à %s caractéres',
                             $this->fields[$field]['name'],
                             $this->fields[$field]['sizemax']
                         );
@@ -259,7 +277,7 @@ abstract class Model
      * @param  array $params parameters
      * @return PDOStatement instance of PDOStatement
      */
-    private static function request(string $query, array $params = []): PDOStatement
+    protected static function request(string $query, array $params = []): PDOStatement
     {
         $pdo = new Connexion;
 

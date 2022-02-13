@@ -94,13 +94,13 @@ class Router
                     $this->route[$name[0]]['datas']['POST'] = $_POST;
                 }
 
-                $this->makeDatasUrl($name[0]);
+                $this->makeDatasUrl($name[0]); 
             }
 
             if (!$method_exist) {
                 throw new RouterException("The method for sending data does not exist");
             }
-
+            
             return $this->route[$name[0]];
         } else {
             throw new RouterException("No match route");
@@ -118,7 +118,6 @@ class Router
     private function makeDatasUrl(string $name): void
     {
         $url = $this->getParamsUrl($name);
-
         if (!empty($url)) {
             $params = $this->getParamsUri($name);
 
@@ -151,14 +150,13 @@ class Router
     {
         $uri = explode('?', trim($this->uri, '/'));
         $uri = explode('/', $uri[0]);
-
         $params = array();
         foreach ($uri as $param) {
             if ($param !== $name && $param !== "") {
-                $params[] = $param;
+                $params[] = htmlentities($param);
             }
         }
-
+        
         return $params;
     }
     
@@ -199,6 +197,10 @@ class Router
             $controller = new $controller;
 
             if (!empty($match['datas'])) {
+                //Add user_session in datas
+                $user_session = !empty($_SESSION['utilisateur_id']) ? $_SESSION : array();
+                $match['datas']['datas_session'] = $user_session;
+
                 $controller->{$match['view']}($match['datas']);
             } else {
                 $controller->{$match['view']}();

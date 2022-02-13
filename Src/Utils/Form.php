@@ -52,6 +52,7 @@ class Form
      * @param  string $name name of the field
      * @param  string $id l'ID of the field
      * @param  string $labelValue value of the label
+     * @param  string $type type of field
      * @param  bool $required Add "required" for the field
      * @param  bool $with_label Add label to the field
      * @return string input in HTML
@@ -60,20 +61,21 @@ class Form
         string $name,
         string $id,
         string $labelValue,
+        string $type = 'text',
         bool $required = false,
         bool $with_label = true
     ): string {
-        $required = $required ? 'required' : '';
+        $required = $required ? '*' : '';
         $errors_field = !empty($this->errorsForm[$name]) ? 'errors-field' : '';
         $valueField = !empty($this->datasPost[$name]) ? $this->datasPost[$name] : '';
         
         $field = '';
         if ($with_label) {
-            $field = '<label for="' . $name . '" class="form-label fw-bold mt-3">' . $labelValue . '</label>';
+            $field = '<label for="' . $name . '" class="form-label fw-bold mt-3">' . $labelValue .
+            ' <span class="text-danger">' . $required . '</span></label>';
         }
-        $field .= '<input type="text" class="form-control ' .
-        $errors_field . '" name="' . $name . '" id="' . $id . '" value="' . $valueField . '" ' . $required .
-        '>';
+        $field .= '<input type=' . $type . ' class="form-control ' .
+        $errors_field . '" name="' . $name . '" id="' . $id . '" value="' . $valueField . '">';
 
         if (!empty($this->errorsForm[$name])) {
             $field .= '<div class="invalid">' . $this->errorsForm[$name] . '</div>';
@@ -99,17 +101,17 @@ class Form
         bool $required = false,
         bool $with_label = true
     ): string {
-        $required = $required ? 'required' : '';
+        $required = $required ? '*' : '';
         $errors_field = !empty($this->errorsForm[$name]) ? 'errors-field' : '';
         $valueField = !empty($this->datasPost[$name]) ? $this->datasPost[$name] : '';
 
         $field = '';
         if ($with_label) {
-            $field = '<label for="' . $name . '" class="form-label fw-bold mt-3">' . $labelValue . '</label>';
+            $field = '<label for="' . $name . '" class="form-label fw-bold mt-3">' . $labelValue .
+            ' <span class="text-danger">' . $required . '</span></label>';
         }
         $field .= '<textarea type="text" class="form-control ' .
-        $errors_field . '" name="' . $name . '" id="' . $id . '" ' . $required .
-        '>' . $valueField . '</textarea>';
+        $errors_field . '" name="' . $name . '" id="' . $id . '">' . $valueField . '</textarea>';
 
         if (!empty($this->errorsForm[$name])) {
             $field .= '<div class="invalid">' . $this->errorsForm[$name] . '</div>';
@@ -150,12 +152,13 @@ class Form
      * getButton
      *
      * @param  string $buttonValue Value of the button
+     * @param  string $class Value of class
      * @return string button in HTML
      */
-    public function addButton($buttonValue = 'Envoyer'): string
+    public function addButton($buttonValue = 'Envoyer', $class = ''): string
     {
-        $button = '<div class="text-center" style="margin-top:50px">';
-        $button .= '<button type="submit" class="btn btn-primary">' . $buttonValue . '</button></div>';
+        $button = '<div class="text-center">';
+        $button .= '<button type="submit" class="btn btn-primary ' . $class . '">' . $buttonValue . '</button></div>';
         
         return $button;
     }
