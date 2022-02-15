@@ -4,25 +4,35 @@
 
 <!-- Post -->
 {% if not errors %}
-<div class='row m-auto' style="max-width:25rem; padding-bottom:10px">
-    <div>
-      <div class="col">
-        <div class="card shadow-sm">
-            <img src="{{ post.path_img }}" class="img-fluid rounded-start">
-            <div>
-                <div class="card-body">
-                    <p class="card-text text-muted">{{ post.chapo }}</p>
-                    <p class="card-text"><small>{{ post.content }}</small></p>
-                </div>
-            </div>
-        </div>
+<div class='row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4 justify-content-center'>
+  <div>
+    <div class="col">
+      <div class="card shadow-sm">
+          <img src="{{ post.path_img }}" class="img-fluid rounded-start" alt="...">
+          <div class="">
+              <div class="card-body">
+                  <h5 class="card-title">{{ post.titre }}</h5>
+                  <p class="card-text">{{ post.chapo }}</p>
+                  <p class="card-text">{{ post.content }}</p>
+              </div>
+          </div>
+          <div class="d-flex justify-content-between align-items-end bg-light text-dark h-25 p-3">
+            <p class="text-muted m-0">Auteur : {{ post.user_name }}</p>
+            <p class="text-muted m-0">Mise à jour le : {{ post.date_upd }}</p>
+          </div>
+      </div>
     </div>
-    </div>
+  </div>
 </div>
 {% endif %}
 
 <div style="margin: 50px 0 50px 0"></div>
   <h2 id='comment_form' class='text-center border-bottom'>Espace commentaires</h2>
+  {% if not comments %}
+    <div class="text-center mt-5">
+      <p class='card-text'> Soyez le premier à commenter ...</p>
+    </div>
+  {% endif %}
 
   <!-- comment success -->
   {% if errors_comment %}

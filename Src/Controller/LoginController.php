@@ -18,13 +18,6 @@ class LoginController extends Controller
     protected $view = 'login';
 
     /**
-     * Datas
-     *
-     * @var array
-     */
-    protected $datas = array();
-
-    /**
      * view of action
      *
      * @param array Datas POST|GET
@@ -58,6 +51,11 @@ class LoginController extends Controller
                     $_SESSION['utilisateur_id'] = $utilisateur[0]->utilisateur_id;
                     $_SESSION['role'] = $utilisateur[0]->role;
                     $_SESSION['user_pseudo'] = $utilisateur[0]->pseudo;
+                    if ($utilisateur[0]->role === 'admin') {
+                        header('Location: /admin/home/?login=1');
+                        exit();
+                    }
+
                     header('Location: /home/?login=1');
                     exit();
                 }

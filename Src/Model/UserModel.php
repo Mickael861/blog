@@ -124,6 +124,7 @@ class UserModel extends Model
             'pseudo' => $pseudo
         );
         
+        //TODO
         return !empty($this->request($query_pseudo, $params)->fetchAll(PDO::FETCH_CLASS, $this->class)) ? true : false;
     }
     
@@ -142,6 +143,7 @@ class UserModel extends Model
             'email' => $email
         );
         
+        //TODO
         return !empty($this->request($query_email, $params)->fetchAll(PDO::FETCH_CLASS, $this->class)) ? true : false;
     }
 }

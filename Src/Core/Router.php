@@ -94,7 +94,7 @@ class Router
                     $this->route[$name[0]]['datas']['POST'] = $_POST;
                 }
 
-                $this->makeDatasUrl($name[0]); 
+                $this->makeDatasUrl($name[0]);
             }
 
             if (!$method_exist) {
@@ -168,10 +168,8 @@ class Router
      */
     private function getParamsUrl(string $name): array
     {
-        $uriExpected = substr($this->route[$name]['url'], 1);
-        $uriExpected = str_replace('/', '', $uriExpected);
+        $uriExpected = str_replace('/', '', $this->route[$name]['url']);
         $uriExpected = explode(':', $uriExpected);
-
         $url = array();
         foreach ($uriExpected as $param) {
             if ($param !== $name && $param !== "") {
@@ -191,11 +189,10 @@ class Router
     {
         try {
             $match = $this->match();
-
             $namespace = 'App\Controller\\';
             $controller = $namespace . $match['controller'];
             $controller = new $controller;
-
+            
             if (!empty($match['datas'])) {
                 //Add user_session in datas
                 $user_session = !empty($_SESSION['utilisateur_id']) ? $_SESSION : array();

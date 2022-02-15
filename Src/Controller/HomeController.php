@@ -20,13 +20,6 @@ class HomeController extends Controller
     protected $view = 'home';
 
     /**
-     * Datas
-     *
-     * @var array
-     */
-    protected $datas = array();
-
-    /**
      * view of action
      *
      * @param array Datas POST|GET
@@ -41,7 +34,7 @@ class HomeController extends Controller
         $datasGet = empty($datas['GET']) ? array() : $datas['GET'];
 
         $this->getSuccessUserAccount($datasGet);
-
+        
         //Contact form fields
         $datasContactExpected = array(
             "first_name" => 'Prénom',

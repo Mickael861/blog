@@ -2,12 +2,20 @@
 namespace App\Controller;
 
 use App\Core\Router;
+use DateTime;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 
 class Controller
 {
-
+        
+    /**
+     * Datas
+     *
+     * @var array
+     */
+    protected $datas = array();
+    
     /**
      * important data initialization
      *
@@ -30,11 +38,12 @@ class Controller
      *
      * @param  string $view name of the view
      * @param  array $datas the datas to be sent to the view
+     * @param  string $folder name of the folder
      * @return string content of the view
      */
-    public static function viewsRender(string $view, array $datas): string
+    protected static function viewsRender(string $view, array $datas, string $folder = 'utilisateurs'): string
     {
-        $path_views = dirname(__DIR__, 2) . "/views";
+        $path_views = dirname(__DIR__, 2) . '/views/' . $folder;
         $loader = new FilesystemLoader($path_views);
 
         $twig = new Environment($loader);

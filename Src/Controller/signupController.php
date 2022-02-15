@@ -17,12 +17,6 @@ class SignupController extends Controller
      */
     protected $view = 'signup';
 
-    /**
-     * Datas
-     *
-     * @var array
-     */
-    protected $datas = array();
 
     /**
      * view of action

@@ -3,8 +3,9 @@ namespace App\Controller;
 
 use App\Model\CommentsModel;
 use App\Model\PostsModel;
+use App\Model\UserModel;
 use App\Utils\Form;
-use DateTime;
+use App\Utils\Utils;
 
 class PostController extends Controller
 {
@@ -18,13 +19,6 @@ class PostController extends Controller
      * @var string
      */
     protected $view = 'post';
-
-    /**
-     * Datas
-     *
-     * @var array
-     */
-    protected $datas = array();
 
     /**
      * view of action
@@ -45,13 +39,19 @@ class PostController extends Controller
         $ModelComments = new CommentsModel();
         $modelPosts = new PostsModel();
         $itemPost = $modelPosts->fetchId($post_id);
-  
+ 
         if (!empty($itemPost)) {
+            $userModel = new UserModel;
+            $itemUser = $userModel->fetchId($itemPost['utilisateur_id']);
+            $itemPost['user_name'] = $itemUser['pseudo'];
+            
+            $this->datas['post'] = $itemPost;
+            
             //verification on the slug
             $slug_url = $datasGet['slug'];
             $slug_post = $itemPost['slug'];
             if ($slug_url !== $slug_post) {
-                $this->datas['errors'] = 'L\'url est différente de celle attendue';
+                $this->datas['errors'] = 'L\'url est différente de celle attendue'; //TODO
                 $itemPost['titre'] = 'Aucun résultat';
             }
 
@@ -71,7 +71,7 @@ class PostController extends Controller
                     'statut' => 'en_attente',
                     'date_add' => date('Y-m-d')
                 );
-
+                
                 $is_save = $ModelComments->save($datas);
                 if ($is_save) {
                     header('Location: ' . $_SESSION['REQUEST_URI'] . '?success=1');
@@ -88,20 +88,17 @@ class PostController extends Controller
             //View Comments post
             $itemsComments = $ModelComments->getCommentsUser($itemPost['post_id']);
             if (!empty($itemsComments)) {
-                $this->datas['comments'] = $itemsComments;
                 foreach ($itemsComments as &$comment) {
-                    $date = (new DateTime($comment->date_add))->format('d/m/Y');
-                    $comment->date_add = $date;
+                    $comment->date_add = (new Utils())::dbToDate($comment->date_add);
                 }
+                $this->datas['comments'] = $itemsComments;
             }
 
             //create comment form
             $formComment = $this->getFormComment($formCommentPost);
             $this->datas['formCommentPost'] = $formComment;
-
-            $this->datas['post'] = $itemPost;
         } else {
-            $this->datas['errors'] = 'L\'identifiant de l\'article est incorrecte';
+            $this->datas['errors'] = 'L\'identifiant de l\'article est incorrecte'; //TODO changer la redirection
         }
         
         echo $this->viewsRender($this->view, $this->datas);
@@ -115,7 +112,7 @@ class PostController extends Controller
      */
     public function getFormComment(Form $formContactHome): string
     {
-        $fields = $formContactHome->addTextArea('content', 'content', 'Besoin de vous éxprimer ?', true);
+        $fields = $formContactHome->addTextArea('content', 'content', 'Votre commentaire', true);
         $fields .= $formContactHome->addButton('Publier', 'btn-comment');
 
         return $formContactHome->createForm($fields);

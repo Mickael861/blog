@@ -2,6 +2,8 @@
 namespace App\Controller;
 
 use App\Model\PostsModel;
+use App\Model\UserModel;
+use App\Utils\Utils;
 
 class PostsController extends Controller
 {
@@ -15,13 +17,6 @@ class PostsController extends Controller
      * @var string
      */
     protected $view = 'posts';
-    
-    /**
-     * Datas
-     *
-     * @var array
-     */
-    protected $datas = array();
 
     /**
      * view of action
@@ -41,13 +36,20 @@ class PostsController extends Controller
 
         $modelPosts = new PostsModel();
 
-        $posts = $modelPosts->fetchAll(true, 'post_id', $page, 'ASC', 4);
+        $posts = $modelPosts->fetchAll(true, 'post_id', $page, 'DESC', 4);
         
         $nbrs_page = $modelPosts->getNbrsPage();
         $this->disabledPagination($page, $nbrs_page);
         $this->datas['nbrs_page'] = $nbrs_page;
 
         if (!empty($posts)) {
+            foreach ($posts as $post) {
+                $userModel = new UserModel;
+                $itemUser = $userModel->fetchId($post->utilisateur_id);
+                $post->user_name = $itemUser['pseudo'];
+
+                $post->date_upd = (new Utils())::dbToDate($post->date_upd);
+            }
             $this->datas['posts'] = $posts;
         }
         
