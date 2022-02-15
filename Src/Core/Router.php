@@ -23,23 +23,15 @@ class Router
      * Records routes
      *
      * @param  string $route name of the route
-     * @param  string $method method of send datas
      * @param  string $url URL excpected
      * @param  string $controller name of the controller
      * @param  string $view name of view
      * @param  string $folder name of folder
      * @return void
      */
-    public function map(
-        string $route,
-        string $method,
-        string $url,
-        string $controller,
-        string $view,
-        string $folder = 'Utilisateurs'
-    ) {
+    public function map(string $route, string $url, string $controller, string $view, string $folder = 'Utilisateurs')
+    {
         $this->route[$route] = array(
-            'method' => $method,
             'url' => $url,
             'controller' => ucFirst($controller) . 'Controller',
             'view' => $view . 'Action',
