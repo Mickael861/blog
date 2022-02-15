@@ -1,6 +1,7 @@
 <?php
-namespace App\Controller;
+namespace App\Controller\Utilisateurs;
 
+use App\Controller\Controller;
 use App\Utils\Form;
 use PHPMailer\PHPMailer\Exception as PHPMailerException;
 use PHPMailer\PHPMailer\PHPMailer;
@@ -27,13 +28,9 @@ class HomeController extends Controller
      */
     public function homeAction(array $datas = array()): void
     {
-        $this->init();
-
-        //Datas POST
-        $datasPost = empty($datas['POST']) ? array() : $datas['POST'];
-        $datasGet = empty($datas['GET']) ? array() : $datas['GET'];
-
-        $this->getSuccessUserAccount($datasGet);
+        $this->init($datas);
+        
+        $this->getSuccessUserAccount();
         
         //Contact form fields
         $datasContactExpected = array(
@@ -44,18 +41,19 @@ class HomeController extends Controller
             "message" => 'Message'
         );
 
-        $action = '/home/#contact_form';
-        $formContactHome = new Form($action, 'POST', $datasPost);
+        $action = '/#contact_form';
+        $formContactHome = new Form($action, 'POST', $this->datasPost);
         //verification form data
         $is_valide = $formContactHome->verifDatasForm($datasContactExpected);
         if ($is_valide) {
             //Send Email
-            $is_send = $this->addMail($datasPost);
+            $is_send = $this->addMail();
             if ($is_send) {
-                $this->datas['success_send_mail'] = 'L\'email a été envoyé avec succes';
+                header('Location: home/?sendmail=1');
+                exit();
             } else {
                 $this->datas['errors_send_mail'] = sprintf('Envoie de l\'e-mail impossible, Veuillez vérifier que
-                    votre adresse "%s" est correcte', $datasPost['email']);
+                    votre adresse "%s" est correcte', $this->datasPost['email']);
             }
         }
         
@@ -69,37 +67,39 @@ class HomeController extends Controller
     /**
      * Manage account errors
      *
-     * @param  mixed $datasGet datas of GET
      * @return void
      */
-    private function getSuccessUserAccount(array $datasGet): void
+    private function getSuccessUserAccount(): void
     {
-        if (!empty($datasGet['login']) && $datasGet['login']) {
+        if (!empty($this->datasGet['login'])) {
             $this->datas['success'] = 'Connexion réussi !';
         }
 
-        if (!empty($datasGet['signup']) && $datasGet['signup']) {
+        if (!empty($this->datasGet['signup'])) {
             $this->datas['success'] = 'Compte crée avec succés et en attente d\'acceptation';
         }
 
-        if (!empty($datasGet['logout']) && $datasGet['logout']) {
+        if (!empty($this->datasGet['logout'])) {
             $this->datas['success'] = 'Déconnexion réussi !';
             unset($this->datas['user_session']);
             session_destroy();
+        }
+
+        if (!empty($this->datasGet['sendmail'])) {
+            $this->datas['success_send_mail'] = 'l\'E-mail a été correctement envoyé';
         }
     }
     
     /**
      * Add contact email
      *
-     * @param  array Datas Get|POST
      * @return bool true, if the sending of the contact email was successful, false otherwise
      */
-    private function addMail(array $datasPost): bool
+    private function addMail(): bool
     {
-        $is_send = $this->sendMailer($datasPost);
+        $is_send = $this->sendMailer();
         if ($is_send) {
-            $this->sendMailer($datasPost, true);
+            $this->sendMailer(true);
         }
 
         return $is_send;
@@ -108,19 +108,18 @@ class HomeController extends Controller
     /**
      * Send contact email
      *
-     * @param  array $datasPost Datas Get|POST
      * @param  bool $is_send true, if the contact email is sent, false otherwise
      * @return bool true, if the sending of the contact email was successful, false otherwise
      */
-    private function sendMailer(array $datasPost, bool $is_send = false): bool
+    private function sendMailer($is_send = false): bool
     {
         $mailer = new PHPMailer(true);
 
-        $from = $is_send ? 'mickael.sayer.dev@gmail.com' : $datasPost['email'];
-        $to = !$is_send ? 'mickael.sayer.dev@gmail.com' : $datasPost['email'];
-        $subject = $is_send ? 'Réponse automatique' : $datasPost['subject'];
+        $from = $is_send ? 'mickael.sayer.dev@gmail.com' : $this->datasPost['email'];
+        $to = !$is_send ? 'mickael.sayer.dev@gmail.com' : $this->datasPost['email'];
+        $subject = $is_send ? 'Réponse automatique' : $this->datasPost['subject'];
         $messageAdmin = 'Votre message sur le site "blog" à correctement était envoyé le ' . date('Y-m-d à H:m:s');
-        $body = $is_send ? $messageAdmin  : $datasPost['message'];
+        $body = $is_send ? $messageAdmin  : $this->datasPost['message'];
         
         try {
             //SMTP Setup

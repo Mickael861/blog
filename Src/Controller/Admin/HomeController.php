@@ -37,13 +37,7 @@ class HomeController extends Controller
      */
     public function homeAction(array $datas = array()): void
     {
-        $this->init(true);
-
-        //Datas POST
-        $datasPost = empty($datas['POST']) ? array() : $datas['POST'];
-        $datasGET = empty($datas['GET']) ? array() : $datas['GET'];
-
-        dump($datasPost, $datasGET);
+        $this->init($datas, true);
 
         echo $this->viewsRender($this->view, $this->datas, $this->folder);
     }

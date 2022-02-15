@@ -1,6 +1,7 @@
 <?php
-namespace App\Controller;
+namespace App\Controller\Utilisateurs;
 
+use App\Controller\Controller;
 use App\Model\PostsModel;
 use App\Model\UserModel;
 use App\Utils\Utils;
@@ -26,21 +27,17 @@ class PostsController extends Controller
      */
     public function postsAction(array $datas = array()): void
     {
-        $this->init();
-        
-        //Datas POST
-        $datasGet = empty($datas['GET']) ? array() : $datas['GET'];
-        $page = empty($datasGet['page']) ? 1 : (int) $datasGet['page'];
-        
-        $this->datas['page'] = $page;
+        $this->init($datas);
+
+        $this->page = empty($this->paramsUrl['page']) ? 1 : (int) $this->paramsUrl['page'];
+        $this->datas['page'] = $this->page;
 
         $modelPosts = new PostsModel();
 
-        $posts = $modelPosts->fetchAll(true, 'post_id', $page, 'DESC', 4);
-        
-        $nbrs_page = $modelPosts->getNbrsPage();
-        $this->disabledPagination($page, $nbrs_page);
-        $this->datas['nbrs_page'] = $nbrs_page;
+        $posts = $modelPosts->fetchAll(true, 'post_id', $this->page, 'DESC', 4);
+        $this->nbrs_page = $modelPosts->getNbrsPage();
+        $this->disabledPagination();
+        $this->datas['nbrs_page'] = $this->nbrs_page;
 
         if (!empty($posts)) {
             foreach ($posts as $post) {
@@ -63,18 +60,16 @@ class PostsController extends Controller
     /**
      * Handles next and before pagination
      *
-     * @param  int $page Current page
-     * @param  int $nbrs_page numbers of page
      * @return void
      */
-    private function disabledPagination(int $page, int $nbrs_page)
+    private function disabledPagination()
     {
         $this->datas['pagination_next'] = '';
         $this->datas['pagination_before'] = '';
 
-        if ($page > $nbrs_page - 1) {
+        if ($this->page > $this->nbrs_page - 1) {
             $this->datas['pagination_next'] = 'disabled';
-        } elseif ($page === 1) {
+        } elseif ($this->page === 1) {
             $this->datas['pagination_before'] = 'disabled';
         }
     }

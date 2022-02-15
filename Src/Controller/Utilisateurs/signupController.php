@@ -1,6 +1,7 @@
 <?php
-namespace App\Controller;
+namespace App\Controller\Utilisateurs;
 
+use App\Controller\Controller;
 use App\Model\UserModel;
 use App\Utils\Form;
 
@@ -26,10 +27,7 @@ class SignupController extends Controller
      */
     public function signupAction(array $datas = array()): void
     {
-        $this->init(true);
-
-        //Datas POST
-        $datasPost = empty($datas['POST']) ? array() : $datas['POST'];
+        $this->init($datas, true);
 
         //signup form fields
         $datasContactExpected = array(
@@ -40,21 +38,21 @@ class SignupController extends Controller
             "password" => 'Mot de passe'
         );
         $action = '/signup';
-        $formSignup = new Form($action, 'POST', $datasPost);
+        $formSignup = new Form($action, 'POST', $this->datasPost);
         //verification form data
         $is_valide = $formSignup->verifDatasForm($datasContactExpected);
         if ($is_valide) {
             $this->modelUtilisateurs = new UserModel;
 
-            $same_errors = $this->getErrorsFormSave($datasPost);
+            $same_errors = $this->getErrorsFormSave();
             if (!$same_errors) {
                 $datas = array(
                     'role' => 'utilisateur',
-                    'pseudo' => $datasPost['pseudo'],
-                    'prenom' => $datasPost['prenom'],
-                    'nom' => $datasPost['nom'],
-                    'email' => $datasPost['email'],
-                    'password' => password_hash($datasPost['password'], PASSWORD_ARGON2I),
+                    'pseudo' => $this->datasPost['pseudo'],
+                    'prenom' => $this->datasPost['prenom'],
+                    'nom' => $this->datasPost['nom'],
+                    'email' => $this->datasPost['email'],
+                    'password' => password_hash($this->datasPost['password'], PASSWORD_ARGON2I),
                     'statut' => 'en_attente'
                 );
 
@@ -80,13 +78,12 @@ class SignupController extends Controller
     /**
      * Manage errors related to the account creation form
      *
-     * @param  array $datasPost datas of the POST
      * @return string False if no error, a character string otherwise
      */
-    private function getErrorsFormSave(array $datasPost): string
+    private function getErrorsFormSave(): string
     {
-        $error_password = strlen($datasPost['password']) < 15;
-        $same_errors = $this->modelUtilisateurs->getErrorsSameDatas($datasPost['pseudo'], $datasPost['email']);
+        $error_password = strlen($this->datasPost['password']) < 15;
+        $same_errors = $this->modelUtilisateurs->getErrorsSameDatas($this->datasPost['pseudo'], $this->datasPost['email']);
         if ($error_password) {
             $set_br = !empty($same_errors) ? '</br>' : '';
             $same_errors .= $set_br . 'Le mot de passe doit contenir 15 caractéres minimum';

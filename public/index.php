@@ -6,11 +6,11 @@ session_start();
 
 $router = new Router();
 
-$router->map('home', 'GET|POST', '/home', 'home', 'home');
+$router->map('home', 'GET', '/home', 'home', 'home');
 $router->map('posts', 'GET', '/posts/:page', 'posts', 'posts');
 $router->map('post', 'GET|POST', '/post/:slug/:id', 'post', 'post');
 $router->map('login', 'GET|POST', '/login', 'login', 'login');
 $router->map('signup', 'GET|POST', '/signup', 'signup', 'signup');
-$router->map('admin', 'GET|POST', '/admin/home', 'home', 'home');
+$router->map('admin', 'GET|POST', '/admin/home', 'home', 'home', 'admin');
 
 $router->run();

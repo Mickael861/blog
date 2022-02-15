@@ -1,6 +1,7 @@
 <?php
-namespace App\Controller;
+namespace App\Controller\Utilisateurs;
 
+use App\Controller\Controller;
 use App\Model\CommentsModel;
 use App\Model\PostsModel;
 use App\Model\UserModel;
@@ -28,13 +29,9 @@ class PostController extends Controller
      */
     public function postAction(array $datas = array()): void
     {
-        $this->init();
+        $this->init($datas);
 
-        //Datas GET
-        $datasGet = empty($datas['GET']) ? array() : $datas['GET'];
-        //Datas GET
-        $datasPost = empty($datas['POST']) ? array() : $datas['POST'];
-        $post_id = (int) $datasGet['id'];
+        $post_id = (int) $this->paramsUrl['id'];
 
         $ModelComments = new CommentsModel();
         $modelPosts = new PostsModel();
@@ -48,7 +45,7 @@ class PostController extends Controller
             $this->datas['post'] = $itemPost;
             
             //verification on the slug
-            $slug_url = $datasGet['slug'];
+            $slug_url = $this->paramsUrl['slug'];
             $slug_post = $itemPost['slug'];
             if ($slug_url !== $slug_post) {
                 $this->datas['errors'] = 'L\'url est différente de celle attendue'; //TODO
@@ -60,14 +57,15 @@ class PostController extends Controller
                 "content" => 'Contenu'
             );
             $action = '/post/' . $itemPost['slug'] . '/' . $itemPost['post_id'] . '/#comment_form';
-            $formCommentPost = new Form($action, 'POST', $datasPost);
+            $formCommentPost = new Form($action, 'POST', $this->datasPost);
+
             //verification form data
             $is_valide = $formCommentPost->verifDatasForm($datasContactExpected);
             if ($is_valide) {
                 $datas = array(
                     'post_id' => (int) $itemPost['post_id'],
                     'utilisateur_id' => (int) $_SESSION['utilisateur_id'],
-                    'content' => $datasPost['content'],
+                    'content' => $this->datasPost['content'],
                     'statut' => 'en_attente',
                     'date_add' => date('Y-m-d')
                 );
@@ -80,8 +78,8 @@ class PostController extends Controller
                     $this->datas['errors_comment'] = implode('</br>', $ModelComments->getErrors());
                 }
             }
-
-            if (!empty($datasGet['success'])) {
+            
+            if (!empty($this->datasGet['success'])) {
                 $this->datas['success_comment'] = 'Commentaire enregistré et en attente de validation';
             }
             

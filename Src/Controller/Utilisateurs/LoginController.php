@@ -1,6 +1,7 @@
 <?php
-namespace App\Controller;
+namespace App\Controller\Utilisateurs;
 
+use App\Controller\Controller;
 use App\Model\UserModel;
 use App\Utils\Form;
 
@@ -25,10 +26,7 @@ class LoginController extends Controller
      */
     public function loginAction(array $datas = array()): void
     {
-        $this->init(true);
-
-        //Datas POST
-        $datasPost = empty($datas['POST']) ? array() : $datas['POST'];
+        $this->init($datas, true);
 
         //login form fields
         $datasContactExpected = array(
@@ -36,17 +34,17 @@ class LoginController extends Controller
             "password" => 'Mot de passe'
         );
         $action = '/login';
-        $formLogin = new Form($action, 'POST', $datasPost);
+        $formLogin = new Form($action, 'POST', $this->datasPost);
         //verification form data
         $is_valide = $formLogin->verifDatasForm($datasContactExpected);
         if ($is_valide) {
             $modelUtilisateurs = new UserModel;
             $parameters = array(
-                'email' => $datasPost['email']
+                'email' => $this->datasPost['email']
             );
             $utilisateur = $modelUtilisateurs->getAllWithParams($parameters);
             if (!empty($utilisateur)) {
-                $is_correct = password_verify($datasPost['password'], $utilisateur[0]->password);
+                $is_correct = password_verify($this->datasPost['password'], $utilisateur[0]->password);
                 if ($is_correct) {
                     $_SESSION['utilisateur_id'] = $utilisateur[0]->utilisateur_id;
                     $_SESSION['role'] = $utilisateur[0]->role;

@@ -10,7 +10,6 @@ class Controller
 {
         
     /**
-     * Datas
      *
      * @var array
      */
@@ -21,12 +20,16 @@ class Controller
      *
      * @return void
      */
-    protected function init($with_access = false)
+    protected function init(array $datas, $with_access = false)
     {
         $user_session = !empty($_SESSION['utilisateur_id']) ? $_SESSION : array();
         $this->datas['user_session'] = $user_session;
         $this->datas['title'] = $this->title;
         $this->datas['view'] = $this->view;
+
+        $this->datasPost = empty($datas['POST']) ? array() : $datas['POST'];
+        $this->datasGet = empty($datas['GET']) ? array() : $datas['GET'];
+        $this->paramsUrl = empty($datas['URL']) ? array() : $datas['URL'];
 
         if ($with_access) {
             $this->getAccessUser();
@@ -44,6 +47,7 @@ class Controller
     protected static function viewsRender(string $view, array $datas, string $folder = 'utilisateurs'): string
     {
         $path_views = dirname(__DIR__, 2) . '/views/' . $folder;
+
         $loader = new FilesystemLoader($path_views);
 
         $twig = new Environment($loader);
@@ -55,7 +59,7 @@ class Controller
 
     private function getAccessUser()
     {
-        if (!empty($this->datas['user_session']['utilisateur_id'])) {
+        if (!empty($this->datas['user_session']['utilisateur_id']) && $this->datas['user_session']['role'] !== 'admin') {
             header('Location: /');
             exit();
         }

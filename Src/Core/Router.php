@@ -27,15 +27,23 @@ class Router
      * @param  string $url URL excpected
      * @param  string $controller name of the controller
      * @param  string $view name of view
+     * @param  string $folder name of folder
      * @return void
      */
-    public function map(string $route, string $method, string $url, string $controller, string $view): void
-    {
+    public function map(
+        string $route,
+        string $method,
+        string $url,
+        string $controller,
+        string $view,
+        string $folder = 'Utilisateurs'
+    ) {
         $this->route[$route] = array(
             'method' => $method,
             'url' => $url,
             'controller' => ucFirst($controller) . 'Controller',
-            'view' => $view . 'Action'
+            'view' => $view . 'Action',
+            'folder' => $folder
         );
     }
         
@@ -56,88 +64,32 @@ class Router
         }
         
         if (key_exists($name[0], $this->route)) {
-            if ($this->route[$name[0]]['method'] === 'GET') {
-                $method_exist = true;
-
-                if (!empty($_GET)) {
-                    $this->route[$name[0]]['datas']['GET'] = $_GET;
-                }
-
-                $this->makeDatasUrl($name[0]);
+            if (!empty($_GET)) {
+                $this->route[$name[0]]['datas']['GET'] = $_GET;
             }
             
-  
-            if ($this->route[$name[0]]['method'] === 'POST') {
-                $method_exist = true;
-
-                if (!empty($_GET)) {
-                    $this->route[$name[0]]['datas']['GET'] = $_GET;
-                }
-                
-                if (!empty($_POST)) {
-                    $this->route[$name[0]]['datas']['POST'] = $_POST;
-                } else {
-                    throw new RouterException("POST data is expected");
-                }
-
-                $this->makeDatasUrl($name[0]);
+            if (!empty($_POST)) {
+                $this->route[$name[0]]['datas']['POST'] = $_POST;
             }
 
-            if ($this->route[$name[0]]['method'] === 'GET|POST') {
-                $method_exist = true;
-
-                if (!empty($_GET)) {
-                    $this->route[$name[0]]['datas']['GET'] = $_GET;
-                }
-                
-                if (!empty($_POST)) {
-                    $this->route[$name[0]]['datas']['POST'] = $_POST;
+            $paramsUrl = $this->getParamsUrl($name[0]);
+            if (!empty($paramsUrl)) {
+                $paramsUri = $this->getParamsUri($name[0]);
+                if (sizeof($paramsUri) !== sizeof($paramsUrl)) {
+                    throw new RouterException("The method for sending data does not exist");
                 }
 
-                $this->makeDatasUrl($name[0]);
-            }
+                $datas_url = array_combine($paramsUrl, $paramsUri);
 
-            if (!$method_exist) {
-                throw new RouterException("The method for sending data does not exist");
+                $this->route[$name[0]]['datas']['URL'] = $datas_url;
             }
-            
+             
             return $this->route[$name[0]];
         } else {
             throw new RouterException("No match route");
         }
 
         return false;
-    }
-
-    /**
-     * Retrieve data from URL
-     *
-     * @param  string $name Le nom
-     * @return void
-     */
-    private function makeDatasUrl(string $name): void
-    {
-        $url = $this->getParamsUrl($name);
-        if (!empty($url)) {
-            $params = $this->getParamsUri($name);
-
-            if (sizeof($url) < sizeof($params)) {
-                throw new RouterException("URL has too much data");
-            } elseif (sizeof($url) !== sizeof($params)) {
-                throw new RouterException("URL has insufficient data");
-            } else {
-                $datas_url = array_combine($url, $params);
-                foreach ($datas_url as $key => $data) {
-                    $this->route[$name]['datas']['GET'][$key] = $data;
-                }
-            }
-        } else {
-            $params = $this->getParamsUri($name);
-            
-            if (!empty($params)) {
-                throw new RouterException("The URL does not match the expected URL");
-            }
-        }
     }
 
     /**
@@ -148,15 +100,18 @@ class Router
      */
     private function getParamsUri(string $name): array
     {
-        $uri = explode('?', trim($this->uri, '/'));
-        $uri = explode('/', $uri[0]);
         $params = array();
-        foreach ($uri as $param) {
-            if ($param !== $name && $param !== "") {
-                $params[] = htmlentities($param);
+
+        $paramsUri = explode('?', trim($this->uri, '/'));
+        unset($paramsUri[1]);
+        $paramsUri = explode('/', $paramsUri[0]);
+        unset($paramsUri[0]);
+        foreach ($paramsUri as $param) {
+            if ($param !== '') {
+                $params[] = $param;
             }
         }
-        
+
         return $params;
     }
     
@@ -168,11 +123,13 @@ class Router
      */
     private function getParamsUrl(string $name): array
     {
-        $uriExpected = str_replace('/', '', $this->route[$name]['url']);
-        $uriExpected = explode(':', $uriExpected);
+        $uriExpected = explode(':', $this->route[$name]['url']);
+        unset($uriExpected[0]);
+
         $url = array();
         foreach ($uriExpected as $param) {
-            if ($param !== $name && $param !== "") {
+            if (!empty($param)) {
+                $param = str_replace('/', '', $param);
                 $url[] = $param;
             }
         }
@@ -189,10 +146,10 @@ class Router
     {
         try {
             $match = $this->match();
-            $namespace = 'App\Controller\\';
+            $namespace = 'App\Controller\\' . $match['folder'] . '\\';
             $controller = $namespace . $match['controller'];
             $controller = new $controller;
-            
+
             if (!empty($match['datas'])) {
                 //Add user_session in datas
                 $user_session = !empty($_SESSION['utilisateur_id']) ? $_SESSION : array();
