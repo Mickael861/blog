@@ -2,8 +2,6 @@
 namespace App\Controller;
 
 use App\Core\Access;
-use App\Core\Router;
-use DateTime;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 
@@ -29,13 +27,18 @@ class Controller
      * @var array
      */
     protected $admin_access = false;
+
+    /**
+     * @var string
+     */
+    protected $no_access_session = false;
     
     /**
      * important data initialization
      *
      * @return void
      */
-    protected function init(array $datas)
+    protected function init(array $datas): void
     {
         $this->session = new Access;
         $this->session::startSession();
@@ -46,12 +49,51 @@ class Controller
         $this->datas['view'] = $this->view;
 
         $this->datasPost = empty($datas['POST']) ? array() : $datas['POST'];
+
         $this->datasGet = empty($datas['GET']) ? array() : $datas['GET'];
+
         $this->paramsUrl = empty($datas['URL']) ? array() : $datas['URL'];
+
+        $this->manageSessionRedirects();
+    }
+    
+    /**
+     * Manage session redirects
+     *
+     * @return void
+     */
+    private function manageSessionRedirects(): void
+    {
+        if ($this->no_access_session) {
+            if ($this->session::sessionIsStart()) {
+                header('Location: /');
+                exit();
+            }
+        }
 
         if ($this->admin_access && !$this->session::userIsAdmin()) {
             require_once dirname(__DIR__, 2) . '/views/error404.twig';
             exit;
+        }
+    }
+
+    /**
+     * Handles next and before pagination
+     *
+     * @return void
+     */
+    protected function disabledPagination()
+    {
+        $this->datas['pagination_next'] = '';
+        $this->datas['pagination_before'] = '';
+
+        if ($this->nbrs_page === 1) {
+            $this->datas['pagination_next'] = 'disabled';
+            $this->datas['pagination_before'] = 'disabled';
+        } elseif ($this->page < $this->nbrs_page - 1) {
+            $this->datas['pagination_before'] = 'disabled';
+        } elseif ($this->page > $this->nbrs_page - 1) {
+            $this->datas['pagination_next'] = 'disabled';
         }
     }
 

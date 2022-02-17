@@ -52,6 +52,23 @@ class Access
     }
     
     /**
+     * Know if the session is open
+     *
+     * @return bool true if the session is open, false otherwise
+     */
+    public static function sessionIsStart(): bool
+    {
+        $session = self::getSession();
+        $is_start = false;
+
+        if (!empty($session)) {
+            $is_start = true;
+        }
+
+        return $is_start;
+    }
+    
+    /**
      * Add session data
      *
      * @param  array $datas Data to be recorded

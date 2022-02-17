@@ -30,7 +30,7 @@ class PostController extends Controller
     public function postAction(array $datas = array()): void
     {
         $this->init($datas);
-
+        
         $post_id = (int) $this->paramsUrl['id'];
 
         $ModelComments = new CommentsModel();

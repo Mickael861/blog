@@ -20,17 +20,15 @@
                     </a>
                   </div>
                   <div class="p-2">
-                    <a class="nav-link {% if view == 'home' %} active {% endif %}" aria-current="page" href="/">Accueil</a>
+                    <a class="nav-link {% if view == 'home' %} active {% endif %}" aria-current="page" href="/admin/home">Accueil</a>
                   </div>
                   <div class="p-2">
-                    <a class="nav-link {% if view == 'posts' or view == 'post' %} active {% endif %}" aria-current="page" href="/posts/1">Articles</a>
+                    <a class="nav-link {% if view == 'articles' %} active {% endif %}" aria-current="page" href="/admin/posts/1">Articles</a>
                   </div>
                   <div class="p-2 d-flex" style="margin-left:auto;">
+                    <a class="nav-link" style='margin-right: 15px' href="/">Blog</a>
                     {% if user_session %}
-                    <a class="nav-link" href="/home/?logout=1">Logout</a>
-                    {% else %}
-                    <a style='margin-right: 15px' class="nav-link {% if view == 'login' %} active {% endif %}" aria-current="page" href="/login">Login</a>
-                    <a class="nav-link {% if view == 'signup' %} active {% endif %}" aria-current="page" href="/signup">Sign up</a>
+                    <a class="nav-link" href="/home/?logout=1">Déconnexion</a>
                     {% endif %}
                   </div>
                 </div>
@@ -39,9 +37,7 @@
         <div class='container'>
           <!--Block errors /success-->
           <div style="margin: 50px 0 50px 0">
-
             <h1 class='text-center border-bottom'>{{ title }}</h1>
-            
             {% if errors %}
             <div class="alert alert-danger text-center" role="alert">
                 {{ errors|raw }}

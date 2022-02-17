@@ -18,6 +18,11 @@ class SignupController extends Controller
      */
     protected $view = 'signup';
 
+    /**
+     * @var string
+     */
+    protected $no_access_session = true;
+
 
     /**
      * view of action
@@ -27,7 +32,7 @@ class SignupController extends Controller
      */
     public function signupAction(array $datas = array()): void
     {
-        $this->init($datas, true);
+        $this->init($datas);
 
         //signup form fields
         $datasContactExpected = array(

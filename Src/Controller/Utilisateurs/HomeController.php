@@ -5,7 +5,6 @@ use App\Controller\Controller;
 use App\Utils\Form;
 use PHPMailer\PHPMailer\Exception as PHPMailerException;
 use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\SMTP;
 
 class HomeController extends Controller
 {
@@ -79,7 +78,7 @@ class HomeController extends Controller
             $this->datas['success'] = 'Compte crée avec succés et en attente d\'acceptation';
         }
 
-        if (!empty($this->datasGet['logout'])) {
+        if (!empty($this->datasGet['logout']) && $this->session::sessionIsStart()) {
             $this->datas['success'] = 'Déconnexion réussi !';
             unset($this->datas['user_session']);
             $this->session::sessionDestroy();

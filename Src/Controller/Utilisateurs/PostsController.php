@@ -56,21 +56,4 @@ class PostsController extends Controller
 
         echo $this->viewsRender($this->view, $this->datas);
     }
-    
-    /**
-     * Handles next and before pagination
-     *
-     * @return void
-     */
-    private function disabledPagination()
-    {
-        $this->datas['pagination_next'] = '';
-        $this->datas['pagination_before'] = '';
-
-        if ($this->page > $this->nbrs_page - 1) {
-            $this->datas['pagination_next'] = 'disabled';
-        } elseif ($this->page === 1) {
-            $this->datas['pagination_before'] = 'disabled';
-        }
-    }
 }

@@ -19,6 +19,11 @@ class LoginController extends Controller
     protected $view = 'login';
 
     /**
+     * @var string
+     */
+    protected $no_access_session = true;
+
+    /**
      * view of action
      *
      * @param array Datas POST|GET
@@ -26,7 +31,7 @@ class LoginController extends Controller
      */
     public function loginAction(array $datas = array()): void
     {
-        $this->init($datas, true);
+        $this->init($datas);
 
         //login form fields
         $datasContactExpected = array(
