@@ -16,18 +16,15 @@ class HomeController extends Controller
      */
     protected $view = 'home';
 
-    
+    /**
+     * @var bool
+     */
+    protected $admin_access = true;
+
     /**
      * @var string
      */
-    protected $folder = 'admin';
-
-    /**
-     * Datas
-     *
-     * @var array
-     */
-    protected $datas = array();
+    private $folder = 'admin';
 
     /**
      * view of action
@@ -37,7 +34,7 @@ class HomeController extends Controller
      */
     public function homeAction(array $datas = array()): void
     {
-        $this->init($datas, true);
+        $this->init($datas);
 
         echo $this->viewsRender($this->view, $this->datas, $this->folder);
     }

@@ -1,6 +1,7 @@
 <?php
 namespace App\Controller;
 
+use App\Core\Access;
 use App\Core\Router;
 use DateTime;
 use Twig\Environment;
@@ -10,20 +11,37 @@ class Controller
 {
         
     /**
-     *
      * @var array
      */
     protected $datas = array();
+
+    /**
+     * @var string
+     */
+    protected $title = '';
+
+    /**
+     * @var string
+     */
+    protected $view = '';
+
+    /**
+     * @var array
+     */
+    protected $admin_access = false;
     
     /**
      * important data initialization
      *
      * @return void
      */
-    protected function init(array $datas, $with_access = false)
+    protected function init(array $datas)
     {
-        $user_session = !empty($_SESSION['utilisateur_id']) ? $_SESSION : array();
-        $this->datas['user_session'] = $user_session;
+        $this->session = new Access;
+        $this->session::startSession();
+
+        $this->datas['user_session'] = $this->session::getSession();
+        
         $this->datas['title'] = $this->title;
         $this->datas['view'] = $this->view;
 
@@ -31,8 +49,9 @@ class Controller
         $this->datasGet = empty($datas['GET']) ? array() : $datas['GET'];
         $this->paramsUrl = empty($datas['URL']) ? array() : $datas['URL'];
 
-        if ($with_access) {
-            $this->getAccessUser();
+        if ($this->admin_access && !$this->session::userIsAdmin()) {
+            require_once dirname(__DIR__, 2) . '/views/error404.twig';
+            exit;
         }
     }
 
@@ -55,13 +74,5 @@ class Controller
         $view = $view . '.twig';
 
         return $twig->render($view, $datas);
-    }
-
-    private function getAccessUser()
-    {
-        if (!empty($this->datas['user_session']['utilisateur_id']) && $this->datas['user_session']['role'] !== 'admin') {
-            header('Location: /');
-            exit();
-        }
     }
 }

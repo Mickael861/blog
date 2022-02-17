@@ -46,9 +46,12 @@ class LoginController extends Controller
             if (!empty($utilisateur)) {
                 $is_correct = password_verify($this->datasPost['password'], $utilisateur[0]->password);
                 if ($is_correct) {
-                    $_SESSION['utilisateur_id'] = $utilisateur[0]->utilisateur_id;
-                    $_SESSION['role'] = $utilisateur[0]->role;
-                    $_SESSION['user_pseudo'] = $utilisateur[0]->pseudo;
+                    $this->session::setDatasSession(array(
+                        'utilisateur_id' => $utilisateur[0]->utilisateur_id,
+                        'role' => $utilisateur[0]->role,
+                        'user_pseudo' => $utilisateur[0]->pseudo
+                    ));
+                    
                     if ($utilisateur[0]->role === 'admin') {
                         header('Location: /admin/home/?login=1');
                         exit();

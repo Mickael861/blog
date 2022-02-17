@@ -2,7 +2,6 @@
 use App\Core\Router;
 
 require_once dirname(__DIR__) . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
-session_start();
 
 $router = new Router();
 

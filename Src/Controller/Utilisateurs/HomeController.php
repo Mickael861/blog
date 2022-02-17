@@ -72,7 +72,7 @@ class HomeController extends Controller
     private function getSuccessUserAccount(): void
     {
         if (!empty($this->datasGet['login'])) {
-            $this->datas['success'] = 'Connexion réussi !';
+            $this->datas['success'] = 'Bienvenue ' . $this->datas['user_session']['user_pseudo'];
         }
 
         if (!empty($this->datasGet['signup'])) {
@@ -82,7 +82,7 @@ class HomeController extends Controller
         if (!empty($this->datasGet['logout'])) {
             $this->datas['success'] = 'Déconnexion réussi !';
             unset($this->datas['user_session']);
-            session_destroy();
+            $this->session::sessionDestroy();
         }
 
         if (!empty($this->datasGet['sendmail'])) {

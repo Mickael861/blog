@@ -64,7 +64,7 @@ class PostController extends Controller
             if ($is_valide) {
                 $datas = array(
                     'post_id' => (int) $itemPost['post_id'],
-                    'utilisateur_id' => (int) $_SESSION['utilisateur_id'],
+                    'utilisateur_id' => (int) $this->datas['user_session']['utilisateur_id'],
                     'content' => $this->datasPost['content'],
                     'statut' => 'en_attente',
                     'date_add' => date('Y-m-d')
@@ -72,7 +72,7 @@ class PostController extends Controller
                 
                 $is_save = $ModelComments->save($datas);
                 if ($is_save) {
-                    header('Location: ' . $_SESSION['REQUEST_URI'] . '?success=1');
+                    header('Location: ' . $_SERVER['REQUEST_URI'] . '?success=1');
                     exit();
                 } else {
                     $this->datas['errors_comment'] = implode('</br>', $ModelComments->getErrors());
