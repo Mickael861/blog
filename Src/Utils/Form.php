@@ -17,18 +17,18 @@ class Form
     /**
      * @var array
      */
-    private $datasPost = array();
+    private $datas_post = array();
     
     /**
      * @var array
      */
     private $errorsForm = array();
 
-    public function __construct($action, $method, $datasPost)
+    public function __construct($action, $method, $datas_post)
     {
         $this->action = $action;
         $this->method = $method;
-        $this->datasPost = $datasPost;
+        $this->datas_post = $datas_post;
     }
     
     /**
@@ -67,7 +67,7 @@ class Form
     ): string {
         $required = $required ? '*' : '';
         $errors_field = !empty($this->errorsForm[$name]) ? 'errors-field' : '';
-        $valueField = !empty($this->datasPost[$name]) ? $this->datasPost[$name] : '';
+        $valueField = !empty($this->datas_post[$name]) ? $this->datas_post[$name] : '';
         
         $field = '';
         if ($with_label) {
@@ -103,7 +103,7 @@ class Form
     ): string {
         $required = $required ? '*' : '';
         $errors_field = !empty($this->errorsForm[$name]) ? 'errors-field' : '';
-        $valueField = !empty($this->datasPost[$name]) ? $this->datasPost[$name] : '';
+        $valueField = !empty($this->datas_post[$name]) ? $this->datas_post[$name] : '';
 
         $field = '';
         if ($with_label) {
@@ -131,7 +131,7 @@ class Form
         $datasForm = array();
         $errors = array();
         
-        foreach ($this->datasPost as $field => $data) {
+        foreach ($this->datas_post as $field => $data) {
             if (!empty($keysExpected[$field]) && !empty(trim(htmlentities($data)))) {
                 $datasForm[$field] = trim(htmlentities($data));
             } else {

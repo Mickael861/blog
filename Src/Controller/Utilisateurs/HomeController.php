@@ -41,25 +41,25 @@ class HomeController extends Controller
         );
 
         $action = '/#contact_form';
-        $formContactHome = new Form($action, 'POST', $this->datasPost);
+        $formContactHome = new Form($action, 'POST', $this->datas_post);
         //verification form data
         $is_valide = $formContactHome->verifDatasForm($datasContactExpected);
         if ($is_valide) {
             //Send Email
             $is_send = $this->addMail();
             if ($is_send) {
-                header('Location: home/?sendmail=1');
+                header('Location: /?sendmail=1');
                 exit();
             } else {
                 $this->datas['errors_send_mail'] = sprintf('Envoie de l\'e-mail impossible, Veuillez vérifier que
-                    votre adresse "%s" est correcte', $this->datasPost['email']);
+                    votre adresse "%s" est correcte', $this->datas_post['email']);
             }
         }
         
         //Add datas contact form
         $formContact = $this->getFormContact($formContactHome);
         $this->datas['formContactHome'] = $formContact;
-
+        
         echo $this->viewsRender($this->view, $this->datas);
     }
     
@@ -70,21 +70,21 @@ class HomeController extends Controller
      */
     private function getSuccessUserAccount(): void
     {
-        if (!empty($this->datasGet['login'])) {
+        if (!empty($this->datas_get['login'])) {
             $this->datas['success'] = 'Bienvenue ' . $this->datas['user_session']['user_pseudo'];
         }
 
-        if (!empty($this->datasGet['signup'])) {
+        if (!empty($this->datas_get['signup'])) {
             $this->datas['success'] = 'Compte crée avec succés et en attente d\'acceptation';
         }
 
-        if (!empty($this->datasGet['logout']) && $this->session::sessionIsStart()) {
+        if (!empty($this->datas_get['logout']) && $this->session::sessionIsStart()) {
             $this->datas['success'] = 'Déconnexion réussi !';
             unset($this->datas['user_session']);
             $this->session::sessionDestroy();
         }
 
-        if (!empty($this->datasGet['sendmail'])) {
+        if (!empty($this->datas_get['sendmail'])) {
             $this->datas['success_send_mail'] = 'l\'E-mail a été correctement envoyé';
         }
     }
@@ -114,11 +114,11 @@ class HomeController extends Controller
     {
         $mailer = new PHPMailer(true);
 
-        $from = $is_send ? 'mickael.sayer.dev@gmail.com' : $this->datasPost['email'];
-        $to = !$is_send ? 'mickael.sayer.dev@gmail.com' : $this->datasPost['email'];
-        $subject = $is_send ? 'Réponse automatique' : $this->datasPost['subject'];
+        $from = $is_send ? 'mickael.sayer.dev@gmail.com' : $this->datas_post['email'];
+        $to = !$is_send ? 'mickael.sayer.dev@gmail.com' : $this->datas_post['email'];
+        $subject = $is_send ? 'Réponse automatique' : $this->datas_post['subject'];
         $messageAdmin = 'Votre message sur le site "blog" à correctement était envoyé le ' . date('Y-m-d à H:m:s');
-        $body = $is_send ? $messageAdmin  : $this->datasPost['message'];
+        $body = $is_send ? $messageAdmin  : $this->datas_post['message'];
         
         try {
             //SMTP Setup

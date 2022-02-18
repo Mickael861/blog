@@ -1,5 +1,5 @@
 <?php
-namespace App\Controller\Utilisateurs;
+namespace App\Controller\Admin;
 
 use App\Controller\Controller;
 use App\Model\PostsModel;
@@ -12,12 +12,22 @@ class PostsController extends Controller
     /**
      * @var string
      */
-    protected $title = 'Articles';
+    protected $title = 'Liste des articles';
 
     /**
      * @var string
      */
     protected $view = 'posts';
+
+    /**
+     * @var bool
+     */
+    protected $admin_access = true;
+
+    /**
+     * @var string
+     */
+    private $folder = 'admin';
 
     /**
      * view of action
@@ -33,8 +43,7 @@ class PostsController extends Controller
         $this->datas['page'] = $this->page;
 
         $modelPosts = new PostsModel();
-
-        $posts = $modelPosts->fetchAll(true, 'post_id', $this->page, 'DESC', 4);
+        $posts = $modelPosts->fetchAll(true, 'post_id', $this->page, 'DESC');
         $this->nbrs_page = $modelPosts->getNbrsPage();
         $this->disabledPagination();
         $this->datas['nbrs_page'] = $this->nbrs_page;
@@ -49,11 +58,17 @@ class PostsController extends Controller
             }
             $this->datas['posts'] = $posts;
         }
+
+        if (!empty($this->datas_get['delete'])) {
+             $modelPosts->delete($this->datas_get['delete']);
+             header('Location: /admnPosts/1');
+             exit();
+        }
         
         if (!empty($modelPosts->getErrors())) {
             $this->datas['errors'] = $modelPosts->getErrors()['page'];
         }
 
-        echo $this->viewsRender($this->view, $this->datas);
+        echo $this->viewsRender($this->view, $this->datas, $this->folder);
     }
 }

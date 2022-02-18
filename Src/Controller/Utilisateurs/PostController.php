@@ -31,7 +31,7 @@ class PostController extends Controller
     {
         $this->init($datas);
         
-        $post_id = (int) $this->paramsUrl['id'];
+        $post_id = (int) $this->datas_match['id'];
 
         $ModelComments = new CommentsModel();
         $modelPosts = new PostsModel();
@@ -45,7 +45,7 @@ class PostController extends Controller
             $this->datas['post'] = $itemPost;
             
             //verification on the slug
-            $slug_url = $this->paramsUrl['slug'];
+            $slug_url = $this->datas_match['slug'];
             $slug_post = $itemPost['slug'];
             if ($slug_url !== $slug_post) {
                 $this->datas['errors'] = 'L\'url est différente de celle attendue'; //TODO
@@ -57,7 +57,7 @@ class PostController extends Controller
                 "content" => 'Contenu'
             );
             $action = '/post/' . $itemPost['slug'] . '/' . $itemPost['post_id'] . '/#comment_form';
-            $formCommentPost = new Form($action, 'POST', $this->datasPost);
+            $formCommentPost = new Form($action, 'POST', $this->datas_post);
 
             //verification form data
             $is_valide = $formCommentPost->verifDatasForm($datasContactExpected);
@@ -65,7 +65,7 @@ class PostController extends Controller
                 $datas = array(
                     'post_id' => (int) $itemPost['post_id'],
                     'utilisateur_id' => (int) $this->datas['user_session']['utilisateur_id'],
-                    'content' => $this->datasPost['content'],
+                    'content' => $this->datas_post['content'],
                     'statut' => 'en_attente',
                     'date_add' => date('Y-m-d')
                 );
@@ -79,7 +79,7 @@ class PostController extends Controller
                 }
             }
             
-            if (!empty($this->datasGet['success'])) {
+            if (!empty($this->datas_get['success'])) {
                 $this->datas['success_comment'] = 'Commentaire enregistré et en attente de validation';
             }
             

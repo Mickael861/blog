@@ -39,17 +39,17 @@ class LoginController extends Controller
             "password" => 'Mot de passe'
         );
         $action = '/login';
-        $formLogin = new Form($action, 'POST', $this->datasPost);
+        $formLogin = new Form($action, 'POST', $this->datas_post);
         //verification form data
         $is_valide = $formLogin->verifDatasForm($datasContactExpected);
         if ($is_valide) {
             $modelUtilisateurs = new UserModel;
             $parameters = array(
-                'email' => $this->datasPost['email']
+                'email' => $this->datas_post['email']
             );
             $utilisateur = $modelUtilisateurs->getAllWithParams($parameters);
             if (!empty($utilisateur)) {
-                $is_correct = password_verify($this->datasPost['password'], $utilisateur[0]->password);
+                $is_correct = password_verify($this->datas_post['password'], $utilisateur[0]->password);
                 if ($is_correct) {
                     $this->session::setDatasSession(array(
                         'utilisateur_id' => $utilisateur[0]->utilisateur_id,
@@ -62,7 +62,7 @@ class LoginController extends Controller
                         exit();
                     }
 
-                    header('Location: /home/?login=1');
+                    header('Location: /?login=1');
                     exit();
                 }
             }

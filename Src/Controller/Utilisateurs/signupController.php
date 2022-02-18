@@ -43,7 +43,7 @@ class SignupController extends Controller
             "password" => 'Mot de passe'
         );
         $action = '/signup';
-        $formSignup = new Form($action, 'POST', $this->datasPost);
+        $formSignup = new Form($action, 'POST', $this->datas_post);
         //verification form data
         $is_valide = $formSignup->verifDatasForm($datasContactExpected);
         if ($is_valide) {
@@ -53,17 +53,17 @@ class SignupController extends Controller
             if (!$same_errors) {
                 $datas = array(
                     'role' => 'utilisateur',
-                    'pseudo' => $this->datasPost['pseudo'],
-                    'prenom' => $this->datasPost['prenom'],
-                    'nom' => $this->datasPost['nom'],
-                    'email' => $this->datasPost['email'],
-                    'password' => password_hash($this->datasPost['password'], PASSWORD_ARGON2I),
+                    'pseudo' => $this->datas_post['pseudo'],
+                    'prenom' => $this->datas_post['prenom'],
+                    'nom' => $this->datas_post['nom'],
+                    'email' => $this->datas_post['email'],
+                    'password' => password_hash($this->datas_post['password'], PASSWORD_ARGON2I),
                     'statut' => 'en_attente'
                 );
 
                 $is_save = $this->modelUtilisateurs->save($datas);
                 if ($is_save) {
-                    header('Location: /home/?signup=1');
+                    header('Location: /?signup=1');
                     exit();
                 } else {
                     $this->datas['errors'] = implode('<br>', $this->modelUtilisateurs->getErrors());
@@ -87,8 +87,8 @@ class SignupController extends Controller
      */
     private function getErrorsFormSave(): string
     {
-        $error_password = strlen($this->datasPost['password']) < 15;
-        $same_errors = $this->modelUtilisateurs->getErrorsSameDatas($this->datasPost['pseudo'], $this->datasPost['email']);
+        $error_password = strlen($this->datas_post['password']) < 15;
+        $same_errors = $this->modelUtilisateurs->getErrorsSameDatas($this->datas_post['pseudo'], $this->datas_post['email']);
         if ($error_password) {
             $set_br = !empty($same_errors) ? '</br>' : '';
             $same_errors .= $set_br . 'Le mot de passe doit contenir 15 caractéres minimum';

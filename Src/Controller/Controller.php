@@ -41,18 +41,15 @@ class Controller
     protected function init(array $datas): void
     {
         $this->session = new Access;
-        $this->session::startSession();
 
         $this->datas['user_session'] = $this->session::getSession();
         
         $this->datas['title'] = $this->title;
         $this->datas['view'] = $this->view;
 
-        $this->datasPost = empty($datas['POST']) ? array() : $datas['POST'];
-
-        $this->datasGet = empty($datas['GET']) ? array() : $datas['GET'];
-
-        $this->paramsUrl = empty($datas['URL']) ? array() : $datas['URL'];
+        $this->datas_post = empty($datas['POST']) ? array() : $datas['POST'];
+        $this->datas_get = empty($datas['GET']) ? array() : $datas['GET'];
+        $this->datas_match = empty($datas['match']) ? array() : $datas['match'];
 
         $this->manageSessionRedirects();
     }
