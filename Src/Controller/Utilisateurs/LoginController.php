@@ -58,11 +58,13 @@ class LoginController extends Controller
                     ));
                     
                     if ($utilisateur[0]->role === 'admin') {
-                        header('Location: /admin/home/?login=1');
+                        $_SESSION['success'] = 'Vous êtes connecté';
+                        header('Location: /admin/home/');
                         exit();
                     }
 
-                    header('Location: /?login=1');
+                    $_SESSION['success'] = 'Vous êtes connecté';
+                    header('Location: /');
                     exit();
                 }
             }

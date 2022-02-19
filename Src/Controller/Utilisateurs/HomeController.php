@@ -46,12 +46,22 @@ class HomeController extends Controller
             //Send Email
             $is_send = $this->addMail();
             if ($is_send) {
-                header('Location: /?sendmail=1');
+                $_SESSION['success'] = 'l\'E-mail a été correctement envoyé';
+                header('Location: /');
                 exit();
             } else {
                 $this->datas['errors_send_mail'] = sprintf('Envoie de l\'e-mail impossible, Veuillez vérifier que
                     votre adresse "%s" est correcte', $this->datas_post['email']);
             }
+        }
+
+        if (!empty($this->datas_get['logout'])) {
+            if ($this->session::sessionIsStart()) {
+                unset($this->datas['user_session']);
+                $this->session::sessionDestroy();
+            }
+
+            $this->datas['success'] = 'Déconnexion réussi';
         }
         
         //Add datas contact form

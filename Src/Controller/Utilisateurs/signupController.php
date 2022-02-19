@@ -63,7 +63,8 @@ class SignupController extends Controller
 
                 $is_save = $this->modelUtilisateurs->save($datas);
                 if ($is_save) {
-                    header('Location: /?signup=1');
+                    $_SESSION['success'] = 'Compte crée avec succés et en attente d\'acceptation';
+                    header('Location: /');
                     exit();
                 } else {
                     $this->datas['errors'] = implode('<br>', $this->modelUtilisateurs->getErrors());

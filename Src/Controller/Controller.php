@@ -139,34 +139,10 @@ class Controller
      */
     private function getSuccessUserAccount(): void
     {
-        if (!empty($this->datas_get['login'])) {
-            $this->datas['success'] = 'Bienvenue ' . $this->datas['user_session']['user_pseudo'];
-        }
+        if (!empty($_SESSION['success'])) {
+            $this->datas['success'] = $_SESSION['success'];
 
-        if (!empty($this->datas_get['signup'])) {
-            $this->datas['success'] = 'Compte crée avec succés et en attente d\'acceptation';
-        }
-
-        if (!empty($this->datas_get['logout']) && $this->session::sessionIsStart()) {
-            $this->datas['success'] = 'Déconnexion réussi !';
-            unset($this->datas['user_session']);
-            $this->session::sessionDestroy();
-        }
-
-        if (!empty($this->datas_get['sendmail'])) {
-            $this->datas['success_send_mail'] = 'l\'E-mail a été correctement envoyé';
-        }
-
-        if (!empty($this->datas_get['create'])) {
-            $this->datas['success'] = 'Article crée avec succés';
-        }
-
-        if (!empty($this->datas_get['update'])) {
-            $this->datas['success'] = 'Article modifié avec succés';
-        }
-
-        if (!empty($this->datas_get['successDelete'])) {
-            $this->datas['success'] = 'Article supprimé avec succés';
+            unset($_SESSION['success']);
         }
     }
 }

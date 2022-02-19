@@ -116,8 +116,10 @@ class PostController extends Controller
         }
 
         if ($is_save) {
-            $url_success = $is_update ? 'update' : 'create';
-            header('Location: /admin/posts/1/?' . $url_success . '=1');
+            $_SESSION['success'] = $is_update ?
+                'Modifications de l\'article éffectuées' :
+                    'Création de l\'article effectuées';
+            header('Location: /admin/posts/1/');
             exit();
         }
 

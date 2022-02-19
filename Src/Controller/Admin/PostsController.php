@@ -79,8 +79,8 @@ class PostsController extends Controller
 
         if (!empty($this->datas_get['delete'])) {
              $modelPosts->delete($this->datas_get['delete']);
-             $url_delete = $this->page . '/?successDelete=1';
-             header('Location: /admin/posts/' . $url_delete);
+             $_SESSION['success'] = 'Article supprimé avec succés';
+             header('Location: /admin/posts/' . $this->page);
              exit();
         }
         
