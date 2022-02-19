@@ -33,8 +33,10 @@ class PostsController extends Controller
         $this->datas['page'] = $this->page;
 
         $modelPosts = new PostsModel();
-
-        $posts = $modelPosts->fetchAll(true, 'post_id', $this->page, 'DESC', 4);
+        $filters = array(
+            'statut' => 'publier'
+        );
+        $posts = $modelPosts->fetchAll(true, 'post_id', $this->page, $filters, 'DESC', 10);
         $this->nbrs_page = $modelPosts->getNbrsPage();
         $this->disabledPagination();
         $this->datas['nbrs_page'] = $this->nbrs_page;

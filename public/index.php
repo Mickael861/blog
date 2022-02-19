@@ -17,7 +17,7 @@ $router->map('login', 'login', 'login', 'login');
 $router->map('signup', 'signup', 'signup', 'signup');
 
 $router->map('admin_home', 'admin/home', 'home', 'home', 'Admin');
-$router->map('admin_posts', 'admin/posts/:id', 'posts', 'posts', 'Admin', array('id'));
+$router->map('admin_posts', 'admin/posts/:page', 'posts', 'posts', 'Admin', array('page'));
 $router->map('admin_post', 'admin/post', 'post', 'post', 'Admin');
 
 $router->run();

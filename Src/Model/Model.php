@@ -181,15 +181,22 @@ abstract class Model
     /**
      * returns all elements of a table
      *
-     * @param  mixed $total total article for pagination
-     * @param  mixed $field sort by which field
-     * @param  mixed $page The current page
-     * @param  mixed $order sort order
-     * @param  mixed $item_per_page Number of items per page
+     * @param  bool $total total article for pagination
+     * @param  string $field sort by which field
+     * @param  int $page The current page
+     * @param  array $filters Filters
+     * @param  string $order sort order
+     * @param  int $item_per_page Number of items per page
      * @return array|bool the items or false if it finds an error
      */
-    public function fetchAll(bool $total, string $field, int $page, string $order = 'DESC', $item_per_page = 20)
-    {
+    public function fetchAll(
+        bool $total,
+        string $field,
+        int $page,
+        array $filters = array(),
+        string $order = 'DESC',
+        int $item_per_page = 20
+    ) {
         if ($total) {
             if ($page < 1) {
                 $this->errors['page'] = 'La page demandée est inférieure aux nombres de page';
@@ -211,7 +218,13 @@ abstract class Model
 
             $page_view = ($page - 1) *  $item_per_page;
             
-            $query = 'SELECT * FROM ' . $this->table . ' ORDER BY ' . $field . ' ' . $order .
+            $query = 'SELECT * FROM ' . $this->table;
+
+            if (!empty($filters)) {
+                $query .= ' WHERE statut = "publier"';
+            }
+
+            $query .= ' ORDER BY ' . $field . ' ' . $order .
                 ' LIMIT ' . $page_view . ',' . $item_per_page;
         } else {
             $query = 'SELECT * FROM ' . $this->table;

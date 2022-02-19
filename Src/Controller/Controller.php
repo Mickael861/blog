@@ -51,6 +51,7 @@ class Controller
         $this->datas_get = $this->controleDatas($datas['GET']);
         $this->datas_match = $this->controleDatas($datas['match']);
 
+        $this->getSuccessUserAccount();
         $this->manageSessionRedirects();
     }
     
@@ -98,16 +99,15 @@ class Controller
      */
     protected function disabledPagination()
     {
-        $this->datas['pagination_next'] = '';
-        $this->datas['pagination_before'] = '';
-
-        if ($this->nbrs_page === 1) {
-            $this->datas['pagination_next'] = 'disabled';
+        if ($this->page === 1) {
             $this->datas['pagination_before'] = 'disabled';
         } elseif ($this->page < $this->nbrs_page - 1) {
             $this->datas['pagination_before'] = 'disabled';
         } elseif ($this->page > $this->nbrs_page - 1) {
             $this->datas['pagination_next'] = 'disabled';
+        } else {
+            $this->datas['pagination_next'] = 'disabled';
+            $this->datas['pagination_before'] = 'disabled';
         }
     }
 
@@ -137,7 +137,7 @@ class Controller
      *
      * @return void
      */
-    protected function getSuccessUserAccount(): void
+    private function getSuccessUserAccount(): void
     {
         if (!empty($this->datas_get['login'])) {
             $this->datas['success'] = 'Bienvenue ' . $this->datas['user_session']['user_pseudo'];
@@ -159,6 +159,14 @@ class Controller
 
         if (!empty($this->datas_get['create'])) {
             $this->datas['success'] = 'Article crée avec succés';
+        }
+
+        if (!empty($this->datas_get['update'])) {
+            $this->datas['success'] = 'Article modifié avec succés';
+        }
+
+        if (!empty($this->datas_get['successDelete'])) {
+            $this->datas['success'] = 'Article supprimé avec succés';
         }
     }
 }

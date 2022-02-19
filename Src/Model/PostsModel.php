@@ -34,6 +34,7 @@ class PostsModel extends Model
         'title' => array(
             'name' => 'Le titre de l\'article',
             'type' => 'string',
+            'sizemax' => 50,
             'required' => true
         ),
         'slug' => array(
@@ -49,7 +50,6 @@ class PostsModel extends Model
         'content' => array(
             'name' => 'Le contenu de l\'article',
             'type' => 'string',
-            'sizemax' => '50',
             'required' => true
         ),
         'author_id' => array(

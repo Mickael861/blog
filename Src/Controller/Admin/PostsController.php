@@ -39,31 +39,48 @@ class PostsController extends Controller
     {
         $this->init($datas);
         
-        $this->getSuccessUserAccount();
-
         $this->page = empty($this->datas_match['page']) ? 1 : (int) $this->datas_match['page'];
         $this->datas['page'] = $this->page;
 
+        $userModel = new UserModel;
         $modelPosts = new PostsModel();
-        $posts = $modelPosts->fetchAll(true, 'post_id', $this->page, 'DESC');
+        $posts = $modelPosts->fetchAll(true, 'post_id', $this->page, array(), 'DESC');
         $this->nbrs_page = $modelPosts->getNbrsPage();
         $this->disabledPagination();
         $this->datas['nbrs_page'] = $this->nbrs_page;
 
-        if (!empty($posts)) {
-            foreach ($posts as $post) {
-                $userModel = new UserModel;
-                $itemUser = $userModel->fetchId($post->user_id);
-                $post->user_name = $itemUser['pseudo'];
+        if (!empty($this->datas_get['publish'])) {
+            $post_id = $this->datas_get['publish'];
+            $post_publish = $modelPosts->fetchId($post_id);
+            
+            $is_publish = $post_publish['statut'] === 'publier' ? 'en_attente' : 'publier';
 
+            $datas_publish = array(
+                'statut' => $is_publish
+            );
+
+            $modelPosts->save($datas_publish, $post_id);
+            header('Location: /admin/posts/' . $this->page);
+            exit();
+        }
+
+        if (!empty($posts)) {
+            foreach ($posts as &$post) {
+                $itemUser = $userModel->fetchId($post->author_id);
+                $post->author_name = $itemUser['pseudo'];
+                $post->title = substr_replace($post->title, '...', 30);
+                $post->chapo = substr_replace($post->chapo, '...', 30);
                 $post->date_upd = (new Utils())::dbToDate($post->date_upd);
+
+                $post->is_publish = $post->statut === 'publier' ? '1' : '0';
             }
             $this->datas['posts'] = $posts;
         }
 
         if (!empty($this->datas_get['delete'])) {
              $modelPosts->delete($this->datas_get['delete']);
-             header('Location: /admnPosts/1');
+             $url_delete = $this->page . '/?successDelete=1';
+             header('Location: /admin/posts/' . $url_delete);
              exit();
         }
         

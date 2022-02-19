@@ -68,7 +68,7 @@ class Form
         $required = $required ? '*' : '';
         $errors_field = !empty($this->errorsForm[$name]) ? 'errors-field' : '';
         $valueField = !empty($this->datas_post[$name]) ? $this->datas_post[$name] : '';
-        
+
         $field = '';
         if ($with_label) {
             $field = '<label for="' . $name . '" class="form-label fw-bold mt-3">' . $labelValue .

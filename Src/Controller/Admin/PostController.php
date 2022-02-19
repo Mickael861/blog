@@ -39,7 +39,24 @@ class PostController extends Controller
     {
         $this->init($datas);
 
-        $modelPosts = new PostsModel;
+        $this->modelPosts = new PostsModel;
+        $this->modelUsers = new UserModel;
+        $is_update = false;
+        $with_verif = true;
+
+        if (!empty($this->datas_get['id']) && empty($this->datas_post)) {
+            $this->item_post = $this->modelPosts->fetchId($this->datas_get['id']);
+            if (!empty($this->item_post)) {
+                $this->datas_post['title'] = $this->item_post['title'];
+                $this->datas_post['chapo'] = $this->item_post['chapo'];
+                $this->datas_post['author_id'] = $this->item_post['author_id'];
+                $this->datas_post['content'] = $this->item_post['content'];
+            }
+
+            $is_update = true;
+            $with_verif = false;
+        }
+
         $datas_post = array(
             "title" => 'Titre',
             "chapo" => 'Chapô',
@@ -48,27 +65,14 @@ class PostController extends Controller
         );
         $action = '';
         $formLogin = new Form($action, 'POST', $this->datas_post);
-        $is_valide = $formLogin->verifDatasForm($datas_post);
-        if (empty($this->datas_get['id']) && $is_valide) {
-            $datas_save = array(
-                'user_id' => (int) $this->datas['user_session']['user_id'],
-                'title' => $this->datas_post['title'],
-                'chapo' => $this->datas_post['chapo'],
-                'content' => $this->datas_post['content'],
-                'author_id' => (int) $this->datas_post['author_id'],
-                'statut' => 'publier',
-                'date_add' => date('Y-m-d'),
-                'user_add' => (int) $this->datas['user_session']['user_id']
-            );
+        
+        $is_valide = false;
+        if ($with_verif) {
+            $is_valide = $formLogin->verifDatasForm($datas_post);
+        }
 
-            $datas_save['slug'] = str_replace(' ', '-', strtolower($this->datas_post['title']));
-            $is_save = $modelPosts->save($datas_save);
-            if ($is_save) {
-                header('Location: /admin/posts/1/?create=1');
-                exit();
-            }
-
-            $this->datas['errors'] = implode('</br>', $modelPosts->getErrors());
+        if ($is_valide) {
+            $this->createUpdatePost($is_update);
         }
 
         //create login form
@@ -76,6 +80,48 @@ class PostController extends Controller
         $this->datas['formPost'] = $formLogin;
 
         echo $this->viewsRender($this->view, $this->datas, $this->folder);
+    }
+    
+    /**
+     * Create post
+     *
+     * @return void
+     */
+    private function createUpdatePost($is_update): void
+    {
+        $datas_save = array(
+            'title' => $this->datas_post['title'],
+            'chapo' => $this->datas_post['chapo'],
+            'content' => $this->datas_post['content'],
+            'slug' => str_replace(array(' ', '\''), array('-', ''), strtolower($this->datas_post['title'])),
+            'author_id' => (int) $this->datas_post['author_id'],
+            'user_upd' => (int) $this->datas['user_session']['user_id'],
+            'date_upd' => date('Y-m-d')
+        );
+        
+        if ($is_update && !empty($this->item_post)) {
+            $datas_save['user_id'] = (int) $this->item_post['user_id'];
+            $datas_save['statut'] = $this->item_post['statut'];
+            $datas_save['date_add'] = $this->item_post['date_add'];
+            $datas_save['user_add'] = (int) $this->item_post['user_add'];
+
+            $is_save = $this->modelPosts->save($datas_save, $this->item_post['post_id']);
+        } else {
+            $datas_save['user_id'] = (int) $this->datas['user_session']['user_id'];
+            $datas_save['statut'] = 'en_attente';
+            $datas_save['date_add'] = date('Y-m-d');
+            $datas_save['user_add'] = (int) $this->datas['user_session']['user_id'];
+
+            $is_save = $this->modelPosts->save($datas_save);
+        }
+
+        if ($is_save) {
+            $url_success = $is_update ? 'update' : 'create';
+            header('Location: /admin/posts/1/?' . $url_success . '=1');
+            exit();
+        }
+
+        $this->datas['errors'] = implode('</br>', $this->modelPosts->getErrors());
     }
 
     /**
@@ -86,8 +132,7 @@ class PostController extends Controller
      */
     public function getformPost(Form $formPost): string
     {
-        $userModel = new UserModel;
-        $itemsUser = $userModel->getUserSelect();
+        $itemsUser = $this->modelUsers->getUserSelect();
 
         $fields = $formPost->addInputText('title', 'title', 'Titre', 'text', true);
         $fields .= $formPost->addInputText('chapo', 'chapo', 'Chapô', 'text', true);

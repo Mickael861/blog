@@ -29,8 +29,6 @@ class HomeController extends Controller
     {
         $this->init($datas);
         
-        $this->getSuccessUserAccount();
-        
         //Contact form fields
         $datasContactExpected = array(
             "first_name" => 'Prénom',
