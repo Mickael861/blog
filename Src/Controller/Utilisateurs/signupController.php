@@ -37,8 +37,8 @@ class SignupController extends Controller
         //signup form fields
         $datasContactExpected = array(
             'pseudo' => 'Pseudo',
-            'prenom' => 'Prénom',
-            'nom' => 'Nom',
+            'firstname' => 'Prénom',
+            'lastname' => 'Nom',
             "email" => 'E-mail',
             "password" => 'Mot de passe'
         );
@@ -54,8 +54,8 @@ class SignupController extends Controller
                 $datas = array(
                     'role' => 'utilisateur',
                     'pseudo' => $this->datas_post['pseudo'],
-                    'prenom' => $this->datas_post['prenom'],
-                    'nom' => $this->datas_post['nom'],
+                    'firstname' => $this->datas_post['firstname'],
+                    'lastname' => $this->datas_post['lastname'],
                     'email' => $this->datas_post['email'],
                     'password' => password_hash($this->datas_post['password'], PASSWORD_ARGON2I),
                     'statut' => 'en_attente'
@@ -105,9 +105,9 @@ class SignupController extends Controller
      */
     public function getFormSignup(Form $formSignup): string
     {
-        $fields = $formSignup->addInputText('pseudo', 'pseudo', 'Votre pseudo', 'pseudo', true);
-        $fields .= $formSignup->addInputText('prenom', 'prenom', 'Votre prenom', 'prenom', true);
-        $fields .= $formSignup->addInputText('nom', 'nom', 'Votre nom', 'nom', true);
+        $fields = $formSignup->addInputText('pseudo', 'pseudo', 'Votre pseudo', 'text', true);
+        $fields .= $formSignup->addInputText('firstname', 'firstname', 'Votre prenom', 'text', true);
+        $fields .= $formSignup->addInputText('lastname', 'lastname', 'Votre nom', 'text', true);
         $fields .= $formSignup->addInputText('email', 'email', 'Votre adresse e-mail', 'email', true);
         $fields .= $formSignup->addInputText('password', 'password', 'Votre mot de passe', 'password', true);
         $fields .= $formSignup->addButton('Créer un compte', 'margin-btn-form');

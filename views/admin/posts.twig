@@ -2,13 +2,16 @@
 
 {% block content %}
 
+<a href="/admin/post" class="btn btn-primary btn-lg" tabindex="-1" role="button" aria-disabled="true">
+  Créer un article
+</a>
+
 <!-- Posts -->
 <div>
     <table class="table table-striped">
         <thead>
             <tr class="text-center">
-                <th></th>
-                <th>#</th>
+                <th style="width:150px"></th>
                 <th>Titre</th>
                 <th>Chapô</th>
                 <th>status</th>
@@ -30,8 +33,7 @@
                         </svg>
                     </a>
                   </td>
-              <td>{{ post.post_id }}</td>
-              <td>{{ post.titre }}</td>
+              <td>{{ post.title }}</td>
               <td>{{ post.chapo }}</td>
               <td>{{ post.statut }}</td>
             </tr>

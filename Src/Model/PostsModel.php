@@ -26,12 +26,12 @@ class PostsModel extends Model
             'name' => 'L\'identifiant de l\'article',
             'type' => 'int'
         ),
-        'utilisateur_id' => array(
+        'user_id' => array(
             'name' => 'L\'identifiant de l\'utilisateur',
             'type' => 'int',
             'required' => true
         ),
-        'titre' => array(
+        'title' => array(
             'name' => 'Le titre de l\'article',
             'type' => 'string',
             'required' => true
@@ -49,11 +49,12 @@ class PostsModel extends Model
         'content' => array(
             'name' => 'Le contenu de l\'article',
             'type' => 'string',
+            'sizemax' => '50',
             'required' => true
         ),
-        'path_img' => array(
-            'name' => 'L\image de l\'article',
-            'type' => 'string',
+        'author_id' => array(
+            'name' => 'L\'identifiant de l\'auteur',
+            'type' => 'int',
             'required' => true
         ),
         'statut' => array(

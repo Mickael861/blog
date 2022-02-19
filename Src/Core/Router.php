@@ -25,6 +25,7 @@ class Router
      * @param  string $controller name of the controller
      * @param  string $view name of view
      * @param  string $folder name of folder
+     * @param  array $params parameters expected
      * @return void
      */
     public function map(
@@ -71,7 +72,7 @@ class Router
         if (empty($params)) {
             throw new RouterException('No match route');
         }
-        
+
         $this->route[$route_name]['datas']['GET'] = !empty($_GET) ? $_GET : array();
         $this->route[$route_name]['datas']['POST'] = !empty($_POST) ? $_POST : array();
   

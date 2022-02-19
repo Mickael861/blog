@@ -52,7 +52,7 @@ class LoginController extends Controller
                 $is_correct = password_verify($this->datas_post['password'], $utilisateur[0]->password);
                 if ($is_correct) {
                     $this->session::setDatasSession(array(
-                        'utilisateur_id' => $utilisateur[0]->utilisateur_id,
+                        'user_id' => $utilisateur[0]->user_id,
                         'role' => $utilisateur[0]->role,
                         'user_pseudo' => $utilisateur[0]->pseudo
                     ));

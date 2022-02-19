@@ -39,7 +39,7 @@ class PostController extends Controller
  
         if (!empty($itemPost)) {
             $userModel = new UserModel;
-            $itemUser = $userModel->fetchId($itemPost['utilisateur_id']);
+            $itemUser = $userModel->fetchId($itemPost['user_id']);
             $itemPost['user_name'] = $itemUser['pseudo'];
             
             $this->datas['post'] = $itemPost;
@@ -49,7 +49,7 @@ class PostController extends Controller
             $slug_post = $itemPost['slug'];
             if ($slug_url !== $slug_post) {
                 $this->datas['errors'] = 'L\'url est différente de celle attendue'; //TODO
-                $itemPost['titre'] = 'Aucun résultat';
+                $itemPost['title'] = 'Aucun résultat';
             }
 
             //comment form fields
@@ -64,7 +64,7 @@ class PostController extends Controller
             if ($is_valide) {
                 $datas = array(
                     'post_id' => (int) $itemPost['post_id'],
-                    'utilisateur_id' => (int) $this->datas['user_session']['utilisateur_id'],
+                    'user_id' => (int) $this->datas['user_session']['user_id'],
                     'content' => $this->datas_post['content'],
                     'statut' => 'en_attente',
                     'date_add' => date('Y-m-d')
@@ -96,7 +96,7 @@ class PostController extends Controller
             $formComment = $this->getFormComment($formCommentPost);
             $this->datas['formCommentPost'] = $formComment;
         } else {
-            $this->datas['errors'] = 'L\'identifiant de l\'article est incorrecte'; //TODO changer la redirection
+            $this->datas['errors'] = 'L\'identifiant de l\'article est incorrecte';
         }
         
         echo $this->viewsRender($this->view, $this->datas);

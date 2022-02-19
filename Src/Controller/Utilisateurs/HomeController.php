@@ -64,32 +64,6 @@ class HomeController extends Controller
     }
     
     /**
-     * Manage account errors
-     *
-     * @return void
-     */
-    private function getSuccessUserAccount(): void
-    {
-        if (!empty($this->datas_get['login'])) {
-            $this->datas['success'] = 'Bienvenue ' . $this->datas['user_session']['user_pseudo'];
-        }
-
-        if (!empty($this->datas_get['signup'])) {
-            $this->datas['success'] = 'Compte crée avec succés et en attente d\'acceptation';
-        }
-
-        if (!empty($this->datas_get['logout']) && $this->session::sessionIsStart()) {
-            $this->datas['success'] = 'Déconnexion réussi !';
-            unset($this->datas['user_session']);
-            $this->session::sessionDestroy();
-        }
-
-        if (!empty($this->datas_get['sendmail'])) {
-            $this->datas['success_send_mail'] = 'l\'E-mail a été correctement envoyé';
-        }
-    }
-    
-    /**
      * Add contact email
      *
      * @return bool true, if the sending of the contact email was successful, false otherwise

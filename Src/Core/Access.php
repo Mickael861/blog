@@ -3,7 +3,7 @@ namespace App\Core;
 
 class Access
 {
-    const USER_KEY = 'utilisateur_id';
+    const USER_KEY = 'user_id';
     const ROLE_ADMIN = 'admin';
     const ROLE_USER = 'utilisateur';
     
@@ -78,7 +78,7 @@ class Access
     {
         if (!empty($datas)) {
             foreach ($datas as $key => $value) {
-                $_SESSION[htmlentities($key)] = htmlentities($value);
+                $_SESSION[$key] = htmlentities($value);
             }
         }
     }

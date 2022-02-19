@@ -5,7 +5,6 @@ use App\Core\Connexion;
 use App\Exception\ModelException;
 use PDO;
 use PDOStatement;
-use stdClass;
 
 abstract class Model
 {

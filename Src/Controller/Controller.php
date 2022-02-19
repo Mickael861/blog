@@ -47,11 +47,28 @@ class Controller
         $this->datas['title'] = $this->title;
         $this->datas['view'] = $this->view;
 
-        $this->datas_post = empty($datas['POST']) ? array() : $datas['POST'];
-        $this->datas_get = empty($datas['GET']) ? array() : $datas['GET'];
-        $this->datas_match = empty($datas['match']) ? array() : $datas['match'];
+        $this->datas_post = $this->controleDatas($datas['POST']);
+        $this->datas_get = $this->controleDatas($datas['GET']);
+        $this->datas_match = $this->controleDatas($datas['match']);
 
         $this->manageSessionRedirects();
+    }
+    
+    /**
+     * controls input data and secures it
+     *
+     * @param  array $datas datas
+     * @return array Controlled data
+     */
+    private function controleDatas($datas)
+    {
+        $datas_controle = array();
+
+        foreach ($datas as $key => $data) {
+            $datas_controle[$key] = htmlentities(trim($data));
+        }
+
+        return $datas_controle;
     }
     
     /**
@@ -113,5 +130,35 @@ class Controller
         $view = $view . '.twig';
 
         return $twig->render($view, $datas);
+    }
+
+    /**
+     * Manage account errors
+     *
+     * @return void
+     */
+    protected function getSuccessUserAccount(): void
+    {
+        if (!empty($this->datas_get['login'])) {
+            $this->datas['success'] = 'Bienvenue ' . $this->datas['user_session']['user_pseudo'];
+        }
+
+        if (!empty($this->datas_get['signup'])) {
+            $this->datas['success'] = 'Compte crée avec succés et en attente d\'acceptation';
+        }
+
+        if (!empty($this->datas_get['logout']) && $this->session::sessionIsStart()) {
+            $this->datas['success'] = 'Déconnexion réussi !';
+            unset($this->datas['user_session']);
+            $this->session::sessionDestroy();
+        }
+
+        if (!empty($this->datas_get['sendmail'])) {
+            $this->datas['success_send_mail'] = 'l\'E-mail a été correctement envoyé';
+        }
+
+        if (!empty($this->datas_get['create'])) {
+            $this->datas['success'] = 'Article crée avec succés';
+        }
     }
 }

@@ -38,6 +38,8 @@ class PostsController extends Controller
     public function postsAction(array $datas = array()): void
     {
         $this->init($datas);
+        
+        $this->getSuccessUserAccount();
 
         $this->page = empty($this->datas_match['page']) ? 1 : (int) $this->datas_match['page'];
         $this->datas['page'] = $this->page;
@@ -51,7 +53,7 @@ class PostsController extends Controller
         if (!empty($posts)) {
             foreach ($posts as $post) {
                 $userModel = new UserModel;
-                $itemUser = $userModel->fetchId($post->utilisateur_id);
+                $itemUser = $userModel->fetchId($post->user_id);
                 $post->user_name = $itemUser['pseudo'];
 
                 $post->date_upd = (new Utils())::dbToDate($post->date_upd);

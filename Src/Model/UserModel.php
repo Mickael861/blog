@@ -8,12 +8,12 @@ class UserModel extends Model
     /**
      * @var string
      */
-    protected $table = 'utilisateurs';
+    protected $table = 'users';
 
     /**
      * @var string
      */
-    protected $primary_key = 'utilisateur_id';
+    protected $primary_key = 'user_id';
 
     /**
      * @var string
@@ -24,7 +24,7 @@ class UserModel extends Model
      * @var array
      */
     protected $fields = array(
-        'utilisateur_id' => array(
+        'user_id' => array(
             'name' => 'L\'identifiant de l\'utilisateur',
             'type' => 'int'
         ),
@@ -38,12 +38,12 @@ class UserModel extends Model
             'type' => 'string',
             'required' => true
         ),
-        'prenom' => array(
+        'firstname' => array(
             'name' => 'Le prénom de l\'utilisateur',
             'type' => 'string',
             'required' => true
         ),
-        'nom' => array(
+        'lastname' => array(
             'name' => 'Le nom de l\'utilisateur',
             'type' => 'string',
             'required' => true
@@ -117,14 +117,13 @@ class UserModel extends Model
      */
     private function getSamePseudo(string $pseudo)
     {
-        $query_pseudo = 'SELECT utilisateur_id FROM ' . $this->table .
+        $query_pseudo = 'SELECT ' . $this->primary_key . ' FROM ' . $this->table .
         ' WHERE pseudo = :pseudo';
 
         $params = array(
             'pseudo' => $pseudo
         );
         
-        //TODO
         return !empty($this->request($query_pseudo, $params)->fetchAll(PDO::FETCH_CLASS, $this->class)) ? true : false;
     }
     
@@ -136,14 +135,21 @@ class UserModel extends Model
      */
     private function getSameEmail(string $email)
     {
-        $query_email = 'SELECT utilisateur_id FROM ' . $this->table .
+        $query_email = 'SELECT ' . $this->primary_key . ' FROM ' . $this->table .
         ' WHERE email = :email';
 
         $params = array(
             'email' => $email
         );
         
-        //TODO
         return !empty($this->request($query_email, $params)->fetchAll(PDO::FETCH_CLASS, $this->class)) ? true : false;
+    }
+
+    public function getUserSelect()
+    {
+        $query = 'SELECT ' . $this->primary_key .
+            ',  CONCAT(firstname, lastname) AS utilisateur_name FROM ' . $this->table;
+        
+        return $this->request($query)->fetchAll(PDO::FETCH_CLASS, $this->class);
     }
 }

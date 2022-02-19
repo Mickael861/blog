@@ -104,14 +104,60 @@ class Form
         $required = $required ? '*' : '';
         $errors_field = !empty($this->errorsForm[$name]) ? 'errors-field' : '';
         $valueField = !empty($this->datas_post[$name]) ? $this->datas_post[$name] : '';
+ 
+        $field = '';
+        if ($with_label) {
+            $field = '<label for="' . $name . '" class="form-label fw-bold mt-3">' . $labelValue .
+            ' <span class="text-danger">' . $required . '</span></label>';
+        }
+        $field .= '<textarea class="form-control ' .
+        $errors_field . '" name="' . $name . '" id="' . $id . '">' . $valueField . '</textarea>';
+
+        if (!empty($this->errorsForm[$name])) {
+            $field .= '<div class="invalid">' . $this->errorsForm[$name] . '</div>';
+        }
+
+        return $field;
+    }
+
+    /**
+     * Creation of the select field
+     *
+     * @param  string $name name of the field
+     * @param  string $id l'ID of the field
+     * @param  string $labelValue value of the label
+     * @param  array $datas datas option
+     * @param  string $default_value default value option
+     * @param  bool $required Add "required" for the field
+     * @param  bool $with_label Add label to the field
+     * @return string select in HTML
+     */
+    public function addSelect($name, $id, $labelValue, $datas, $default_value, $required = false, $with_label = true)
+    {
+        $required = $required ? '*' : '';
+        $errors_field = !empty($this->errorsForm[$name]) ? 'errors-field' : '';
+        $valueField = !empty($this->datas_post[$name]) ? $this->datas_post[$name] : '';
 
         $field = '';
         if ($with_label) {
             $field = '<label for="' . $name . '" class="form-label fw-bold mt-3">' . $labelValue .
             ' <span class="text-danger">' . $required . '</span></label>';
         }
-        $field .= '<textarea type="text" class="form-control ' .
-        $errors_field . '" name="' . $name . '" id="' . $id . '">' . $valueField . '</textarea>';
+
+        $field .= '<select name="' . $name . '" id="' . $id . '" for="' . $name .
+            '" class="form-select ' . $errors_field . '">';
+
+        $field .= '<option value="">' . $default_value . '</option>';
+        foreach ($datas as $data) {
+            $selected = '';
+            if (!empty($valueField) && $data->user_id == (int) $valueField) {
+                $selected = 'selected';
+            }
+
+            $field .= '<option ' . $selected . ' value="' . $data->user_id . '">' . $data->utilisateur_name . '</option>';
+        }
+
+        $field .= '</select>';
 
         if (!empty($this->errorsForm[$name])) {
             $field .= '<div class="invalid">' . $this->errorsForm[$name] . '</div>';
@@ -130,7 +176,7 @@ class Form
     {
         $datasForm = array();
         $errors = array();
-        
+
         foreach ($this->datas_post as $field => $data) {
             if (!empty($keysExpected[$field]) && !empty(trim(htmlentities($data)))) {
                 $datasForm[$field] = trim(htmlentities($data));
@@ -138,7 +184,7 @@ class Form
                 $errors[$field] = sprintf('Le champ "%s" est obligatoire', $keysExpected[$field]);
             }
         }
-
+        
         if (!empty($errors)) {
             $this->errorsForm = $errors;
 
