@@ -99,15 +99,13 @@ class Controller
      */
     protected function disabledPagination()
     {
-        if ($this->page === 1) {
+        if ($this->nbrs_page === 1) {
+            $this->datas['pagination_next'] = 'disabled';
             $this->datas['pagination_before'] = 'disabled';
-        } elseif ($this->page < $this->nbrs_page - 1) {
+        } elseif ($this->page === 1) {
             $this->datas['pagination_before'] = 'disabled';
         } elseif ($this->page > $this->nbrs_page - 1) {
             $this->datas['pagination_next'] = 'disabled';
-        } else {
-            $this->datas['pagination_next'] = 'disabled';
-            $this->datas['pagination_before'] = 'disabled';
         }
     }
 

@@ -25,6 +25,9 @@
                   <div class="p-2">
                     <a class="nav-link {% if view == 'posts' %} active {% endif %}" aria-current="page" href="/admin/posts/1">Liste des articles</a>
                   </div>
+                  <div class="p-2">
+                    <a class="nav-link {% if view == 'comments' %} active {% endif %}" aria-current="page" href="/admin/comments/1">Liste des commentaires</a>
+                  </div>
                   <div class="p-2 d-flex" style="margin-left:auto;">
                     <a class="nav-link" style='margin-right: 15px' href="/">Blog</a>
                     {% if user_session %}

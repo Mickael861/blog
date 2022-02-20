@@ -33,27 +33,29 @@ class PostsController extends Controller
         $this->datas['page'] = $this->page;
 
         $modelPosts = new PostsModel();
+        $userModel = new UserModel;
         $filters = array(
-            'statut' => 'publier'
+            'publier' => 'statut'
         );
-        $posts = $modelPosts->fetchAll(true, 'post_id', $this->page, $filters, 'DESC', 10);
-        $this->nbrs_page = $modelPosts->getNbrsPage();
-        $this->disabledPagination();
-        $this->datas['nbrs_page'] = $this->nbrs_page;
-
+        $posts = $modelPosts->fetchAll(true, 'post_id', $this->page, $filters, 'DESC', 6);
         if (!empty($posts)) {
+            $this->nbrs_page = $modelPosts->getNbrsPage();
+            $this->disabledPagination();
+            $this->datas['nbrs_page'] = $this->nbrs_page;
+
             foreach ($posts as $post) {
-                $userModel = new UserModel;
                 $itemUser = $userModel->fetchId($post->user_id);
                 $post->user_name = $itemUser['pseudo'];
 
                 $post->date_upd = (new Utils())::dbToDate($post->date_upd);
             }
             $this->datas['posts'] = $posts;
-        }
-        
-        if (!empty($modelPosts->getErrors())) {
-            $this->datas['errors'] = $modelPosts->getErrors()['page'];
+
+            if (!empty($modelPosts->getErrors())) {
+                $this->datas['errors'] = $modelPosts->getErrors()['page'];
+            }
+        } else {
+            $this->datas['errors'] = 'Aucun article disponible';
         }
 
         echo $this->viewsRender($this->view, $this->datas);

@@ -43,28 +43,29 @@ class PostsController extends Controller
         $this->datas['page'] = $this->page;
 
         $userModel = new UserModel;
-        $modelPosts = new PostsModel();
+        $modelPosts = new PostsModel;
+        
         $posts = $modelPosts->fetchAll(true, 'post_id', $this->page, array(), 'DESC');
-        $this->nbrs_page = $modelPosts->getNbrsPage();
-        $this->disabledPagination();
-        $this->datas['nbrs_page'] = $this->nbrs_page;
-
-        if (!empty($this->datas_get['publish'])) {
-            $post_id = $this->datas_get['publish'];
-            $post_publish = $modelPosts->fetchId($post_id);
-            
-            $is_publish = $post_publish['statut'] === 'publier' ? 'en_attente' : 'publier';
-
-            $datas_publish = array(
-                'statut' => $is_publish
-            );
-
-            $modelPosts->save($datas_publish, $post_id);
-            header('Location: /admin/posts/' . $this->page);
-            exit();
-        }
-
         if (!empty($posts)) {
+            $this->nbrs_page = $modelPosts->getNbrsPage();
+            $this->disabledPagination();
+            $this->datas['nbrs_page'] = $this->nbrs_page;
+
+            if (!empty($this->datas_get['publish'])) {
+                $post_id = $this->datas_get['publish'];
+                $post_publish = $modelPosts->fetchId($post_id);
+                
+                $is_publish = $post_publish['statut'] === 'publier' ? 'en_attente' : 'publier';
+
+                $datas_publish = array(
+                    'statut' => $is_publish
+                );
+
+                $modelPosts->save($datas_publish, $post_id);
+                header('Location: /admin/posts/' . $this->page);
+                exit();
+            }
+
             foreach ($posts as &$post) {
                 $itemUser = $userModel->fetchId($post->author_id);
                 $post->author_name = $itemUser['pseudo'];
@@ -75,19 +76,21 @@ class PostsController extends Controller
                 $post->is_publish = $post->statut === 'publier' ? '1' : '0';
             }
             $this->datas['posts'] = $posts;
-        }
 
-        if (!empty($this->datas_get['delete'])) {
-             $modelPosts->delete($this->datas_get['delete']);
-             $_SESSION['success'] = 'Article supprimé avec succés';
-             header('Location: /admin/posts/' . $this->page);
-             exit();
+            if (!empty($this->datas_get['delete'])) {
+                $modelPosts->delete($this->datas_get['delete']);
+                $_SESSION['success'] = 'Article supprimé avec succés';
+                header('Location: /admin/posts/' . $this->page);
+                exit();
+            }
+
+            if (!empty($modelPosts->getErrors())) {
+                $this->datas['errors'] = $modelPosts->getErrors()['page'];
+            }
+        } else {
+            $this->datas['errors'] = 'Aucun article disponible';
         }
         
-        if (!empty($modelPosts->getErrors())) {
-            $this->datas['errors'] = $modelPosts->getErrors()['page'];
-        }
-
         echo $this->viewsRender($this->view, $this->datas, $this->folder);
     }
 }

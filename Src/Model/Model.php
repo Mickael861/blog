@@ -42,11 +42,11 @@ abstract class Model
     /**
      * save items
      *
-     * @param  mixed $params parameter to save
-     * @param  mixed $item_id item ID
+     * @param  array $params parameter to save
+     * @param  int $item_id item ID
      * @return bool returns false on error, true otherwise
      */
-    public function save($params, $item_id = 0): bool
+    public function save(array $params, int $item_id = 0): bool
     {
         $this->dataVerification($params);
 
@@ -75,13 +75,13 @@ abstract class Model
         foreach ($params as $field => $value) {
             $str_params[] = $field . ' = :' . $field;
         }
-
-        $params['post_id'] = $item_id;
+ 
+        $params[$this->primary_key] = $item_id;
 
         $query = 'UPDATE ' . $this->table . ' SET ';
         $query .= implode(', ', $str_params);
         $query .= ' WHERE ' . $this->primary_key . ' = :' . $this->primary_key;
-
+        
         $result = self::request($query, $params);
 
         if (empty($result)) {
@@ -205,7 +205,23 @@ abstract class Model
             }
 
             $query = 'SELECT count(*) FROM ' . $this->table;
+            if (!empty($filters)) {
+                $where = '';
+                $and = 0;
+                $size_filter = sizeof($filters);
+                foreach ($filters as $value => $column) {
+                    $where .= $column . ' = "' . $value . '"';
 
+                    if ($and !== $size_filter - 1) {
+                        $where .= ' OR ';
+                    }
+
+                    $and++;
+                }
+                
+                $query .= ' WHERE ' . $where;
+            }
+            
             $nbrs_items = (int) self::request($query)->fetch()[0];
 
             $this->nbrs_page = (int) ceil($nbrs_items / $item_per_page);
@@ -221,7 +237,7 @@ abstract class Model
             $query = 'SELECT * FROM ' . $this->table;
 
             if (!empty($filters)) {
-                $query .= ' WHERE statut = "publier"';
+                $query .= ' WHERE ' . $where;
             }
 
             $query .= ' ORDER BY ' . $field . ' ' . $order .
@@ -229,7 +245,7 @@ abstract class Model
         } else {
             $query = 'SELECT * FROM ' . $this->table;
         }
-
+        
         return self::request($query)->fetchAll(PDO::FETCH_CLASS, $this->class);
     }
     
