@@ -29,8 +29,6 @@ class HomeController extends Controller
     {
         $this->init($datas);
 
-        $this->formContactHome = new Form('/#contact_form', 'POST', $this->datas_post);
-
         $this->emailManagement();
 
         $this->logout();
@@ -58,6 +56,8 @@ class HomeController extends Controller
      */
     private function emailManagement(): void
     {
+        $this->formContactHome = new Form('/#contact_form', 'POST', $this->datas_post);
+        
         $datasContactExpected = array(
             "first_name" => 'Prénom',
             "last_name" => 'Nom',
@@ -159,18 +159,17 @@ class HomeController extends Controller
     /**
      * Creation of the contact form
      *
-     * @param  Objet $formContact Objet of the Form
      * @return string form contact in HTML
      */
-    public function getFormContact(Form $formContactHome): string
+    public function getFormContact(): string
     {
-        $fields = $formContactHome->addInputText('first_name', 'first_name', 'Prénom', true);
-        $fields .= $formContactHome->addInputText('last_name', 'last_name', 'Nom', true);
-        $fields .= $formContactHome->addInputText('email', 'email', 'Adresse e-mail', true);
-        $fields .= $formContactHome->addInputText('subject', 'subject', 'Objet', true);
-        $fields .= $formContactHome->addTextArea('message', 'message', 'Message', true);
-        $fields .= $formContactHome->addButton('Envoyer', 'margin-btn-form');
+        $fields = $this->formContactHome->addInputText('first_name', 'first_name', 'Prénom', true);
+        $fields .= $this->formContactHome->addInputText('last_name', 'last_name', 'Nom', true);
+        $fields .= $this->formContactHome->addInputText('email', 'email', 'Adresse e-mail', true);
+        $fields .= $this->formContactHome->addInputText('subject', 'subject', 'Objet', true);
+        $fields .= $this->formContactHome->addTextArea('message', 'message', 'Message', true);
+        $fields .= $this->formContactHome->addButton('Envoyer', 'margin-btn-form');
 
-        return $formContactHome->createForm($fields);
+        return $this->formContactHome->createForm($fields);
     }
 }
