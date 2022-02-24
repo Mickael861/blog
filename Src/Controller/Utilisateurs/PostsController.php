@@ -29,9 +29,21 @@ class PostsController extends Controller
     {
         $this->init($datas);
 
+        $this->postsManagement();
+
+        echo $this->viewsRender($this->view, $this->datas);
+    }
+    
+    /**
+     * Posts management
+     *
+     * @return void
+     */
+    private function postsManagement(): void
+    {
         $this->page = empty($this->datas_match['page']) ? 1 : (int) $this->datas_match['page'];
         $this->datas['page'] = $this->page;
-
+        
         $modelPosts = new PostsModel();
         $userModel = new UserModel;
         $filters = array(
@@ -57,7 +69,5 @@ class PostsController extends Controller
         } else {
             $this->datas['errors'] = 'Aucun article disponible';
         }
-
-        echo $this->viewsRender($this->view, $this->datas);
     }
 }
