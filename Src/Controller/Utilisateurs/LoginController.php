@@ -51,24 +51,33 @@ class LoginController extends Controller
             if (!empty($utilisateur)) {
                 $is_correct = password_verify($this->datas_post['password'], $utilisateur[0]->password);
                 if ($is_correct) {
-                    $this->session::setDatasSession(array(
-                        'user_id' => $utilisateur[0]->user_id,
-                        'role' => $utilisateur[0]->role,
-                        'user_pseudo' => $utilisateur[0]->pseudo
-                    ));
-                    
-                    if ($utilisateur[0]->role === 'admin') {
+                    if ($utilisateur[0]->statut === "en_attente") {
+                        $this->datas['errors'] = 'Votre compte n\'a pas été vérifié';
+                    } elseif ($utilisateur[0]->statut === 'refuser') {
+                        $this->datas['errors'] = 'Votre compte a été refusé';
+                    } else {
+                        $this->session::setDatasSession(array(
+                            'user_id' => $utilisateur[0]->user_id,
+                            'role' => $utilisateur[0]->role,
+                            'user_pseudo' => $utilisateur[0]->pseudo
+                        ));
+                        
+                        if ($utilisateur[0]->role === 'admin') {
+                            $_SESSION['success'] = 'Vous êtes connecté';
+                            header('Location: /admin/home/');
+                            exit();
+                        }
+    
                         $_SESSION['success'] = 'Vous êtes connecté';
-                        header('Location: /admin/home/');
+                        header('Location: /');
                         exit();
                     }
-
-                    $_SESSION['success'] = 'Vous êtes connecté';
-                    header('Location: /');
-                    exit();
+                } else {
+                    $this->datas['errors'] = 'Votre adresse E-mail ou votre mot de passe est incorrecte';
                 }
+            } else {
+                $this->datas['errors'] = 'Votre adresse E-mail ou votre mot de passe est incorrecte';
             }
-            $this->datas['errors'] = 'Votre adresse E-mail ou votre mot de passe est incorrecte';
         }
 
         //create login form
