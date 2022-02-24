@@ -2,7 +2,6 @@
 namespace App\Controller;
 
 use App\Core\Access;
-use App\Model\UserModel;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 

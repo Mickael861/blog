@@ -49,7 +49,12 @@ class CommentsController extends Controller
 
         echo $this->viewsRender($this->view, $this->datas, $this->folder);
     }
-
+    
+    /**
+     * Comments management
+     *
+     * @return void
+     */
     private function commentsManagement()
     {
         $comments = $this->commentsModel->fetchAll(true, 'comment_id', $this->page, $this->filters, 'DESC');
