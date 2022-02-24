@@ -108,7 +108,7 @@ class LoginController extends Controller
      *
      * @return array|bool true the data is correct, false otherwise
      */
-    private function getVerifDatasForm(): ?array
+    private function getVerifDatasForm()
     {
         $datasContactExpected = array(
             "email" => 'E-mail',

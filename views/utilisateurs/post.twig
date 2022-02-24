@@ -23,10 +23,9 @@
     </div>
   </div>
 </div>
-{% endif %}
 
 <div style="margin: 50px 0 50px 0"></div>
-  <h2 id='comment_form' class='text-center border-bottom'>Espace commentaires</h2>
+  <h2 class='text-center border-bottom'>Espace commentaires</h2>
   {% if not comments %}
     <div class="text-center mt-5">
       <p class='card-text'> Soyez le premier à commenter ...</p>
@@ -46,31 +45,32 @@
       {{ success_comment }}
   </div>
   {% endif %}
-</div>
+  </div>
 
-<div class="container mt-5">
-  <div class="row d-flex justify-content-center">
-      <div class="col-md-8">
-        {% for comment in comments %}
-        <div class="d-flex flex-row comment-row block-comment">
-          <div class="comment-text w-100 text-break">
-            <h6 class="font-medium">{{ comment.pseudo }}</h6> 
-            <span class="m-b-15 d-block">{{ comment.content|raw }}</span>
-            <div class="comment-footer"> 
-              <span class="text-muted">Ajouté le : {{ comment.date_add }}</span> 
+  <div class="container mt-5">
+    <div class="row d-flex justify-content-center">
+        <div class="col-md-8">
+          {% for comment in comments %}
+          <div class="d-flex flex-row comment-row block-comment">
+            <div class="comment-text w-100 text-break">
+              <h6 class="font-medium">{{ comment.pseudo }}</h6> 
+              <span class="m-b-15 d-block">{{ comment.content|raw }}</span>
+              <div class="comment-footer"> 
+                <span class="text-muted">Ajouté le : {{ comment.date_add }}</span> 
+              </div>
             </div>
           </div>
+          {% endfor %}
         </div>
-        {% endfor %}
-      </div>
+    </div>
   </div>
-</div>
 
-<!-- comment form -->
-{% if user_session %}
-<div style="max-width:650px" class="m-auto">
-  {{ formCommentPost|raw }}
-</div>
+  <!-- comment form -->
+  {% if user_session %}
+  <div id='comment_form' style="max-width:650px" class="m-auto">
+    {{ formCommentPost|raw }}
+  </div>
+  {% endif %}
 {% endif %}
   
 {% endblock content %}
