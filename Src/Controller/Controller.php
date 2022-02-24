@@ -66,7 +66,7 @@ class Controller
         $datas_controle = array();
 
         foreach ($datas as $key => $data) {
-            $datas_controle[$key] = htmlentities(trim($data));
+            $datas_controle[$key] = trim(htmlspecialchars($data));
         }
 
         return $datas_controle;

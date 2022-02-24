@@ -110,7 +110,7 @@ class Form
             $field = '<label for="' . $name . '" class="form-label fw-bold mt-3">' . $labelValue .
             ' <span class="text-danger">' . $required . '</span></label>';
         }
-        $field .= '<textarea class="form-control ' .
+        $field .= '<textarea style="height:200px;" class="form-control ' .
         $errors_field . '" name="' . $name . '" id="' . $id . '">' . $valueField . '</textarea>';
 
         if (!empty($this->errorsForm[$name])) {
@@ -178,8 +178,8 @@ class Form
         $errors = array();
 
         foreach ($this->datas_post as $field => $data) {
-            if (!empty($keysExpected[$field]) && !empty(trim(htmlentities($data)))) {
-                $datasForm[$field] = trim(htmlentities($data));
+            if (!empty($keysExpected[$field]) && !empty($data)) {
+                $datasForm[$field] = $data;
             } else {
                 $errors[$field] = sprintf('Le champ "%s" est obligatoire', $keysExpected[$field]);
             }

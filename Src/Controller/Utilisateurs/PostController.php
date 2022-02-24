@@ -41,7 +41,7 @@ class PostController extends Controller
             $userModel = new UserModel;
             $itemUser = $userModel->fetchId($itemPost['user_id']);
             $itemPost['user_name'] = $itemUser['pseudo'];
-            
+            $itemPost['content'] = nl2br($itemPost['content']);
             $this->datas['post'] = $itemPost;
             
             //verification on the slug
@@ -88,6 +88,7 @@ class PostController extends Controller
             if (!empty($itemsComments)) {
                 foreach ($itemsComments as &$comment) {
                     $comment->date_add = (new Utils())::dbToDate($comment->date_add);
+                    $comment->content = nl2br($comment->content);
                 }
                 $this->datas['comments'] = $itemsComments;
             }

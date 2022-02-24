@@ -69,8 +69,6 @@ class PostsController extends Controller
             foreach ($posts as &$post) {
                 $itemUser = $userModel->fetchId($post->author_id);
                 $post->author_name = $itemUser['pseudo'];
-                $post->title = substr_replace($post->title, '...', 30);
-                $post->chapo = substr_replace($post->chapo, '...', 30);
                 $post->date_upd = (new Utils())::dbToDate($post->date_upd);
 
                 $post->is_publish = $post->statut === 'publier' ? '1' : '0';

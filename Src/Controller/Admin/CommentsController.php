@@ -73,7 +73,7 @@ class CommentsController extends Controller
 
                 $itemPost = $postsModel->fetchId($comment->post_id);
                 if (!empty($itemPost)) {
-                    $comment->title_post = substr_replace($itemPost['title'], '...', 30);
+                    $comment->title_post = $itemPost['title'];
                 }
 
                 if ($comment->statut === 'valider') {
@@ -87,7 +87,7 @@ class CommentsController extends Controller
                     $comment->statut = 'En attente';
                 }
 
-                $comment->content = substr_replace($comment->content, '...', 30);
+                $comment->content = nl2br($comment->content);
             }
 
             if (!empty($this->datas_get['valide'])) {

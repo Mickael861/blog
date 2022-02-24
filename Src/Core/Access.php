@@ -45,7 +45,7 @@ class Access
         $datasSession = array();
 
         foreach ($session as $key => $value) {
-            $datasSession[htmlentities($key)] = htmlentities($value);
+            $datasSession[$key] = $value;
         }
 
         return $datasSession;
@@ -78,7 +78,7 @@ class Access
     {
         if (!empty($datas)) {
             foreach ($datas as $key => $value) {
-                $_SESSION[$key] = htmlentities($value);
+                $_SESSION[$key] = $value;
             }
         }
     }

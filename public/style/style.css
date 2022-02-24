@@ -42,7 +42,13 @@ body {
    height: 60px;
 }
 
-.test {
-   height: 150px;
-   width: 250px;
+.btn-accept:hover {
+   transform: scale(1.4);
+}
+
+.btn-refus {
+   transform: rotate(45deg);
+}
+.btn-refus:hover {
+   transform: scale(1.4) rotate(45deg);
 }
