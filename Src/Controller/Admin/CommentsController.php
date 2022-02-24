@@ -39,56 +39,58 @@ class CommentsController extends Controller
     {
         $this->init($datas);
 
-        $userModel = new UserModel;
-        $postsModel = new PostsModel;
         $this->commentsModel = new CommentsModel;
-        
-        $this->page = empty($this->datas_match['page']) ? 1 : (int) $this->datas_match['page'];
-        $this->datas['page'] = $this->page;
+
+        $this->addDatasPages();
 
         $this->addStatusManagement($this->commentsModel);
 
-        $comments = $this->commentsModel->fetchAll(true, 'comment_id', $this->page, $filters, 'DESC');
+        $this->commentsManagement();
+
+        echo $this->viewsRender($this->view, $this->datas, $this->folder);
+    }
+
+    private function commentsManagement()
+    {
+        $comments = $this->commentsModel->fetchAll(true, 'comment_id', $this->page, $this->filters, 'DESC');
         if (!empty($comments)) {
             $this->addDatasNbrsPages($this->commentsModel);
     
-            foreach ($comments as &$comment) {
-                $itemUser = $userModel->fetchId($comment->user_id);
-                if (!empty($itemUser)) {
-                    $comment->pseudo = $itemUser['pseudo'];
-                }
+            $this->addDatasComments($comments);
 
-                $itemPost = $postsModel->fetchId($comment->post_id);
-                if (!empty($itemPost)) {
-                    $comment->title_post = $itemPost['title'];
-                }
-
-                $this->addDatasStatutItem($comment);
-
-                $comment->content = nl2br($comment->content);
-            }
-
-            if (!empty($this->datas_get['valide'])) {
-                $datas_save['statut'] = 'valider';
-                $this->commentsModel->save($datas_save, (int) $this->datas_get['valide']);
-                $_SESSION['success'] = 'Commentaire accepté';
-                header('Location: /admin/comments/' . $this->page);
-                exit();
-            }
-
-            if (!empty($this->datas_get['refuse'])) {
-                $datas_save['statut'] = 'refuser';
-                $this->commentsModel->save($datas_save, $this->datas_get['refuse']);
-                $_SESSION['success'] = 'Commentaire refusé';
-                header('Location: /admin/comments/' . $this->page);
-                exit();
-            }
-
-            $this->datas['comments'] = $comments;
+            $this->addSaveAccount($this->commentsModel);
         } else {
             $this->datas['errors'] = 'Aucun commentaire trouvé';
         }
+    }
+    
+    /**
+     * Add data to item
+     *
+     * @param  objet $comments
+     * @return void
+     */
+    private function addDatasComments($comments)
+    {
+        $userModel = new UserModel;
+        $postsModel = new PostsModel;
 
-        echo $this->viewsRender($this->view, $this->datas, $this->folder);
+        foreach ($comments as &$comment) {
+            $itemUser = $userModel->fetchId($comment->user_id);
+            if (!empty($itemUser)) {
+                $comment->pseudo = $itemUser['pseudo'];
+            }
+
+            $itemPost = $postsModel->fetchId($comment->post_id);
+            if (!empty($itemPost)) {
+                $comment->title_post = $itemPost['title'];
+            }
+
+            $this->addDatasStatutItem($comment);
+
+            $comment->content = nl2br($comment->content);
+        }
+
+        $this->datas['comments'] = $comments;
     }
 }

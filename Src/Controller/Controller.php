@@ -223,4 +223,64 @@ class Controller
             'statut' => $statut
         )));
     }
+    
+    /**
+     * record new statuses
+     *
+     * @param  objet $model
+     * @return void
+     */
+    protected function addSaveAccount($model): void
+    {
+        $this->saveRefusAccount($model);
+
+        $this->saveValideAccount($model);
+    }
+
+    /**
+     * save refus account
+     *
+     * @param  objet $model
+     * @return void
+     */
+    private function saveRefusAccount($model): void
+    {
+        if (!empty($this->datas_get['refuse'])) {
+            $datas_save['statut'] = 'refuser';
+            $model->save($datas_save, $this->datas_get['refuse']);
+            $_SESSION['success'] = 'Compte refusé';
+
+            header('Location: /admin/accounts/' . $this->page);
+            exit();
+        }
+    }
+    
+    /**
+     * save valide account
+     *
+     * @param  objet $model
+     * @return void
+     */
+    private function saveValideAccount($model): void
+    {
+        if (!empty($this->datas_get['valide'])) {
+            $datas_save['statut'] = 'valider';
+            $model->save($datas_save, (int) $this->datas_get['valide']);
+            $_SESSION['success'] = 'Compte accepté';
+            
+            header('Location: /admin/accounts/' . $this->page);
+            exit();
+        }
+    }
+    
+    /**
+     * Add page data to data
+     *
+     * @return void
+     */
+    protected function addDatasPages()
+    {
+        $this->page = empty($this->datas_match['page']) ? 1 : (int) $this->datas_match['page'];
+        $this->datas['page'] = $this->page;
+    }
 }

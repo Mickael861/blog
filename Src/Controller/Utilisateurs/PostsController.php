@@ -41,11 +41,9 @@ class PostsController extends Controller
      */
     private function postsManagement(): void
     {
-        $this->page = empty($this->datas_match['page']) ? 1 : (int) $this->datas_match['page'];
-        $this->datas['page'] = $this->page;
+        $this->addDatasPages();
         
         $modelPosts = new PostsModel();
-        $userModel = new UserModel;
         $filters = array(
             'publier' => 'statut'
         );
@@ -53,13 +51,7 @@ class PostsController extends Controller
         if (!empty($posts)) {
             $this->addDatasNbrsPages($modelPosts);
 
-            foreach ($posts as $post) {
-                $itemUser = $userModel->fetchId($post->user_id);
-                $post->user_name = $itemUser['pseudo'];
-
-                $post->date_upd = (new Utils())::dbToDate($post->date_upd);
-            }
-            $this->datas['posts'] = $posts;
+            $this->addDatasPosts($posts);
 
             if (!empty($modelPosts->getErrors())) {
                 $this->datas['errors'] = $modelPosts->getErrors()['page'];
@@ -67,5 +59,25 @@ class PostsController extends Controller
         } else {
             $this->datas['errors'] = 'Aucun article disponible';
         }
+    }
+    
+    /**
+     * Add data to item
+     *
+     * @param  array $posts
+     * @return void
+     */
+    private function addDatasPosts(array $posts)
+    {
+        $userModel = new UserModel;
+
+        foreach ($posts as $post) {
+            $itemUser = $userModel->fetchId($post->user_id);
+            $post->user_name = $itemUser['pseudo'];
+
+            $post->date_upd = (new Utils())::dbToDate($post->date_upd);
+        }
+        
+        $this->datas['posts'] = $posts;
     }
 }

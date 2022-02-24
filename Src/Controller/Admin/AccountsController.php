@@ -53,8 +53,7 @@ class AccountsController extends Controller
      */
     private function accountsManagement(): void
     {
-        $this->page = empty($this->datas_match['page']) ? 1 : (int) $this->datas_match['page'];
-        $this->datas['page'] = $this->page;
+        $this->addDatasPages();
 
         $accounts = $this->userModel->fetchAll(true, 'user_id', $this->page, $this->filters, 'DESC');
         if (!empty($accounts)) {
@@ -66,45 +65,9 @@ class AccountsController extends Controller
 
             $this->datas['accounts'] = $accounts;
             
-            $this->saveValideAccount();
-
-            $this->saveRefusAccount();
+            $this->addSaveAccount($this->userModel);
         } else {
             $this->datas['errors'] = 'Aucun compte trouvé';
-        }
-    }
-
-    /**
-     * save refus account
-     *
-     * @return void
-     */
-    private function saveRefusAccount(): void
-    {
-        if (!empty($this->datas_get['refuse'])) {
-            $datas_save['statut'] = 'refuser';
-            $this->userModel->save($datas_save, $this->datas_get['refuse']);
-            $_SESSION['success'] = 'Compte refusé';
-
-            header('Location: /admin/accounts/' . $this->page);
-            exit();
-        }
-    }
-    
-    /**
-     * save valide account
-     *
-     * @return void
-     */
-    private function saveValideAccount(): void
-    {
-        if (!empty($this->datas_get['valide'])) {
-            $datas_save['statut'] = 'valider';
-            $this->userModel->save($datas_save, (int) $this->datas_get['valide']);
-            $_SESSION['success'] = 'Compte accepté';
-            
-            header('Location: /admin/accounts/' . $this->page);
-            exit();
         }
     }
 }
