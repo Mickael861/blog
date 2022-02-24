@@ -28,8 +28,36 @@ class HomeController extends Controller
     public function homeAction(array $datas = array()): void
     {
         $this->init($datas);
+
+        $this->formContactHome = new Form('/#contact_form', 'POST', $this->datas_post);
+
+        $this->emailManagement();
+
+        $this->logout();
         
-        //Contact form fields
+        $this->addFormContact();
+        
+        echo $this->viewsRender($this->view, $this->datas);
+    }
+    
+    /**
+     * Add the form to the view
+     *
+     * @return void
+     */
+    private function addFormContact(): void
+    {
+        $formContact = $this->getFormContact($this->formContactHome);
+        $this->datas['formContactHome'] = $formContact;
+    }
+    
+    /**
+     * email management
+     *
+     * @return void
+     */
+    private function emailManagement(): void
+    {
         $datasContactExpected = array(
             "first_name" => 'Prénom',
             "last_name" => 'Nom',
@@ -38,12 +66,8 @@ class HomeController extends Controller
             "message" => 'Message'
         );
 
-        $action = '/#contact_form';
-        $formContactHome = new Form($action, 'POST', $this->datas_post);
-        //verification form data
-        $is_valide = $formContactHome->verifDatasForm($datasContactExpected);
+        $is_valide = $this->formContactHome->verifDatasForm($datasContactExpected);
         if ($is_valide) {
-            //Send Email
             $is_send = $this->addMail();
             if ($is_send) {
                 $_SESSION['success'] = 'l\'E-mail a été correctement envoyé';
@@ -54,7 +78,15 @@ class HomeController extends Controller
                     votre adresse "%s" est correcte', $this->datas_post['email']);
             }
         }
-
+    }
+    
+    /**
+     * Manage disconnection
+     *
+     * @return void
+     */
+    private function logout():void
+    {
         if (!empty($this->datas_get['logout'])) {
             if ($this->session::sessionIsStart()) {
                 unset($this->datas['user_session']);
@@ -63,12 +95,6 @@ class HomeController extends Controller
 
             $this->datas['success'] = 'Déconnexion réussi';
         }
-        
-        //Add datas contact form
-        $formContact = $this->getFormContact($formContactHome);
-        $this->datas['formContactHome'] = $formContact;
-        
-        echo $this->viewsRender($this->view, $this->datas);
     }
     
     /**
@@ -92,7 +118,7 @@ class HomeController extends Controller
      * @param  bool $is_send true, if the contact email is sent, false otherwise
      * @return bool true, if the sending of the contact email was successful, false otherwise
      */
-    private function sendMailer($is_send = false): bool
+    private function sendMailer(bool $is_send = false): bool
     {
         $mailer = new PHPMailer(true);
 

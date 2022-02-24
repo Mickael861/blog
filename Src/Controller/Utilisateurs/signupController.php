@@ -48,7 +48,6 @@ class SignupController extends Controller
         $is_valide = $formSignup->verifDatasForm($datasContactExpected);
         if ($is_valide) {
             $this->modelUtilisateurs = new UserModel;
-
             $same_errors = $this->getErrorsFormSave();
             if (!$same_errors) {
                 $datas = array(

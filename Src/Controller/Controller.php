@@ -79,11 +79,9 @@ class Controller
      */
     private function manageSessionRedirects(): void
     {
-        if ($this->no_access_session) {
-            if ($this->session::sessionIsStart()) {
-                header('Location: /');
-                exit();
-            }
+        if ($this->no_access_session && $this->session::sessionIsStart()) {
+            header('Location: /');
+            exit();
         }
 
         if ($this->admin_access && !$this->session::userIsAdmin()) {
