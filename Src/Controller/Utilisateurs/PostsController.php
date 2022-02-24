@@ -51,9 +51,7 @@ class PostsController extends Controller
         );
         $posts = $modelPosts->fetchAll(true, 'post_id', $this->page, $filters, 'DESC', 6);
         if (!empty($posts)) {
-            $this->nbrs_page = $modelPosts->getNbrsPage();
-            $this->disabledPagination();
-            $this->datas['nbrs_page'] = $this->nbrs_page;
+            $this->addDatasNbrsPages($modelPosts);
 
             foreach ($posts as $post) {
                 $itemUser = $userModel->fetchId($post->user_id);

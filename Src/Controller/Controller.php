@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use App\Core\Access;
+use App\Model\UserModel;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 
@@ -95,7 +96,7 @@ class Controller
      *
      * @return void
      */
-    protected function disabledPagination()
+    private function disabledPagination()
     {
         if ($this->nbrs_page === 1) {
             $this->datas['pagination_next'] = 'disabled';
@@ -105,6 +106,19 @@ class Controller
         } elseif ($this->page > $this->nbrs_page - 1) {
             $this->datas['pagination_next'] = 'disabled';
         }
+    }
+    
+    /**
+     * Add datas numbers of page
+     *
+     * @param  objet $model
+     * @return void
+     */
+    protected function addDatasNbrsPages($model)
+    {
+        $this->nbrs_page = $model->getNbrsPage();
+        $this->disabledPagination();
+        $this->datas['nbrs_page'] = $this->nbrs_page;
     }
 
     /**
@@ -140,5 +154,73 @@ class Controller
 
             unset($_SESSION['success']);
         }
+    }
+    
+    /**
+     * Add to the item the status
+     *
+     * @param  objet $item
+     * @return void
+     */
+    protected function addDatasStatutItem($item): void
+    {
+        if ($item->statut === 'valider') {
+            $item->color_statut = '#52BE80';
+            $item->statut = 'Valider';
+        } elseif ($item->statut === 'refuser') {
+            $item->color_statut = '#EC7063';
+            $item->statut = 'Refuser';
+        } else {
+            $item->color_statut = '#F5B041';
+            $item->statut = 'En attente';
+        }
+    }
+    
+    /**
+     * Addition of statutes
+     *
+     * @param  objet $model
+     * @return void
+     */
+    protected function addStatusManagement($model): void
+    {
+        $this->statusManagement($model);
+    }
+    
+    /**
+     * Status management
+     *
+     * @param  objet $model
+     * @return void
+     */
+    private function statusManagement($model): void
+    {
+        $this->filters = array();
+
+        foreach ($this->datas_post as $key => $post) {
+            if (!empty($this->datas_post[$key])) {
+                $column = explode('_', $key)[0];
+                $this->filters[$post] = $column;
+                $this->datas[$key] = $post;
+            }
+        }
+
+        $this->getNbrsItems('valider', $model);
+        $this->getNbrsItems('refuser', $model);
+        $this->getNbrsItems('en_attente', $model);
+    }
+
+    /**
+     * Count the number of elements
+     *
+     * @param  string $statut statut of item
+     * @param  objet $model
+     * @return void
+     */
+    private function getNbrsItems(string $statut, $model): void
+    {
+        $this->datas['accounts_' . $statut] = '+ ' . sizeof($model->getAllWithParams(array(
+            'statut' => $statut
+        )));
     }
 }

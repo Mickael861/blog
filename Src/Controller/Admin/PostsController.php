@@ -47,9 +47,7 @@ class PostsController extends Controller
         
         $posts = $modelPosts->fetchAll(true, 'post_id', $this->page, array(), 'DESC');
         if (!empty($posts)) {
-            $this->nbrs_page = $modelPosts->getNbrsPage();
-            $this->disabledPagination();
-            $this->datas['nbrs_page'] = $this->nbrs_page;
+            $this->addDatasNbrsPages($modelPosts);
 
             if (!empty($this->datas_get['publish'])) {
                 $post_id = $this->datas_get['publish'];
