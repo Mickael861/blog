@@ -114,10 +114,16 @@ class CommentsController extends Controller
         echo $this->viewsRender($this->view, $this->datas, $this->folder);
     }
 
-    private function getNbrsItems($field)
+    /**
+     * Count the number of elements
+     *
+     * @param  string $statut statut of item
+     * @return void
+     */
+    private function getNbrsItems($statut)
     {
-        $this->datas['comments_' . $field] = '+ ' . sizeof($this->commentsModel->getAllWithParams(array(
-            'statut' => $field
+        $this->datas['comments_' . $statut] = '+ ' . sizeof($this->commentsModel->getAllWithParams(array(
+            'statut' => $statut
         )));
     }
 }
