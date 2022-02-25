@@ -1,15 +1,25 @@
 <?php
+
+use App\Core\Access;
 use App\Core\Router;
 
 require_once dirname(__DIR__) . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
-session_start();
+
+$session = new Access;
+$session::startSession();
 
 $router = new Router();
 
-$router->map('home', 'GET|POST', '/home', 'home', 'home');
-$router->map('posts', 'GET', '/posts/:page', 'posts', 'posts');
-$router->map('post', 'GET|POST', '/post/:slug/:id', 'post', 'post');
-$router->map('login', 'GET|POST', '/login', 'login', 'login');
-$router->map('signup', 'GET|POST', '/signup', 'signup', 'signup');
+$router->map('home', '/', 'home', 'home');
+$router->map('posts', 'posts/:page', 'posts', 'posts', 'Utilisateurs', array('page'));
+$router->map('post', 'post/:slug/:id', 'post', 'post', 'Utilisateurs', array('slug', 'id'));
+$router->map('login', 'login', 'login', 'login');
+$router->map('signup', 'signup', 'signup', 'signup');
+
+$router->map('admin_home', 'admin/home', 'home', 'home', 'Admin');
+$router->map('admin_posts', 'admin/posts/:page', 'posts', 'posts', 'Admin', array('page'));
+$router->map('admin_post', 'admin/post', 'post', 'post', 'Admin');
+$router->map('admin_comments', 'admin/comments/:page', 'comments', 'comments', 'Admin', array('page'));
+$router->map('admin_accounts', 'admin/accounts/:page', 'accounts', 'accounts', 'Admin', array('page'));
 
 $router->run();

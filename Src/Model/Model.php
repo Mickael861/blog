@@ -5,7 +5,6 @@ use App\Core\Connexion;
 use App\Exception\ModelException;
 use PDO;
 use PDOStatement;
-use stdClass;
 
 abstract class Model
 {
@@ -43,11 +42,11 @@ abstract class Model
     /**
      * save items
      *
-     * @param  mixed $params parameter to save
-     * @param  mixed $item_id item ID
+     * @param  array $params parameter to save
+     * @param  int $item_id item ID
      * @return bool returns false on error, true otherwise
      */
-    public function save($params, $item_id = 0): bool
+    public function save(array $params, int $item_id = 0): bool
     {
         $this->dataVerification($params);
 
@@ -76,13 +75,13 @@ abstract class Model
         foreach ($params as $field => $value) {
             $str_params[] = $field . ' = :' . $field;
         }
-
-        $params['post_id'] = $item_id;
+ 
+        $params[$this->primary_key] = $item_id;
 
         $query = 'UPDATE ' . $this->table . ' SET ';
         $query .= implode(', ', $str_params);
         $query .= ' WHERE ' . $this->primary_key . ' = :' . $this->primary_key;
-
+        
         $result = self::request($query, $params);
 
         if (empty($result)) {
@@ -182,15 +181,22 @@ abstract class Model
     /**
      * returns all elements of a table
      *
-     * @param  mixed $total total article for pagination
-     * @param  mixed $field sort by which field
-     * @param  mixed $page The current page
-     * @param  mixed $order sort order
-     * @param  mixed $item_per_page Number of items per page
+     * @param  bool $total total article for pagination
+     * @param  string $field sort by which field
+     * @param  int $page The current page
+     * @param  array $filters Filters
+     * @param  string $order sort order
+     * @param  int $item_per_page Number of items per page
      * @return array|bool the items or false if it finds an error
      */
-    public function fetchAll(bool $total, string $field, int $page, string $order = 'DESC', $item_per_page = 20)
-    {
+    public function fetchAll(
+        bool $total,
+        string $field,
+        int $page,
+        array $filters = array(),
+        string $order = 'DESC',
+        int $item_per_page = 20
+    ) {
         if ($total) {
             if ($page < 1) {
                 $this->errors['page'] = 'La page demandée est inférieure aux nombres de page';
@@ -199,7 +205,23 @@ abstract class Model
             }
 
             $query = 'SELECT count(*) FROM ' . $this->table;
+            if (!empty($filters)) {
+                $where = '';
+                $and = 0;
+                $size_filter = sizeof($filters);
+                foreach ($filters as $value => $column) {
+                    $where .= $column . ' = "' . $value . '"';
 
+                    if ($and !== $size_filter - 1) {
+                        $where .= ' OR ';
+                    }
+
+                    $and++;
+                }
+                
+                $query .= ' WHERE ' . $where;
+            }
+            
             $nbrs_items = (int) self::request($query)->fetch()[0];
 
             $this->nbrs_page = (int) ceil($nbrs_items / $item_per_page);
@@ -212,12 +234,18 @@ abstract class Model
 
             $page_view = ($page - 1) *  $item_per_page;
             
-            $query = 'SELECT * FROM ' . $this->table . ' ORDER BY ' . $field . ' ' . $order .
+            $query = 'SELECT * FROM ' . $this->table;
+
+            if (!empty($filters)) {
+                $query .= ' WHERE ' . $where;
+            }
+
+            $query .= ' ORDER BY ' . $field . ' ' . $order .
                 ' LIMIT ' . $page_view . ',' . $item_per_page;
         } else {
             $query = 'SELECT * FROM ' . $this->table;
         }
-
+        
         return self::request($query)->fetchAll(PDO::FETCH_CLASS, $this->class);
     }
     

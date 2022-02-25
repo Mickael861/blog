@@ -1,0 +1,83 @@
+{% extends "layout.twig" %}
+
+{% block content %}
+
+{% if posts %}
+  <a href="/admin/post" class="btn btn-primary btn-lg" tabindex="-1" role="button" aria-disabled="true">
+    <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" class="bi bi-patch-plus" viewBox="0 0 16 16">
+      <path fill-rule="evenodd" d="M8 5.5a.5.5 0 0 1 .5.5v1.5H10a.5.5 0 0 1 0 1H8.5V10a.5.5 0 0 1-1 0V8.5H6a.5.5 0 0 1 0-1h1.5V6a.5.5 0 0 1 .5-.5z"/>
+      <path d="m10.273 2.513-.921-.944.715-.698.622.637.89-.011a2.89 2.89 0 0 1 2.924 2.924l-.01.89.636.622a2.89 2.89 0 0 1 0 4.134l-.637.622.011.89a2.89 2.89 0 0 1-2.924 2.924l-.89-.01-.622.636a2.89 2.89 0 0 1-4.134 0l-.622-.637-.89.011a2.89 2.89 0 0 1-2.924-2.924l.01-.89-.636-.622a2.89 2.89 0 0 1 0-4.134l.637-.622-.011-.89a2.89 2.89 0 0 1 2.924-2.924l.89.01.622-.636a2.89 2.89 0 0 1 4.134 0l-.715.698a1.89 1.89 0 0 0-2.704 0l-.92.944-1.32-.016a1.89 1.89 0 0 0-1.911 1.912l.016 1.318-.944.921a1.89 1.89 0 0 0 0 2.704l.944.92-.016 1.32a1.89 1.89 0 0 0 1.912 1.911l1.318-.016.921.944a1.89 1.89 0 0 0 2.704 0l.92-.944 1.32.016a1.89 1.89 0 0 0 1.911-1.912l-.016-1.318.944-.921a1.89 1.89 0 0 0 0-2.704l-.944-.92.016-1.32a1.89 1.89 0 0 0-1.912-1.911l-1.318.016z"/>
+    </svg>
+    Créer un article
+  </a>
+  <!-- Posts -->
+  <div>
+      <table class="table table-striped">
+          <thead>
+              <tr class="text-center">
+                  <th style="width:150px"></th>
+                  <th>Titre</th>
+                  <th>Chapô</th>
+                  <th>Créateur</th>
+                  <th>status</th>
+              </tr>
+            </thead>
+            <tbody class='text-break'>
+              {% for post in posts %}
+              <tr class="table-active text-center">
+                <td>
+                  <a title="Modifier l'article" href="/admin/post/?id={{ post.post_id }}" class="btn btn-lg" tabindex="-1" role="button" aria-disabled="true">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="#52BE80" class="bi bi-patch-plus-fill btn-accept" viewBox="0 0 16 16">
+                      <path d="M10.067.87a2.89 2.89 0 0 0-4.134 0l-.622.638-.89-.011a2.89 2.89 0 0 0-2.924 2.924l.01.89-.636.622a2.89 2.89 0 0 0 0 4.134l.637.622-.011.89a2.89 2.89 0 0 0 2.924 2.924l.89-.01.622.636a2.89 2.89 0 0 0 4.134 0l.622-.637.89.011a2.89 2.89 0 0 0 2.924-2.924l-.01-.89.636-.622a2.89 2.89 0 0 0 0-4.134l-.637-.622.011-.89a2.89 2.89 0 0 0-2.924-2.924l-.89.01-.622-.636zM8.5 6v1.5H10a.5.5 0 0 1 0 1H8.5V10a.5.5 0 0 1-1 0V8.5H6a.5.5 0 0 1 0-1h1.5V6a.5.5 0 0 1 1 0z"/>
+                    </svg>
+                  </a>
+                  <a title="Supprimer l'article" href="/admin/posts/{{ page }}?delete={{ post.post_id }}" class="btn btn-lg" tabindex="-1" role="button" aria-disabled="true">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="#EC7063" class="bi bi-patch-plus-fill btn-refus" viewBox="0 0 16 16">
+                      <path d="M10.067.87a2.89 2.89 0 0 0-4.134 0l-.622.638-.89-.011a2.89 2.89 0 0 0-2.924 2.924l.01.89-.636.622a2.89 2.89 0 0 0 0 4.134l.637.622-.011.89a2.89 2.89 0 0 0 2.924 2.924l.89-.01.622.636a2.89 2.89 0 0 0 4.134 0l.622-.637.89.011a2.89 2.89 0 0 0 2.924-2.924l-.01-.89.636-.622a2.89 2.89 0 0 0 0-4.134l-.637-.622.011-.89a2.89 2.89 0 0 0-2.924-2.924l-.89.01-.622-.636zM8.5 6v1.5H10a.5.5 0 0 1 0 1H8.5V10a.5.5 0 0 1-1 0V8.5H6a.5.5 0 0 1 0-1h1.5V6a.5.5 0 0 1 1 0z"/>
+                    </svg>
+                  </a>
+                </td>
+                <td>{{ post.title }}</td>
+                <td>{{ post.chapo }}</td>
+                <td>{{ post.author_name }}</td>
+                <td>
+                  {% if post.is_publish %}
+                  <a title="Mettre en attente l'article" href="/admin/posts/{{ page }}/?publish={{ post.post_id }}" class="" tabindex="-1" role="button" aria-disabled="true">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-toggle-on" viewBox="0 0 16 16">
+                      <path d="M5 3a5 5 0 0 0 0 10h6a5 5 0 0 0 0-10H5zm6 9a4 4 0 1 1 0-8 4 4 0 0 1 0 8z"/>
+                    </svg>
+                  </a>
+                  {% else %}
+                  <a title="Publier l'article" href="/admin/posts/{{ page }}/?publish={{ post.post_id }}" class="" tabindex="-1" role="button" aria-disabled="true">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-toggle-off" viewBox="0 0 16 16">
+                      <path d="M11 4a4 4 0 0 1 0 8H8a4.992 4.992 0 0 0 2-4 4.992 4.992 0 0 0-2-4h3zm-6 8a4 4 0 1 1 0-8 4 4 0 0 1 0 8zM0 8a5 5 0 0 0 5 5h6a5 5 0 0 0 0-10H5a5 5 0 0 0-5 5z"/>
+                    </svg>
+                  </a>
+                  {% endif %}
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+      </table>
+  </div>
+
+  <!-- paging -->
+  {% if not errors %}
+  <nav aria-label="navigation pagination" style='margin-top:100px'>
+    <ul class="pagination justify-content-center">
+      <li class="page-item {{ pagination_before }}">
+        <a class="page-link" href="/admin/posts/{{ page - 1}}">Précédent</a>
+      </li>
+      {% for page in 1 .. nbrs_page %}
+        <li class="page-item">
+          <a class="page-link" href="/admin/posts/{{ page }}">{{ page }}</a>
+        </li>
+      {% endfor %}
+      <li class="page-item {{ pagination_next }}">
+        <a class="page-link" href="/admin/posts/{{ page + 1 }}">Suivant</a>
+      </li>
+    </ul>
+  </nav>
+  {% endif %}
+{% endif %}
+{% endblock content %}

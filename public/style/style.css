@@ -37,4 +37,18 @@ body {
    position:relative;
    top: -49px;
    left: -50px;
+   background-color: white;
+   border: 2px solid #EC7063;
+   height: 60px;
+}
+
+.btn-accept:hover {
+   transform: scale(1.4);
+}
+
+.btn-refus {
+   transform: rotate(45deg);
+}
+.btn-refus:hover {
+   transform: scale(1.4) rotate(45deg);
 }

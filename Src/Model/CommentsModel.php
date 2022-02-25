@@ -8,12 +8,12 @@ class CommentsModel extends Model
     /**
      * @var string
      */
-    protected $table = 'commentaires';
+    protected $table = 'comments';
 
     /**
      * @var string
      */
-    protected $primary_key = 'commentaire_id';
+    protected $primary_key = 'comment_id';
 
     /**
      * @var string
@@ -24,7 +24,7 @@ class CommentsModel extends Model
      * @var array
      */
     protected $fields = array(
-        'commentaire_id' => array(
+        'comment_id' => array(
             'name' => 'L\'identifiant du commentaire',
             'type' => 'int'
         ),
@@ -33,7 +33,7 @@ class CommentsModel extends Model
             'type' => 'int',
             'required' => true
         ),
-        'utilisateur_id' => array(
+        'user_id' => array(
             'name' => 'L\'identifiant de l\'utilisateur',
             'type' => 'int',
             'required' => true
@@ -43,7 +43,7 @@ class CommentsModel extends Model
             'type' => 'string',
             'required' => true
         ),
-        'status' => array(
+        'statut' => array(
             'name' => 'Le status du commentaire',
             'type' => 'string',
             'required' => true
@@ -63,8 +63,8 @@ class CommentsModel extends Model
      */
     public function getCommentsUser(int $post_id)
     {
-        $query = 'SELECT *, u.pseudo AS pseudo FROM ' . $this->table . ' AS c'.
-        ' LEFT JOIN utilisateurs AS u ON c.utilisateur_id = u.utilisateur_id' .
+        $query = 'SELECT *, u.pseudo AS pseudo, c.date_add AS date_add FROM ' . $this->table . ' AS c'.
+        ' LEFT JOIN users AS u ON c.user_id = u.user_id' .
         ' WHERE c.post_id = :post_id AND c.statut = "valider"';
     
         $params = array(
