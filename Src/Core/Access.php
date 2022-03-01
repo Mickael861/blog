@@ -1,6 +1,8 @@
 <?php
 namespace App\Core;
 
+use App\Model\UserModel;
+
 class Access
 {
     const USER_KEY = 'user_id';
@@ -91,5 +93,24 @@ class Access
     public static function sessionDestroy(): void
     {
         session_destroy();
+    }
+    
+    /**
+     * Verify that a user exists and has the correct status
+     *
+     * @param  int $user_id
+     * @return bool true if the user is accepted, false otherwise
+     */
+    public function userIsAccept(int $user_id): bool
+    {
+        $is_accepted = false;
+
+        $modelUsers = new UserModel();
+        $user = $modelUsers->fetchId($user_id);
+        if (!empty($user) && $user['statut'] === 'valider') {
+            $is_accepted = true;
+        }
+
+        return $is_accepted;
     }
 }

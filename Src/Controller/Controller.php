@@ -31,7 +31,43 @@ class Controller
     /**
      * @var string
      */
-    protected $no_access_session = false;
+    private $no_access_session = false;
+    
+    /**
+     *
+     * @var array
+     */
+    protected $datas_post = array();
+
+    /**
+     *
+     * @var array
+     */
+    protected $datas_get = array();
+
+    /**
+     *
+     * @var array
+     */
+    protected $datas_match = array();
+    
+    /**
+     *
+     * @var int
+     */
+    protected $page = 1;
+
+    /**
+     *
+     * @var int
+     */
+    private $nbrs_page = 0;
+    
+    /**
+     *
+     * @var array
+     */
+    protected $filters = array();
     
     /**
      * important data initialization
@@ -43,7 +79,6 @@ class Controller
         $this->session = new Access;
 
         $this->datas['user_session'] = $this->session::getSession();
-        
         $this->datas['title'] = $this->title;
         $this->datas['view'] = $this->view;
 
@@ -79,14 +114,16 @@ class Controller
      */
     private function manageSessionRedirects(): void
     {
+        
         if ($this->no_access_session && $this->session::sessionIsStart()) {
             header('Location: /');
             exit();
         }
-
+        //pb
         if ($this->admin_access && !$this->session::userIsAdmin()) {
-            require_once dirname(__DIR__, 2) . '/views/error404.twig';
-            exit;
+            $_SESSION['errors'] = 'Vous n\'avez pas accés à cette partie du blog';
+            header('Location: /');
+            exit();
         }
     }
 
@@ -153,6 +190,12 @@ class Controller
 
             unset($_SESSION['success']);
         }
+
+        if (!empty($_SESSION['errors'])) {
+            $this->datas['errors'] = $_SESSION['errors'];
+
+            unset($_SESSION['errors']);
+        }
     }
     
     /**
@@ -194,8 +237,6 @@ class Controller
      */
     private function statusManagement($model): void
     {
-        $this->filters = array();
-
         foreach ($this->datas_post as $key => $post) {
             if (!empty($this->datas_post[$key])) {
                 $column = explode('_', $key)[0];
@@ -218,7 +259,7 @@ class Controller
      */
     private function getNbrsItems(string $statut, $model): void
     {
-        $this->datas['accounts_' . $statut] = '+ ' . sizeof($model->getAllWithParams(array(
+        $this->datas[$model->getTable() . '_' . $statut] = '+ ' . sizeof($model->getAllWithParams(array(
             'statut' => $statut
         )));
     }

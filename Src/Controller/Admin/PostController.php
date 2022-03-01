@@ -3,7 +3,6 @@ namespace App\Controller\Admin;
 
 use App\Controller\Controller;
 use App\Model\PostsModel;
-use App\Model\UserModel;
 use App\Utils\Form;
 
 class PostController extends Controller
@@ -40,7 +39,6 @@ class PostController extends Controller
         $this->init($datas);
 
         $this->modelPosts = new PostsModel;
-        $this->modelUsers = new UserModel;
         $is_update = false;
         $with_verif = true;
 
@@ -49,7 +47,7 @@ class PostController extends Controller
             if (!empty($this->item_post)) {
                 $this->datas_post['title'] = $this->item_post['title'];
                 $this->datas_post['chapo'] = $this->item_post['chapo'];
-                $this->datas_post['author_id'] = $this->item_post['author_id'];
+                $this->datas_post['author'] = $this->item_post['author'];
                 $this->datas_post['content'] = $this->item_post['content'];
             }
 
@@ -60,7 +58,7 @@ class PostController extends Controller
         $datas_post = array(
             "title" => 'Titre',
             "chapo" => 'Chapô',
-            "author_id" => 'Auteur',
+            "author" => 'Auteur',
             "content" => 'Contenu'
         );
         $action = '';
@@ -94,7 +92,7 @@ class PostController extends Controller
             'chapo' => $this->datas_post['chapo'],
             'content' => $this->datas_post['content'],
             'slug' => str_replace(array(' ', '\''), array('-', ''), strtolower($this->datas_post['title'])),
-            'author_id' => (int) $this->datas_post['author_id'],
+            'author' => $this->datas_post['author'],
             'user_upd' => (int) $this->datas['user_session']['user_id'],
             'date_upd' => date('Y-m-d')
         );
@@ -134,18 +132,9 @@ class PostController extends Controller
      */
     public function getformPost(Form $formPost): string
     {
-        $itemsUser = $this->modelUsers->getUserSelect();
-
         $fields = $formPost->addInputText('title', 'title', 'Titre', 'text', true);
         $fields .= $formPost->addInputText('chapo', 'chapo', 'Chapô', 'text', true);
-        $fields .= $formPost->addSelect(
-            'author_id',
-            'author_id',
-            'Créateur',
-            $itemsUser,
-            'Choisisez un utilisateur',
-            true
-        );
+        $fields .= $formPost->addInputText('author', 'author', 'Auteur', 'text', true);
         $fields .= $formPost->addTextArea('content', 'content', 'Message', true);
         $fields .= $formPost->addButton('Enregistrer', 'margin-btn-form');
 

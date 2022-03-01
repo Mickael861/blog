@@ -13,7 +13,7 @@
                 Validé
                 </label>
                 <span title="compte validé" class="badge rounded-pill bg-success">
-                    {{ accounts_valider }}
+                    {{ users_valider }}
                 </span>
             </div>
             <div class="form-check">
@@ -22,7 +22,7 @@
                 Refusé
                 </label>
                 <span title="Compte refusé" class="badge rounded-pill bg-danger">
-                    {{ accounts_refuser }}
+                    {{ users_refuser }}
                 </span>
             </div>
             <div class="form-check">
@@ -31,7 +31,7 @@
                 En attente
                 </label>
                 <span title="Compte en attente" class="badge rounded-pill bg-warning">
-                    {{ accounts_en_attente }}
+                    {{ users_en_attente }}
                 </span>
             </div>
         </div>
@@ -66,7 +66,7 @@
                             </svg>
                         </a>
                     </td>
-                <td>{{ account.statut }}</td>
+                <td>{{ account.role }}</td>
                 <td>{{ account.pseudo }}</td>
                 <td>{{ account.firstname }}</td>
                 <td>{{ account.lastname }}</td>

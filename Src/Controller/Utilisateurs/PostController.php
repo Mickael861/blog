@@ -2,6 +2,7 @@
 namespace App\Controller\Utilisateurs;
 
 use App\Controller\Controller;
+use App\Core\Access;
 use App\Model\CommentsModel;
 use App\Model\PostsModel;
 use App\Model\UserModel;
@@ -78,14 +79,10 @@ class PostController extends Controller
      */
     private function addDatasPost(): void
     {
-        $userModel = new UserModel;
-        $itemUser = $userModel->fetchId($this->itemPost['user_id']);
-        if (!empty($itemUser)) {
-            $this->itemPost['user_name'] = $itemUser['pseudo'];
-            $this->itemPost['content'] = nl2br($this->itemPost['content']);
-            
-            $this->datas['post'] = $this->itemPost;
-        }
+        $this->itemPost['content'] = nl2br($this->itemPost['content']);
+        $this->itemPost['date_upd'] = (new Utils())::dbToDate($this->itemPost['date_upd']);
+
+        $this->datas['post'] = $this->itemPost;
     }
     
     /**
@@ -95,20 +92,25 @@ class PostController extends Controller
      */
     private function saveDatasComments(): void
     {
-        $datas = array(
-            'post_id' => (int) $this->itemPost['post_id'],
-            'user_id' => (int) $this->datas['user_session']['user_id'],
-            'content' => $this->datas_post['content'],
-            'statut' => 'en_attente',
-            'date_add' => date('Y-m-d')
-        );
-        
-        $is_save = $this->ModelComments->save($datas);
-        if ($is_save) {
-            header('Location: ' . $_SERVER['REQUEST_URI'] . '?success=1');
-            exit();
+        $is_user_exist = (new Access())->userIsAccept($this->datas['user_session']['user_id']);
+        if ($is_user_exist) {
+            $datas = array(
+                'post_id' => (int) $this->itemPost['post_id'],
+                'user_id' => (int) $this->datas['user_session']['user_id'],
+                'content' => $this->datas_post['content'],
+                'statut' => 'en_attente',
+                'date_add' => date('Y-m-d')
+            );
+            
+            $is_save = $this->ModelComments->save($datas);
+            if ($is_save) {
+                header('Location: ' . $_SERVER['REQUEST_URI'] . '?success=1');
+                exit();
+            } else {
+                $this->datas['errors_comment'] = implode('</br>', $this->ModelComments->getErrors());
+            }
         } else {
-            $this->datas['errors_comment'] = implode('</br>', $this->ModelComments->getErrors());
+            $this->datas['errors_comment'] = 'Vous n\'avez pas l\'autorisation de commenter';
         }
     }
     

@@ -338,4 +338,14 @@ abstract class Model
     {
         return $this->nbrs_page;
     }
+
+    /**
+     * Get the value of table
+     *
+     * @return  string
+     */
+    public function getTable(): string
+    {
+        return $this->table;
+    }
 }

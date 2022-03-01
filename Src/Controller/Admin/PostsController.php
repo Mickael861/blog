@@ -3,7 +3,6 @@ namespace App\Controller\Admin;
 
 use App\Controller\Controller;
 use App\Model\PostsModel;
-use App\Model\UserModel;
 use App\Utils\Utils;
 
 class PostsController extends Controller
@@ -119,13 +118,8 @@ class PostsController extends Controller
      */
     private function addDatasPosts($posts): void
     {
-        $userModel = new UserModel;
-
         foreach ($posts as &$post) {
-            $itemUser = $userModel->fetchId($post->author_id);
-            $post->author_name = $itemUser['pseudo'];
             $post->date_upd = (new Utils())::dbToDate($post->date_upd);
-
             $post->is_publish = $post->statut === 'publier' ? '1' : '0';
         }
 
