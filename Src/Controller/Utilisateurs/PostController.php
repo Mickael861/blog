@@ -163,7 +163,7 @@ class PostController extends Controller
      * @param  Objet $formContact Objet of the Form
      * @return string form contact in HTML
      */
-    public function getFormComment(): string
+    private function getFormComment(): string
     {
         $fields = $this->formCommentPost->addTextArea('content', 'content', 'Votre commentaire', true);
         $fields .= $this->formCommentPost->addButton('Publier', 'btn-comment');

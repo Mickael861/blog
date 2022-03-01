@@ -45,6 +45,7 @@
                     <th>Utilisateur</th>
                     <th>Titre de l'article</th>
                     <th>Commentaire</th>
+                    <th>Date d'ajout</th>
                     <th>status</th>
                 </tr>
             </thead>
@@ -63,10 +64,11 @@
                             </svg>
                         </a>
                     </td>
-                <td>{{ comment.pseudo }}</td>
-                <td>{{ comment.title_post }}</td>
-                <td style="width:738px">{{ comment.content|raw }}</td>
-                <td style='color:{{ comment.color_statut }}; font-weight:600;'>{{ comment.statut }}</td>
+                    <td>{{ comment.pseudo }}</td>
+                    <td>{{ comment.title_post }}</td>
+                    <td style="max-width: 300px">{{ comment.content|raw }}</td>
+                    <td>{{ comment.date_add }}</td>
+                    <td style='color:{{ comment.color_statut }}; font-weight:600;'>{{ comment.statut }}</td>
                 </tr>
                 {% endfor %}
             </tbody>

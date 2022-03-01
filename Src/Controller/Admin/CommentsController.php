@@ -5,6 +5,7 @@ use App\Controller\Controller;
 use App\Model\CommentsModel;
 use App\Model\PostsModel;
 use App\Model\UserModel;
+use App\Utils\Utils;
 
 class CommentsController extends Controller
 {
@@ -89,6 +90,7 @@ class CommentsController extends Controller
             $itemPost = $postsModel->fetchId($comment->post_id);
             if (!empty($itemPost)) {
                 $comment->title_post = $itemPost['title'];
+                $comment->date_add = (new Utils())::dbToDate($comment->date_add);
             }
 
             $this->addDatasStatutItem($comment);

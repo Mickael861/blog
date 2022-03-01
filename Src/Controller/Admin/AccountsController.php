@@ -3,6 +3,7 @@ namespace App\Controller\Admin;
 
 use App\Controller\Controller;
 use App\Model\UserModel;
+use App\Utils\Utils;
 
 class AccountsController extends Controller
 {
@@ -61,6 +62,8 @@ class AccountsController extends Controller
     
             foreach ($accounts as $account) {
                 $this->addDatasStatutItem($account);
+
+                $account->date_add = (new Utils())::dbToDate($account->date_add);
             }
 
             $this->datas['accounts'] = $accounts;

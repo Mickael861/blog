@@ -38,21 +38,34 @@ class PostController extends Controller
     {
         $this->init($datas);
 
-        $this->modelPosts = new PostsModel;
-        $is_update = false;
-        $with_verif = true;
+        $this->postManagement();
 
-        if (!empty($this->datas_get['id']) && empty($this->datas_post)) {
+        $this->addFormPost();
+
+        echo $this->viewsRender($this->view, $this->datas, $this->folder);
+    }
+    
+    /**
+     * Post management
+     *
+     * @return void
+     */
+    private function postManagement()
+    {
+        $this->modelPosts = new PostsModel;
+        $is_valide = true;
+        $is_update = !empty($this->datas_get['id']) && $this->datas_match['action'] === 'update' ? true : false;
+
+        if ($is_update) {
             $this->item_post = $this->modelPosts->fetchId($this->datas_get['id']);
-            if (!empty($this->item_post)) {
+            if (!empty($this->item_post) && empty($this->datas_post)) {
+                $is_valide = false;
+
                 $this->datas_post['title'] = $this->item_post['title'];
                 $this->datas_post['chapo'] = $this->item_post['chapo'];
                 $this->datas_post['author'] = $this->item_post['author'];
                 $this->datas_post['content'] = $this->item_post['content'];
             }
-
-            $is_update = true;
-            $with_verif = false;
         }
 
         $datas_post = array(
@@ -61,28 +74,33 @@ class PostController extends Controller
             "author" => 'Auteur',
             "content" => 'Contenu'
         );
+
         $action = '';
-        $formLogin = new Form($action, 'POST', $this->datas_post);
-        
-        $is_valide = false;
-        if ($with_verif) {
-            $is_valide = $formLogin->verifDatasForm($datas_post);
+        $this->formLogin = new Form($action, 'POST', $this->datas_post);
+
+        if ($is_valide) {
+            $is_valide = $this->formLogin->verifDatasForm($datas_post);
         }
 
         if ($is_valide) {
             $this->createUpdatePost($is_update);
         }
+    }
 
-        //create login form
-        $formLogin = $this->getformPost($formLogin);
-        $this->datas['formPost'] = $formLogin;
-
-        echo $this->viewsRender($this->view, $this->datas, $this->folder);
+    /**
+     * Add form post
+     *
+     * @return void
+     */
+    private function addFormPost(): void
+    {
+        $this->datas['formPost'] = $this->getformPost($this->formLogin);
     }
     
     /**
      * Create post
      *
+     * @param bool $is_update
      * @return void
      */
     private function createUpdatePost($is_update): void
@@ -97,7 +115,7 @@ class PostController extends Controller
             'date_upd' => date('Y-m-d')
         );
         
-        if ($is_update && !empty($this->item_post)) {
+        if ($is_update) {
             $datas_save['user_id'] = (int) $this->item_post['user_id'];
             $datas_save['statut'] = $this->item_post['statut'];
             $datas_save['date_add'] = $this->item_post['date_add'];
@@ -114,7 +132,7 @@ class PostController extends Controller
         }
 
         if ($is_save) {
-            $_SESSION['success'] = $is_update ?
+            $_SESSION['success'] = !empty($this->datas_get['id']) ?
                 'Modifications de l\'article éffectuées' :
                     'Création de l\'article effectuées';
             header('Location: /admin/posts/1/');
