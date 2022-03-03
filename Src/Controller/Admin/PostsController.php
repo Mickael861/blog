@@ -53,8 +53,9 @@ class PostsController extends Controller
     private function postsManagement(): void
     {
         $this->modelPosts = new PostsModel;
-        
-        $posts = $this->modelPosts->fetchAll(true, 'post_id', $this->page, array(), 'DESC');
+        $this->addStatusManagement($this->modelPosts);
+
+        $posts = $this->modelPosts->fetchAll(true, 'post_id', $this->page, $this->filters, 'DESC');
         if (!empty($posts)) {
             $this->addDatasNbrsPages($this->modelPosts);
 
@@ -119,9 +120,14 @@ class PostsController extends Controller
     private function addDatasPosts($posts): void
     {
         foreach ($posts as &$post) {
+            $this->addBadgeNewItems($post);
+
+            $post->date_add = (new Utils())::dbToDate($post->date_add);
             $post->date_upd = (new Utils())::dbToDate($post->date_upd);
             $post->is_publish = $post->statut === 'publier' ? '1' : '0';
         }
+
+        $this->datas['today'] = date('Y-m-d');
 
         $this->datas['posts'] = $posts;
     }

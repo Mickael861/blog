@@ -241,24 +241,28 @@ class Controller
             'valider',
             'refuser',
             'en_attente',
-            date('Y-m-d')
+            date('Y-m-d'),
+            'publier'
         );
-
+        
         foreach ($this->datas_post as $key => $post) {
             if (in_array($post, $statut_expected) && !empty($this->datas_post[$key])) {
                 $column = explode('_', $key)[0];
-                if ($column === 'new') {
+
+                if ($column === 'new' || $column === 'newPosts') {
                     $column = 'date_add';
                 }
                 $this->filters[$post] = $column;
                 $this->datas[$key] = $post;
             }
         }
-
+        
         $this->getNbrsItems('valider', $model);
         $this->getNbrsItems('refuser', $model);
         $this->getNbrsItems('en_attente', $model);
+        $this->getNbrsItems('publier', $model);
         $this->getNbrsItems('new', $model);
+        $this->getNbrsItems('newPosts', $model);
     }
 
     /**
@@ -273,13 +277,15 @@ class Controller
         $filters = array(
             'statut' => $statut
         );
-        if ($statut === 'new') {
+        if ($statut === 'new' || $statut === 'newPosts') {
             $filters = array(
-                'date_add' => date('Y-m-d'),
-                'statut' => 'en_attente'
+                'date_add' => date('Y-m-d')
             );
+            if ($statut === 'new') {
+                $filters['statut'] = 'en_attente';
+            }
         }
-
+        
         $this->datas[$model->getTable() . '_' . $statut] = '+ ' . sizeof($model->getAllWithParams($filters));
     }
     
