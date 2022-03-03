@@ -2,8 +2,62 @@
 
 {% block content %}
 
-<div class="d-flex justify-content-evenly">
-    <div class="d-flex flex-column justify-content-evenly flex-wrap mb-5 border-top-0 border-end-0 border border-3 border">
+<div class="d-flex justify-content-evenly flex-wrap">
+    <div class="d-flex flex-column justify-content-evenly flex-wrap mb-5 border-top-0 border-end-0 border border-3 border m-3">
+        <h3 class="text-center mb-5">Général</h3>
+        <div>
+            <div style="padding:15px">
+                <div class="card border-0" style="background-color:#FCF3CF">
+                    <div class="card-body">
+                        E-mail reçu
+                    </div>
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning">
+                        {{ count_email_send }}
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <div style="padding:15px">
+                <div class="card border-0" style="background-color:#FCF3CF">
+                    <div class="card-body">
+                        Nombres de visistes
+                    </div>
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning">
+                        + 26
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <div style="padding:15px">
+                <div class="card border-0" style="background-color:#FCF3CF">
+                    <div class="card-body">
+                        Nombres de connexion
+                    </div>
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning">
+                        + 14
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <div style="padding:15px">
+                <div class="card border-0" style="background-color:#FCF3CF">
+                    <div class="card-body">
+                        Nombres de personnes connectées
+                    </div>
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning">
+                        + 31
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="d-flex flex-column justify-content-evenly flex-wrap mb-5 border-top-0 border-end-0 border border-3 border m-3">
         <h3 class="text-center mb-5">Les commentaires</h3>
         <div>
             <div style="padding:15px">
@@ -70,7 +124,7 @@
         </div>
     </div>
 
-    <div class="d-flex flex-column justify-content-evenly flex-wrap mb-5 border-top-0 border-end-0 border border-3 border">
+    <div class="d-flex flex-column justify-content-evenly flex-wrap mb-5 border-top-0 border-end-0 border border-3 border m-3">
         <h3 class="text-center mb-5">Les comptes</h3>
         <div>
             <div style="padding:15px">
