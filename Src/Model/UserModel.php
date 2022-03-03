@@ -144,12 +144,4 @@ class UserModel extends Model
         
         return !empty($this->request($query_email, $params)->fetchAll(PDO::FETCH_CLASS, $this->class)) ? true : false;
     }
-
-    public function getUserSelect()
-    {
-        $query = 'SELECT ' . $this->primary_key .
-            ',  CONCAT(firstname, lastname) AS utilisateur_name FROM ' . $this->table;
-        
-        return $this->request($query)->fetchAll(PDO::FETCH_CLASS, $this->class);
-    }
 }

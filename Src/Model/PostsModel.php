@@ -40,11 +40,13 @@ class PostsModel extends Model
         'slug' => array(
             'name' => 'Le slug de l\'article',
             'type' => 'string',
+            'sizemax' => 50,
             'required' => true
         ),
         'chapo' => array(
             'name' => 'Le chapô  de l\'article',
             'type' => 'string',
+            'sizemax' => 50,
             'required' => true
         ),
         'content' => array(
@@ -52,9 +54,10 @@ class PostsModel extends Model
             'type' => 'string',
             'required' => true
         ),
-        'author_id' => array(
-            'name' => 'L\'identifiant de l\'auteur',
-            'type' => 'int',
+        'author' => array(
+            'name' => 'Le nom de l\'auteur',
+            'type' => 'string',
+            'sizemax' => 50,
             'required' => true
         ),
         'statut' => array(
@@ -79,9 +82,4 @@ class PostsModel extends Model
             'type' => 'int'
         )
     );
-
-    /**
-     * @var int
-     */
-    protected $nbrs_page = 0;
 }

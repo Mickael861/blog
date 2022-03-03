@@ -2,11 +2,19 @@
 
 {% block content %}
 
-{% if comments %}
     <h2 class="text-center">Filtres</h2>
     <form action="" method="POST">
         <div class="d-flex flex-row align-items-center justify-content-around card" style="padding:10px 5px 10px 5px; margin-bottom: 60px">
             <button type="submit" class="btn btn-primary">Filtrer</button>
+            <div class="form-check">
+                <input class="form-check-input" name="new" type="checkbox" value="{{ today }}" id="new" {% if new %} checked {% endif %}>
+                <label class="form-check-label" for="nouveau">
+                Nouveau
+                </label>
+                <span title="Nouveaux commentaires" class="badge rounded-pill bg-primary">
+                    {{ comments_new }}
+                </span>
+            </div>
             <div class="form-check">
                 <input class="form-check-input" name='statut_valide' type="checkbox" value="valider" id="valide" {% if statut_valide %} checked {% endif %}>
                 <label class="form-check-label" for="valide">
@@ -36,6 +44,7 @@
             </div>
         </div>
     </form>
+{% if comments %}
     <!-- Posts -->
     <div>
         <table class="table table-striped">
@@ -45,7 +54,8 @@
                     <th>Utilisateur</th>
                     <th>Titre de l'article</th>
                     <th>Commentaire</th>
-                    <th>status</th>
+                    <th>Date d'ajout</th>
+                    <th>statut</th>
                 </tr>
             </thead>
             <tbody class="text-break">
@@ -63,10 +73,18 @@
                             </svg>
                         </a>
                     </td>
-                <td>{{ comment.pseudo }}</td>
-                <td>{{ comment.title_post }}</td>
-                <td style="width:738px">{{ comment.content|raw }}</td>
-                <td style='color:{{ comment.color_statut }}; font-weight:600;'>{{ comment.statut }}</td>
+                    <td>{{ comment.pseudo }}</td>
+                    <td>{{ comment.title_post }}</td>
+                    <td style="max-width: 300px">{{ comment.content|raw }}</td>
+                    <td>{{ comment.date_add }}</td>
+                    <td style='color:{{ comment.color_statut }}; font-weight:600;'>
+                        {{ comment.statut }}
+                        {% if comment.new %}
+                        <span title="Nouveau commentaire" class="badge rounded-pill bg-primary" style="font-size:0.7em">
+                            New
+                        </span>
+                        {% endif %}
+                    </td>
                 </tr>
                 {% endfor %}
             </tbody>

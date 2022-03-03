@@ -2,4 +2,247 @@
 
 {% block content %}
 
+<div class="d-flex justify-content-evenly flex-wrap">
+    <div class="d-flex flex-column justify-content-evenly flex-wrap mb-5 border-top-0 border-end-0 border border-3 border m-3">
+        <h3 class="text-center mb-5">Général</h3>
+        <div>
+            <div style="padding:15px">
+                <div class="card border-0" style="background-color:#FCF3CF">
+                    <div class="card-body">
+                        E-mail reçu
+                    </div>
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning">
+                        {{ count_email_send }}
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <div style="padding:15px">
+                <div class="card border-0" style="background-color:#FCF3CF">
+                    <div class="card-body">
+                        Nombres de visistes
+                    </div>
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning">
+                        + 26
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <div style="padding:15px">
+                <div class="card border-0" style="background-color:#FCF3CF">
+                    <div class="card-body">
+                        Nombres de connexion
+                    </div>
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning">
+                        + 14
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <div style="padding:15px">
+                <div class="card border-0" style="background-color:#FCF3CF">
+                    <div class="card-body">
+                        Nombres de personnes connectées
+                    </div>
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning">
+                        + 31
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="d-flex flex-column justify-content-evenly flex-wrap mb-5 border-top-0 border-end-0 border border-3 border m-3">
+        <h3 class="text-center mb-5">Les commentaires</h3>
+        <div>
+            <div style="padding:15px">
+                <div class="card border-0" style="background-color:#AED6F1">
+                    <div class="card-body">
+                        Commentaires en attente aujourd'hui
+                    </div>
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary">
+                        {{ count_comments.new }}
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div>
+            <div style="padding:15px">
+                <div class="card border-0" style="background-color:#D2B4DE">
+                    <div class="card-body">
+                        Total de commentaires
+                    </div>
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill" style="background-color:#A569BD">
+                        {{ count_comments.total }}
+                    </span>
+                </div>
+            </div>
+        </div>
+    
+        <div>
+            <div style="padding:15px">
+                <div class="card border-0" style="background-color:#FAD7A0">
+                    <div class="card-body">
+                        Commentaires en attentes
+                    </div>
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning">
+                        {{ count_comments.waiting }}
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <div style="padding:15px">
+                <div class="card border-0" style="background-color:#EDBB99">
+                    <div class="card-body">
+                        Commentaires refusés
+                    </div>
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                        {{ count_comments.refus }}
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <div style="padding:15px">
+                <div class="card border-0" style="background-color:#A9DFBF">
+                    <div class="card-body">
+                        Commentaires acceptés
+                    </div>
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-success">
+                        {{ count_comments.accept }}
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="d-flex flex-column justify-content-evenly flex-wrap mb-5 border-top-0 border-end-0 border border-3 border m-3">
+        <h3 class="text-center mb-5">Les comptes</h3>
+        <div>
+            <div style="padding:15px">
+                <div class="card border-0" style="background-color:#AED6F1">
+                    <div class="card-body">
+                        Demande de compte aujourd'hui
+                    </div>
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary">
+                        {{ count_users.new }}
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div>
+            <div style="padding:15px">
+                <div class="card border-0" style="background-color:#D2B4DE">
+                    <div class="card-body">
+                        Total de comptes
+                    </div>
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill" style="background-color:#A569BD">
+                        {{ count_users.total }}
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <div style="padding:15px">
+                <div class="card border-0" style="background-color:#FAD7A0">
+                    <div class="card-body">
+                        Comptes en attentes
+                    </div>
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning">
+                        {{ count_users.waiting }}
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <div style="padding:15px">
+                <div class="card border-0" style="background-color:#EDBB99">
+                    <div class="card-body">
+                        Comptes refusés
+                    </div>
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                        {{ count_users.refus }}
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <div style="padding:15px">
+                <div class="card border-0" style="background-color:#A9DFBF">
+                    <div class="card-body">
+                        Comptes acceptés
+                    </div>
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-success">
+                        {{ count_users.accept }}
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="d-flex flex-column justify-content-evenly flex-wrap mb-5 border-top-0 border-end-0 border border-3 border">
+        <h3 class="text-center mb-5">Les articles</h3>
+        <div>
+            <div style="padding:15px">
+                <div class="card border-0" style="background-color:#AED6F1">
+                    <div class="card-body">
+                        Nouveaux articles crées aujourd'hui
+                    </div>
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary">
+                        {{ count_posts.new }}
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div>
+            <div style="padding:15px">
+                <div class="card border-0" style="background-color:#D2B4DE">
+                    <div class="card-body">
+                        Total d'articles
+                    </div>
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill" style="background-color:#A569BD">
+                        {{ count_posts.total }}
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <div style="padding:15px">
+                <div class="card border-0" style="background-color:#A9DFBF">
+                    <div class="card-body">
+                        Articles publiés
+                    </div>
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-success">
+                        {{ count_posts.publish }}
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <div style="padding:15px">
+                <div class="card border-0" style="background-color:#FAD7A0">
+                    <div class="card-body">
+                        articles en attentes
+                    </div>
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning">
+                        {{ count_posts.waiting }}
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock content %}

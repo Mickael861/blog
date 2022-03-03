@@ -82,7 +82,6 @@ class LoginController extends Controller
                     'role' => $this->utilisateur[0]->role,
                     'user_pseudo' => $this->utilisateur[0]->pseudo
                 ));
-                
                 if ($this->utilisateur[0]->role === 'admin') {
                     $_SESSION['success'] = 'Vous êtes connecté';
                     header('Location: /admin/home/');

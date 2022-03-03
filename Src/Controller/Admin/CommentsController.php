@@ -5,6 +5,7 @@ use App\Controller\Controller;
 use App\Model\CommentsModel;
 use App\Model\PostsModel;
 use App\Model\UserModel;
+use App\Utils\Utils;
 
 class CommentsController extends Controller
 {
@@ -46,7 +47,7 @@ class CommentsController extends Controller
         $this->addStatusManagement($this->commentsModel);
 
         $this->commentsManagement();
-
+        
         echo $this->viewsRender($this->view, $this->datas, $this->folder);
     }
     
@@ -57,6 +58,9 @@ class CommentsController extends Controller
      */
     private function commentsManagement()
     {
+        $this->addStatutWaiting();
+
+        //Je gére plus les filtres
         $comments = $this->commentsModel->fetchAll(true, 'comment_id', $this->page, $this->filters, 'DESC');
         if (!empty($comments)) {
             $this->addDatasNbrsPages($this->commentsModel);
@@ -65,7 +69,9 @@ class CommentsController extends Controller
 
             $this->addSaveAccount($this->commentsModel);
         } else {
-            $this->datas['errors'] = 'Aucun commentaire trouvé';
+            $_SESSION['errors'] = 'Aucun commentaire trouvé';
+            header('Location: /admin/comments/1');
+            exit();
         }
     }
     
@@ -86,15 +92,20 @@ class CommentsController extends Controller
                 $comment->pseudo = $itemUser['pseudo'];
             }
 
-            $itemPost = $postsModel->fetchId($comment->post_id);
-            if (!empty($itemPost)) {
-                $comment->title_post = $itemPost['title'];
-            }
+            $this->addBadgeNewItems($comment);
 
             $this->addDatasStatutItem($comment);
 
+            $itemPost = $postsModel->fetchId($comment->post_id);
+            if (!empty($itemPost)) {
+                $comment->title_post = $itemPost['title'];
+                $comment->date_add = (new Utils())::dbToDate($comment->date_add);
+            }
+
             $comment->content = nl2br($comment->content);
         }
+        
+        $this->datas['today'] = date('Y-m-d');
 
         $this->datas['comments'] = $comments;
     }

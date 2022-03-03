@@ -2,18 +2,26 @@
 
 {% block content %}
 
-{% if accounts %}
     <h2 class="text-center">Filtres</h2>
     <form action="" method="POST">
         <div class="d-flex flex-row align-items-center justify-content-around card" style="padding:10px 5px 10px 5px; margin-bottom: 60px">
             <button type="submit" class="btn btn-primary">Filtrer</button>
+            <div class="form-check">
+                <input class="form-check-input" name="new" type="checkbox" value="{{ today }}" id="new" {% if new %} checked {% endif %}>
+                <label class="form-check-label" for="nouveau">
+                Nouveau
+                </label>
+                <span title="Nouveaux comptes" class="badge rounded-pill bg-primary">
+                    {{ users_new }}
+                </span>
+            </div>
             <div class="form-check">
                 <input class="form-check-input" name='statut_valide' type="checkbox" value="valider" id="valide" {% if statut_valide %} checked {% endif %}>
                 <label class="form-check-label" for="valide">
                 Validé
                 </label>
                 <span title="compte validé" class="badge rounded-pill bg-success">
-                    {{ accounts_valider }}
+                    {{ users_valider }}
                 </span>
             </div>
             <div class="form-check">
@@ -22,7 +30,7 @@
                 Refusé
                 </label>
                 <span title="Compte refusé" class="badge rounded-pill bg-danger">
-                    {{ accounts_refuser }}
+                    {{ users_refuser }}
                 </span>
             </div>
             <div class="form-check">
@@ -31,11 +39,12 @@
                 En attente
                 </label>
                 <span title="Compte en attente" class="badge rounded-pill bg-warning">
-                    {{ accounts_en_attente }}
+                    {{ users_en_attente }}
                 </span>
             </div>
         </div>
     </form>
+{% if accounts %}
     <!-- Posts -->
     <div>
         <table class="table table-striped">
@@ -66,13 +75,20 @@
                             </svg>
                         </a>
                     </td>
-                <td>{{ account.statut }}</td>
+                <td>{{ account.role }}</td>
                 <td>{{ account.pseudo }}</td>
                 <td>{{ account.firstname }}</td>
                 <td>{{ account.lastname }}</td>
                 <td>{{ account.email }}</td>
                 <td>{{ account.date_add }}</td>
-                <td style='color:{{ account.color_statut }}; font-weight:600;'>{{ account.statut }}</td>
+                <td style='color:{{ account.color_statut }}; font-weight:600;'>
+                    {{ account.statut }}
+                    {% if account.new %}
+                    <span title="Nouveau commentaire" class="badge rounded-pill bg-primary" style="font-size:0.7em">
+                        New
+                    </span>
+                    {% endif %}
+                </td>
                 </tr>
                 {% endfor %}
             </tbody>

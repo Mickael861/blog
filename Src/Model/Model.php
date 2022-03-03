@@ -190,13 +190,18 @@ abstract class Model
      * @return array|bool the items or false if it finds an error
      */
     public function fetchAll(
-        bool $total,
-        string $field,
-        int $page,
+        bool $total = false,
+        string $field = '',
+        int $page = 0,
         array $filters = array(),
         string $order = 'DESC',
         int $item_per_page = 20
     ) {
+
+        if (empty($field)) {
+            $field = $this->primary_key;
+        }
+
         if ($total) {
             if ($page < 1) {
                 $this->errors['page'] = 'La page demandée est inférieure aux nombres de page';
@@ -213,7 +218,12 @@ abstract class Model
                     $where .= $column . ' = "' . $value . '"';
 
                     if ($and !== $size_filter - 1) {
-                        $where .= ' OR ';
+
+                        if ($column === 'date_add') {
+                            $where .= ' AND ';
+                        } else {
+                            $where .= ' OR ';
+                        }
                     }
 
                     $and++;
@@ -320,6 +330,62 @@ abstract class Model
     }
     
     /**
+     * count the number of items with a filter
+     *
+     * @param  string $alias alias of the field
+     * @param  filters $filters value of the filters status
+     * @return int numbers of items
+     */
+    protected function getCountItemsWithFilter(string $alias, array $filters = array()): int
+    {
+        $query = 'SELECT count(*) AS ' . $alias . ' FROM ' . $this->table;
+
+        if (!empty($filters)) {
+            $query .= ' WHERE ';
+            foreach ($filters as $key => $filter) {
+                $query .= ' statut = "' . $filter . '" ';
+                if (!empty($filters[$key + 1])) {
+                    $query .= ' AND ';
+                }
+            }
+        }
+
+        return (int) $this->request($query)->fetch()[$alias];
+    }
+
+    /**
+     * Counts the number of pending items and new ones
+     *
+     * @return array A items counter
+     */
+    public function countItems(): array
+    {
+        $results_count['waiting'] = '+ ' . $this->getCountItemsWithFilter('waiting', array('en_attente'));
+        $results_count['new'] = '+ ' . $this->getCountNewItems();
+        $results_count['total'] = '+ ' . $this->getCountItemsWithFilter('total');
+        $results_count['publish'] = '+ ' . $this->getCountItemsWithFilter('publish', array('publier'));
+
+        $results_count['refus'] = '+ ' . $this->getCountItemsWithFilter('refus', array('refuser'));
+        $results_count['accept'] = '+ ' . $this->getCountItemsWithFilter('accept', array('valider'));
+
+        return $results_count;
+    }
+
+    /**
+     * Counts the new items
+     *
+     * @return int numbers of new items
+     */
+    public function getCountNewItems():int
+    {
+        $query = 'SELECT count(*) AS new FROM ' . $this->table .
+            ' WHERE statut <> "valider" AND statut != "refuser"' .
+            ' AND date_add = "' . date('Y-m-d') . '"';
+
+        return (int) $this->request($query)->fetch()['new'];
+    }
+    
+    /**
      * Get errors
      *
      * @return array error table
@@ -337,5 +403,15 @@ abstract class Model
     public function getNbrsPage(): int
     {
         return $this->nbrs_page;
+    }
+
+    /**
+     * Get the value of table
+     *
+     * @return  string
+     */
+    public function getTable(): string
+    {
+        return $this->table;
     }
 }

@@ -31,7 +31,43 @@ class Controller
     /**
      * @var string
      */
-    protected $no_access_session = false;
+    private $no_access_session = false;
+    
+    /**
+     *
+     * @var array
+     */
+    protected $datas_post = array();
+
+    /**
+     *
+     * @var array
+     */
+    protected $datas_get = array();
+
+    /**
+     *
+     * @var array
+     */
+    protected $datas_match = array();
+    
+    /**
+     *
+     * @var int
+     */
+    protected $page = 1;
+
+    /**
+     *
+     * @var int
+     */
+    private $nbrs_page = 0;
+    
+    /**
+     *
+     * @var array
+     */
+    protected $filters = array();
     
     /**
      * important data initialization
@@ -43,7 +79,6 @@ class Controller
         $this->session = new Access;
 
         $this->datas['user_session'] = $this->session::getSession();
-        
         $this->datas['title'] = $this->title;
         $this->datas['view'] = $this->view;
 
@@ -79,14 +114,16 @@ class Controller
      */
     private function manageSessionRedirects(): void
     {
+        
         if ($this->no_access_session && $this->session::sessionIsStart()) {
             header('Location: /');
             exit();
         }
-
+        //pb
         if ($this->admin_access && !$this->session::userIsAdmin()) {
-            require_once dirname(__DIR__, 2) . '/views/error404.twig';
-            exit;
+            $_SESSION['errors'] = 'Vous n\'avez pas accés à cette partie du blog';
+            header('Location: /');
+            exit();
         }
     }
 
@@ -153,6 +190,12 @@ class Controller
 
             unset($_SESSION['success']);
         }
+
+        if (!empty($_SESSION['errors'])) {
+            $this->datas['errors'] = $_SESSION['errors'];
+
+            unset($_SESSION['errors']);
+        }
     }
     
     /**
@@ -161,7 +204,7 @@ class Controller
      * @param  objet $item
      * @return void
      */
-    protected function addDatasStatutItem($item): void
+    protected function addDatasStatutItem(&$item): void
     {
         if ($item->statut === 'valider') {
             $item->color_statut = '#52BE80';
@@ -194,19 +237,32 @@ class Controller
      */
     private function statusManagement($model): void
     {
-        $this->filters = array();
-
+        $statut_expected = array(
+            'valider',
+            'refuser',
+            'en_attente',
+            date('Y-m-d'),
+            'publier'
+        );
+        
         foreach ($this->datas_post as $key => $post) {
-            if (!empty($this->datas_post[$key])) {
+            if (in_array($post, $statut_expected) && !empty($this->datas_post[$key])) {
                 $column = explode('_', $key)[0];
+
+                if ($column === 'new' || $column === 'newPosts') {
+                    $column = 'date_add';
+                }
                 $this->filters[$post] = $column;
                 $this->datas[$key] = $post;
             }
         }
-
+        
         $this->getNbrsItems('valider', $model);
         $this->getNbrsItems('refuser', $model);
         $this->getNbrsItems('en_attente', $model);
+        $this->getNbrsItems('publier', $model);
+        $this->getNbrsItems('new', $model);
+        $this->getNbrsItems('newPosts', $model);
     }
 
     /**
@@ -218,9 +274,19 @@ class Controller
      */
     private function getNbrsItems(string $statut, $model): void
     {
-        $this->datas['accounts_' . $statut] = '+ ' . sizeof($model->getAllWithParams(array(
+        $filters = array(
             'statut' => $statut
-        )));
+        );
+        if ($statut === 'new' || $statut === 'newPosts') {
+            $filters = array(
+                'date_add' => date('Y-m-d')
+            );
+            if ($statut === 'new') {
+                $filters['statut'] = 'en_attente';
+            }
+        }
+        
+        $this->datas[$model->getTable() . '_' . $statut] = '+ ' . sizeof($model->getAllWithParams($filters));
     }
     
     /**
@@ -281,5 +347,31 @@ class Controller
     {
         $this->page = empty($this->datas_match['page']) ? 1 : (int) $this->datas_match['page'];
         $this->datas['page'] = $this->page;
+    }
+    
+    /**
+     * Indicates that the item is a new item
+     *
+     * @param  objet $item
+     * @return void
+     */
+    protected function addBadgeNewItems($item)
+    {
+        $item->new = false;
+        if ($item->date_add === date('Y-m-d') && $item->statut !== 'refuser' && $item->statut !== 'valider') {
+            $item->new = true;
+        }
+    }
+    
+    /**
+     * Add an additional condition for new items
+     *
+     * @return void
+     */
+    protected function addStatutWaiting()
+    {
+        if (!empty($this->datas_post['new'])) {
+            $this->filters['en_attente'] = 'statut';
+        }
     }
 }

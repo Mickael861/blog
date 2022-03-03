@@ -79,6 +79,7 @@ class SignupController extends Controller
             'lastname' => $this->datas_post['lastname'],
             'email' => $this->datas_post['email'],
             'password' => password_hash($this->datas_post['password'], PASSWORD_ARGON2I),
+            'date_add' => date('Y-m-d'),
             'statut' => 'en_attente'
         );
 
