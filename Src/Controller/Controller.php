@@ -237,17 +237,28 @@ class Controller
      */
     private function statusManagement($model): void
     {
+        $statut_expected = array(
+            'valider',
+            'refuser',
+            'en_attente',
+            date('Y-m-d')
+        );
+        
         foreach ($this->datas_post as $key => $post) {
-            if (!empty($this->datas_post[$key])) {
+            if (in_array($post, $statut_expected) && !empty($this->datas_post[$key])) {
                 $column = explode('_', $key)[0];
+                if ($column === 'new') {
+                    $column = 'date_add';
+                }
                 $this->filters[$post] = $column;
                 $this->datas[$key] = $post;
             }
         }
-
+        
         $this->getNbrsItems('valider', $model);
         $this->getNbrsItems('refuser', $model);
         $this->getNbrsItems('en_attente', $model);
+        $this->getNbrsItems('new', $model);
     }
 
     /**
@@ -259,9 +270,15 @@ class Controller
      */
     private function getNbrsItems(string $statut, $model): void
     {
-        $this->datas[$model->getTable() . '_' . $statut] = '+ ' . sizeof($model->getAllWithParams(array(
+        $filters = array(
             'statut' => $statut
-        )));
+        );
+        if ($statut === 'new') {
+            $filters = array(
+                'date_add' => date('Y-m-d')
+            );
+        }
+        $this->datas[$model->getTable() . '_' . $statut] = '+ ' . sizeof($model->getAllWithParams($filters));
     }
     
     /**

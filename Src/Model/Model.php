@@ -190,13 +190,18 @@ abstract class Model
      * @return array|bool the items or false if it finds an error
      */
     public function fetchAll(
-        bool $total,
-        string $field,
-        int $page,
+        bool $total = false,
+        string $field = '',
+        int $page = 0,
         array $filters = array(),
         string $order = 'DESC',
         int $item_per_page = 20
     ) {
+
+        if (empty($field)) {
+            $field = $this->primary_key;
+        }
+
         if ($total) {
             if ($page < 1) {
                 $this->errors['page'] = 'La page demandée est inférieure aux nombres de page';
@@ -213,7 +218,12 @@ abstract class Model
                     $where .= $column . ' = "' . $value . '"';
 
                     if ($and !== $size_filter - 1) {
-                        $where .= ' OR ';
+
+                        if ($column === 'date_add') {
+                            $where .= ' AND ';
+                        } else {
+                            $where .= ' OR ';
+                        }
                     }
 
                     $and++;

@@ -2,4 +2,45 @@
 
 {% block content %}
 
+<h3 class="text-center mb-5">Espace commentaires</h3>
+
+<div class="d-flex flex-row justify-content-evenly flex-wrap mb-5">
+    <form action="/admin/comments/1" method="POST">
+        <input type="hidden" name="statut_en_attente" value="en_attente">
+        <input type="hidden" name="new" value="{{ today}}">
+        <div class='link-secondary text-decoration-none' style="padding:15px">
+            <button class="card border-0" style="background-color:#AED6F1">
+                <div class="card-body">
+                    Nouveau commentaire
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-bar-right" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M6 8a.5.5 0 0 0 .5.5h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L12.293 7.5H6.5A.5.5 0 0 0 6 8zm-2.5 7a.5.5 0 0 1-.5-.5v-13a.5.5 0 0 1 1 0v13a.5.5 0 0 1-.5.5z"/>
+                </svg>
+                </div>
+                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary">
+                    {{ count_comments.new_comments }}
+                </span>
+            </button>
+        </div>
+    </form>
+
+    <form action="/admin/comments/1" method="POST">
+        <input type="hidden" name="statut" value="en_attente">
+        <div class='link-secondary text-decoration-none' style="padding:15px">
+            <button class="card border-0" style="background-color:#FAD7A0">
+                <div class="card-body">
+                    Commentaires en attentes
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-bar-right" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M6 8a.5.5 0 0 0 .5.5h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L12.293 7.5H6.5A.5.5 0 0 0 6 8zm-2.5 7a.5.5 0 0 1-.5-.5v-13a.5.5 0 0 1 1 0v13a.5.5 0 0 1-.5.5z"/>
+                </svg>
+                </div>
+                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning">
+                    {{ count_comments.comments_waiting }}
+                </span>
+            </button>
+        </div>
+    </form>
+</div>
+
+<h3 class="text-center mb-5">Espace comptes</h3>
+
 {% endblock content %}

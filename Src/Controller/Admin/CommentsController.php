@@ -47,7 +47,7 @@ class CommentsController extends Controller
         $this->addStatusManagement($this->commentsModel);
 
         $this->commentsManagement();
-
+        
         echo $this->viewsRender($this->view, $this->datas, $this->folder);
     }
     
@@ -58,6 +58,7 @@ class CommentsController extends Controller
      */
     private function commentsManagement()
     {
+        //Je gére plus les filtres
         $comments = $this->commentsModel->fetchAll(true, 'comment_id', $this->page, $this->filters, 'DESC');
         if (!empty($comments)) {
             $this->addDatasNbrsPages($this->commentsModel);
@@ -66,7 +67,9 @@ class CommentsController extends Controller
 
             $this->addSaveAccount($this->commentsModel);
         } else {
-            $this->datas['errors'] = 'Aucun commentaire trouvé';
+            $_SESSION['errors'] = 'Aucun commentaire trouvé';
+            header('Location: /admin/comments/' . $this->page);
+            exit();
         }
     }
     
@@ -87,16 +90,24 @@ class CommentsController extends Controller
                 $comment->pseudo = $itemUser['pseudo'];
             }
 
+            $this->addDatasStatutItem($comment);
+
+            $comment->new_comments = false;
+            if ($comment->date_add === date('Y-m-d')
+                && $comment->statut !== 'Refuser' && $comment->statut !== 'Valider') {
+                $comment->new_comments = true;
+            }
+
             $itemPost = $postsModel->fetchId($comment->post_id);
             if (!empty($itemPost)) {
                 $comment->title_post = $itemPost['title'];
                 $comment->date_add = (new Utils())::dbToDate($comment->date_add);
             }
 
-            $this->addDatasStatutItem($comment);
-
             $comment->content = nl2br($comment->content);
         }
+        
+        $this->datas['today'] = date('Y-m-d');
 
         $this->datas['comments'] = $comments;
     }

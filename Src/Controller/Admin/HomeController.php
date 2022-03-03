@@ -2,6 +2,7 @@
 namespace App\Controller\Admin;
 
 use App\Controller\Controller;
+use App\Model\CommentsModel;
 
 class HomeController extends Controller
 {
@@ -35,6 +36,11 @@ class HomeController extends Controller
     public function homeAction(array $datas = array()): void
     {
         $this->init($datas);
+
+        $modelComments = new CommentsModel;
+        $this->datas['count_comments'] = $modelComments->countComments();
+
+        $this->datas['today'] = date('Y-m-d');
 
         echo $this->viewsRender($this->view, $this->datas, $this->folder);
     }
