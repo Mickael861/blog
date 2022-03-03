@@ -11,7 +11,7 @@
                 <label class="form-check-label" for="nouveau">
                 Nouveau
                 </label>
-                <span title="Commentaires en attentes" class="badge rounded-pill bg-primary">
+                <span title="Nouveaux commentaires" class="badge rounded-pill bg-primary">
                     {{ comments_new }}
                 </span>
             </div>
@@ -79,7 +79,7 @@
                     <td>{{ comment.date_add }}</td>
                     <td style='color:{{ comment.color_statut }}; font-weight:600;'>
                         {{ comment.statut }}
-                        {% if comment.new_comments %}
+                        {% if comment.new %}
                         <span title="Nouveau commentaire" class="badge rounded-pill bg-primary" style="font-size:0.7em">
                             New
                         </span>

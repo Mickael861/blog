@@ -204,7 +204,7 @@ class Controller
      * @param  objet $item
      * @return void
      */
-    protected function addDatasStatutItem($item): void
+    protected function addDatasStatutItem(&$item): void
     {
         if ($item->statut === 'valider') {
             $item->color_statut = '#52BE80';
@@ -215,6 +215,11 @@ class Controller
         } else {
             $item->color_statut = '#F5B041';
             $item->statut = 'En attente';
+        }
+
+        $item->new = false;
+        if ($item->date_add === date('Y-m-d')) {
+            $item->new = true;
         }
     }
     
@@ -252,6 +257,7 @@ class Controller
                 }
                 $this->filters[$post] = $column;
                 $this->datas[$key] = $post;
+                $_SESSION['filters_comments'] = $this->filters;
             }
         }
         

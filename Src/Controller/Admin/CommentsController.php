@@ -68,7 +68,7 @@ class CommentsController extends Controller
             $this->addSaveAccount($this->commentsModel);
         } else {
             $_SESSION['errors'] = 'Aucun commentaire trouvé';
-            header('Location: /admin/comments/' . $this->page);
+            header('Location: /admin/comments/1');
             exit();
         }
     }
@@ -91,12 +91,6 @@ class CommentsController extends Controller
             }
 
             $this->addDatasStatutItem($comment);
-
-            $comment->new_comments = false;
-            if ($comment->date_add === date('Y-m-d')
-                && $comment->statut !== 'Refuser' && $comment->statut !== 'Valider') {
-                $comment->new_comments = true;
-            }
 
             $itemPost = $postsModel->fetchId($comment->post_id);
             if (!empty($itemPost)) {

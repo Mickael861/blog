@@ -59,18 +59,22 @@ class AccountsController extends Controller
         $accounts = $this->userModel->fetchAll(true, 'user_id', $this->page, $this->filters, 'DESC');
         if (!empty($accounts)) {
             $this->addDatasNbrsPages($this->userModel);
-    
-            foreach ($accounts as $account) {
+
+            foreach ($accounts as &$account) {
                 $this->addDatasStatutItem($account);
 
                 $account->date_add = (new Utils())::dbToDate($account->date_add);
             }
 
+            $this->datas['today'] = date('Y-m-d');
+            dump($accounts);
             $this->datas['accounts'] = $accounts;
             
             $this->addSaveAccount($this->userModel);
         } else {
-            $this->datas['errors'] = 'Aucun compte trouvé';
+            $_SESSION['errors'] = 'Aucun compte trouvé';
+            header('Location: /admin/accounts/1');
+            exit();
         }
     }
 }
