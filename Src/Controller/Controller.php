@@ -216,11 +216,6 @@ class Controller
             $item->color_statut = '#F5B041';
             $item->statut = 'En attente';
         }
-
-        $item->new = false;
-        if ($item->date_add === date('Y-m-d')) {
-            $item->new = true;
-        }
     }
     
     /**
@@ -248,7 +243,7 @@ class Controller
             'en_attente',
             date('Y-m-d')
         );
-        
+
         foreach ($this->datas_post as $key => $post) {
             if (in_array($post, $statut_expected) && !empty($this->datas_post[$key])) {
                 $column = explode('_', $key)[0];
@@ -257,10 +252,9 @@ class Controller
                 }
                 $this->filters[$post] = $column;
                 $this->datas[$key] = $post;
-                $_SESSION['filters_comments'] = $this->filters;
             }
         }
-        
+
         $this->getNbrsItems('valider', $model);
         $this->getNbrsItems('refuser', $model);
         $this->getNbrsItems('en_attente', $model);
@@ -281,9 +275,11 @@ class Controller
         );
         if ($statut === 'new') {
             $filters = array(
-                'date_add' => date('Y-m-d')
+                'date_add' => date('Y-m-d'),
+                'statut' => 'en_attente'
             );
         }
+
         $this->datas[$model->getTable() . '_' . $statut] = '+ ' . sizeof($model->getAllWithParams($filters));
     }
     
@@ -345,5 +341,31 @@ class Controller
     {
         $this->page = empty($this->datas_match['page']) ? 1 : (int) $this->datas_match['page'];
         $this->datas['page'] = $this->page;
+    }
+    
+    /**
+     * Indicates that the item is a new item
+     *
+     * @param  objet $item
+     * @return void
+     */
+    protected function addBadgeNewItems($item)
+    {
+        $item->new = false;
+        if ($item->date_add === date('Y-m-d') && $item->statut !== 'refuser' && $item->statut !== 'valider') {
+            $item->new = true;
+        }
+    }
+    
+    /**
+     * Add an additional condition for new items
+     *
+     * @return void
+     */
+    protected function addStatutWaiting()
+    {
+        if (!empty($this->datas_post['new'])) {
+            $this->filters['en_attente'] = 'statut';
+        }
     }
 }

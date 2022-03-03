@@ -58,6 +58,8 @@ class CommentsController extends Controller
      */
     private function commentsManagement()
     {
+        $this->addStatutWaiting();
+
         //Je gére plus les filtres
         $comments = $this->commentsModel->fetchAll(true, 'comment_id', $this->page, $this->filters, 'DESC');
         if (!empty($comments)) {
@@ -89,6 +91,8 @@ class CommentsController extends Controller
             if (!empty($itemUser)) {
                 $comment->pseudo = $itemUser['pseudo'];
             }
+
+            $this->addBadgeNewItems($comment);
 
             $this->addDatasStatutItem($comment);
 

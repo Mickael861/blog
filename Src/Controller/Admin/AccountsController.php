@@ -55,19 +55,23 @@ class AccountsController extends Controller
     private function accountsManagement(): void
     {
         $this->addDatasPages();
+        
+        $this->addStatutWaiting();
 
         $accounts = $this->userModel->fetchAll(true, 'user_id', $this->page, $this->filters, 'DESC');
         if (!empty($accounts)) {
             $this->addDatasNbrsPages($this->userModel);
 
             foreach ($accounts as &$account) {
+                $this->addBadgeNewItems($account);
+
                 $this->addDatasStatutItem($account);
 
                 $account->date_add = (new Utils())::dbToDate($account->date_add);
             }
 
             $this->datas['today'] = date('Y-m-d');
-            dump($accounts);
+
             $this->datas['accounts'] = $accounts;
             
             $this->addSaveAccount($this->userModel);

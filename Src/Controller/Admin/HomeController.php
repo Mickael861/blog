@@ -3,6 +3,8 @@ namespace App\Controller\Admin;
 
 use App\Controller\Controller;
 use App\Model\CommentsModel;
+use App\Model\PostsModel;
+use App\Model\UserModel;
 
 class HomeController extends Controller
 {
@@ -38,7 +40,11 @@ class HomeController extends Controller
         $this->init($datas);
 
         $modelComments = new CommentsModel;
-        $this->datas['count_comments'] = $modelComments->countComments();
+        $modelUsers = new UserModel;
+        $modelPosts = new PostsModel;
+        $this->datas['count_comments'] = $modelComments->countItems();
+        $this->datas['count_users'] = $modelUsers->countItems();
+        $this->datas['count_posts'] = $modelPosts->countItems();
 
         $this->datas['today'] = date('Y-m-d');
 

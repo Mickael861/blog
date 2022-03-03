@@ -73,33 +73,4 @@ class CommentsModel extends Model
         
         return $this->request($query, $params)->fetchAll(PDO::FETCH_CLASS, $this->class);
     }
-
-    /**
-     * Counts the number of pending comments and new ones
-     *
-     * @return array A comment counter
-     */
-    public function countComments(): array
-    {
-        $query = 'SELECT count(*) AS comments_waiting FROM ' . $this->table . ' WHERE statut = "en_attente"';
-        $results_count['comments_waiting'] = '+ ' . (int) $this->request($query)->fetch()['comments_waiting'];
-
-        $results_count['new_comments'] = '+ ' . $this->getCountNewComments();
-
-        return $results_count;
-    }
-    
-    /**
-     * Counts the new comments
-     *
-     * @return int numbers of new comments
-     */
-    public function getCountNewComments():int
-    {
-        $query = 'SELECT count(*) AS new_comments FROM ' . $this->table .
-            ' WHERE statut <> "valider" AND statut != "refuser"' .
-            ' AND date_add = "' . date('Y-m-d') . '"';
-
-        return (int) $this->request($query)->fetch()['new_comments'];
-    }
 }
