@@ -74,7 +74,6 @@ class PostsController extends Controller
         foreach ($posts as $post) {
             $itemUser = $userModel->fetchId($post->user_id);
             $post->user_name = $itemUser['pseudo'];
-
             $post->date_upd = (new Utils())::dbToDate($post->date_upd);
         }
         

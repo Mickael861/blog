@@ -315,7 +315,7 @@ class Controller
             $model->save($datas_save, $this->datas_get['refuse']);
             $_SESSION['success'] = 'Compte refusé';
 
-            header('Location: /admin/accounts/' . $this->page);
+            header('Location: /admin/' . $this->view . '/' . $this->page);
             exit();
         }
     }
@@ -333,7 +333,7 @@ class Controller
             $model->save($datas_save, (int) $this->datas_get['valide']);
             $_SESSION['success'] = 'Compte accepté';
             
-            header('Location: /admin/accounts/' . $this->page);
+            header('Location: /admin/' . $this->view . '/' . $this->page);
             exit();
         }
     }

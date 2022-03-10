@@ -52,6 +52,7 @@ class PostController extends Controller
         $this->itemPost = $modelPosts->fetchId($post_id);
         $slug_url = $this->datas_match['slug'];
         $slug_post = $this->itemPost['slug'];
+        
         if (!empty($this->itemPost) && $slug_url === $slug_post) {
             $this->addDatasPost();
             

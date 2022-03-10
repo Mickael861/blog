@@ -34,19 +34,19 @@ class PostsModel extends Model
         'title' => array(
             'name' => 'Le titre de l\'article',
             'type' => 'string',
-            'sizemax' => 50,
+            'sizemax' => 225,
             'required' => true
         ),
         'slug' => array(
             'name' => 'Le slug de l\'article',
             'type' => 'string',
-            'sizemax' => 50,
+            'sizemax' => 225,
             'required' => true
         ),
         'chapo' => array(
             'name' => 'Le chapô  de l\'article',
             'type' => 'string',
-            'sizemax' => 50,
+            'sizemax' => 225,
             'required' => true
         ),
         'content' => array(
@@ -57,7 +57,7 @@ class PostsModel extends Model
         'author' => array(
             'name' => 'Le nom de l\'auteur',
             'type' => 'string',
-            'sizemax' => 50,
+            'sizemax' => 125,
             'required' => true
         ),
         'statut' => array(

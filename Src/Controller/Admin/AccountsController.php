@@ -76,9 +76,7 @@ class AccountsController extends Controller
             
             $this->addSaveAccount($this->userModel);
         } else {
-            $_SESSION['errors'] = 'Aucun compte trouvé';
-            header('Location: /admin/accounts/1');
-            exit();
+            $this->datas['errors'] = 'Aucun compte trouvé';
         }
     }
 }

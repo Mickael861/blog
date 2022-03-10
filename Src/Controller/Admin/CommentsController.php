@@ -60,7 +60,6 @@ class CommentsController extends Controller
     {
         $this->addStatutWaiting();
 
-        //Je gére plus les filtres
         $comments = $this->commentsModel->fetchAll(true, 'comment_id', $this->page, $this->filters, 'DESC');
         if (!empty($comments)) {
             $this->addDatasNbrsPages($this->commentsModel);
@@ -69,9 +68,7 @@ class CommentsController extends Controller
 
             $this->addSaveAccount($this->commentsModel);
         } else {
-            $_SESSION['errors'] = 'Aucun commentaire trouvé';
-            header('Location: /admin/comments/1');
-            exit();
+            $this->datas['errors'] = 'Aucun commentaire trouvé';
         }
     }
     

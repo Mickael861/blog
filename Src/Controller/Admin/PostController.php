@@ -4,6 +4,7 @@ namespace App\Controller\Admin;
 use App\Controller\Controller;
 use App\Model\PostsModel;
 use App\Utils\Form;
+use App\Utils\Utils;
 
 class PostController extends Controller
 {
@@ -105,16 +106,18 @@ class PostController extends Controller
      */
     private function createUpdatePost($is_update): void
     {
+
+        $slug = (new Utils())::changeSlugCharacter($this->datas_post['title']);
         $datas_save = array(
             'title' => $this->datas_post['title'],
             'chapo' => $this->datas_post['chapo'],
             'content' => $this->datas_post['content'],
-            'slug' => str_replace(array(' ', '\''), array('-', ''), strtolower($this->datas_post['title'])),
+            'slug' => $slug,
             'author' => $this->datas_post['author'],
             'user_upd' => (int) $this->datas['user_session']['user_id'],
             'date_upd' => date('Y-m-d')
         );
-        
+
         if ($is_update) {
             $datas_save['user_id'] = (int) $this->item_post['user_id'];
             $datas_save['statut'] = $this->item_post['statut'];
