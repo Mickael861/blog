@@ -60,7 +60,7 @@ class CommentsController extends Controller
     {
         $this->addStatutWaiting();
 
-        $comments = $this->commentsModel->fetchAll(true, 'comment_id', $this->page, $this->filters, 'DESC');
+        $comments = $this->commentsModel->fetchAll(true, 'comment_id', $this->page, $this->filters, 'DESC', 12);
         if (!empty($comments)) {
             $this->addDatasNbrsPages($this->commentsModel);
     

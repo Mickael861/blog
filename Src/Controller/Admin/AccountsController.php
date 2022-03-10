@@ -58,7 +58,7 @@ class AccountsController extends Controller
         
         $this->addStatutWaiting();
 
-        $accounts = $this->userModel->fetchAll(true, 'user_id', $this->page, $this->filters, 'DESC');
+        $accounts = $this->userModel->fetchAll(true, 'user_id', $this->page, $this->filters, 'DESC', 12);
         if (!empty($accounts)) {
             $this->addDatasNbrsPages($this->userModel);
 
