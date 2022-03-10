@@ -2,107 +2,108 @@
 
 {% block content %}
 
-<h2 class="text-center">Filtres</h2>
 <form action="" method="POST">
-    <div class="d-flex flex-row align-items-center justify-content-around card" style="padding:10px 5px 10px 5px; margin-bottom: 60px">
-        <button type="submit" class="btn btn-primary">Filtrer</button>
+  <div class="dropdown">
+    <button class="btn btn-success dropdown-toggle btn-filters" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+      Filtrer
+    </button>
+    <ul class="dropdown-menu p-3" aria-labelledby="dropdownMenuButton1">
+      <li>
         <div class="form-check">
-            <input class="form-check-input" name="newPosts" type="checkbox" value="{{ today }}" id="newPosts" {% if newPosts %} checked {% endif %}>
-            <label class="form-check-label" for="nouveau">
-            Nouveau
-            </label>
-            <span title="Nouvelles articles" class="badge rounded-pill bg-primary">
-                {{ posts_newPosts }}
-            </span>
-        </div>
+          <input class="form-check-input" name="newPosts" type="checkbox" value="{{ today }}" id="newPosts" {% if newPosts %} checked {% endif %}>
+          <label class="form-check-label" for="nouveau">
+          Nouveau
+          </label>
+          <span title="Nouvelles articles" class="badge rounded-pill bg-primary">
+              {{ posts_newPosts }}
+          </span>
+      </div>
+      </li>
+      <li>
         <div class="form-check">
-            <input class="form-check-input" name='statut_publier' type="checkbox" value="publier" id="publier" {% if statut_publier %} checked {% endif %}>
-            <label class="form-check-label" for="publier">
-            Publier
-            </label>
-            <span title="Articles publiés" class="badge rounded-pill bg-success">
-                {{ posts_publier }}
-            </span>
-        </div>
+          <input class="form-check-input" name='statut_publier' type="checkbox" value="publier" id="publier" {% if statut_publier %} checked {% endif %}>
+          <label class="form-check-label" for="publier">
+          Publier
+          </label>
+          <span title="Articles publiés" class="badge rounded-pill bg-success">
+              {{ posts_publier }}
+          </span>
+      </div>
+      </li>
+      <li>
         <div class="form-check">
-            <input class="form-check-input" name="statut_en_attente" type="checkbox" value="en_attente" id="attente" {% if statut_en_attente %} checked {% endif %}>
-            <label class="form-check-label" for="attente">
-            En attente
-            </label>
-            <span title="Articles en attentes" class="badge rounded-pill bg-warning">
-                {{ posts_en_attente }}
-            </span>
-        </div>
-    </div>
+          <input class="form-check-input" name="statut_en_attente" type="checkbox" value="en_attente" id="attente" {% if statut_en_attente %} checked {% endif %}>
+          <label class="form-check-label" for="attente">
+          En attente
+          </label>
+          <span title="Articles en attentes" class="badge rounded-pill bg-warning">
+              {{ posts_en_attente }}
+          </span>
+      </div>
+      </li>
+      <button type="submit" class="btn btn-primary btn-send-filter">Filtrer</button>
+    </ul>
+  </div>
 </form>
 
-<a href="/admin/post/create" class="btn btn-primary btn-lg" tabindex="-1" role="button" aria-disabled="true">
-  <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="currentColor" class="bi bi-plus" viewBox="0 0 16 16">
-    <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+<a href="/admin/post/create" class="btn btn-danger btn-create" tabindex="-1" role="button" aria-disabled="true">
+  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-hammer" viewBox="0 0 16 16">
+    <path d="M9.972 2.508a.5.5 0 0 0-.16-.556l-.178-.129a5.009 5.009 0 0 0-2.076-.783C6.215.862 4.504 1.229 2.84 3.133H1.786a.5.5 0 0 0-.354.147L.146 4.567a.5.5 0 0 0 0 .706l2.571 2.579a.5.5 0 0 0 .708 0l1.286-1.29a.5.5 0 0 0 .146-.353V5.57l8.387 8.873A.5.5 0 0 0 14 14.5l1.5-1.5a.5.5 0 0 0 .017-.689l-9.129-8.63c.747-.456 1.772-.839 3.112-.839a.5.5 0 0 0 .472-.334z"/>
   </svg>
   Créer un article
 </a>
 
 {% if posts %}
-  <!-- Posts -->
-  <div>
-      <table class="table table-striped">
-          <thead>
-              <tr class="text-center">
-                  <th style="width:150px"></th>
-                  <th>Titre</th>
-                  <th>Chapô</th>
-                  <th>Auteur</th>
-                  <th>Date d'ajout</th>
-                  <th>statut</th>
-              </tr>
-            </thead>
-            <tbody class='text-break'>
-              {% for post in posts %}
-              <tr class="table-active text-center">
-                <td>
-                  <a title="Modifier l'article" href="/admin/post/update/?id={{ post.post_id }}" class="btn btn-lg" tabindex="-1" role="button" aria-disabled="true">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="#52BE80" class="bi bi-pencil" viewBox="0 0 16 16">
-                      <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"/>
-                    </svg>
-                  </a>
-                  <a title="Supprimer l'article" href="/admin/posts/{{ page }}?delete={{ post.post_id }}" class="btn btn-lg" tabindex="-1" role="button" aria-disabled="true">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="#EC7063" class="bi bi-trash" viewBox="0 0 16 16">
-                      <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
-                      <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
-                    </svg>
-                  </a>
-                </td>
-                <td>
-                  {% if post.new %}
-                  <span title="Nouvelle article" class="badge rounded-pill bg-primary" style="font-size:0.7em">
-                      New
-                  </span>
-                  {% endif %}
-                  {{ post.title }}
-                </td>
-                <td>{{ post.chapo }}</td>
-                <td>{{ post.author }}</td>
-                <td>{{ post.date_add }}</td>
-                <td>
-                  {% if post.is_publish %}
-                  <a title="Mettre en attente l'article" href="/admin/posts/{{ page }}/?publish={{ post.post_id }}" class="" tabindex="-1" role="button" aria-disabled="true">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-toggle-on" viewBox="0 0 16 16">
-                      <path d="M5 3a5 5 0 0 0 0 10h6a5 5 0 0 0 0-10H5zm6 9a4 4 0 1 1 0-8 4 4 0 0 1 0 8z"/>
-                    </svg>
-                  </a>
-                  {% else %}
-                  <a title="Publier l'article" href="/admin/posts/{{ page }}/?publish={{ post.post_id }}" class="" tabindex="-1" role="button" aria-disabled="true">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-toggle-off" viewBox="0 0 16 16">
-                      <path d="M11 4a4 4 0 0 1 0 8H8a4.992 4.992 0 0 0 2-4 4.992 4.992 0 0 0-2-4h3zm-6 8a4 4 0 1 1 0-8 4 4 0 0 1 0 8zM0 8a5 5 0 0 0 5 5h6a5 5 0 0 0 0-10H5a5 5 0 0 0-5 5z"/>
-                    </svg>
-                  </a>
-                  {% endif %}
-                </td>
-              </tr>
-              {% endfor %}
-            </tbody>
-      </table>
+
+  <div class="d-flex justify-content-center flex-wrap align-items-start">
+    {% for post in posts %}
+    <div class="card m-4 p-2" style="width: 18rem;">
+      <div class="position-absolute l-2">
+        {% if post.new %}
+        <span title="Nouvelle article" class="badge rounded-pill bg-primary" style="font-size:0.7em">
+            New
+        </span>
+        {% endif %}
+      </div>
+        <div class="card-body">
+          <div class="card-body d-flex justify-content-evenly align-items-center p-0">
+            <a title="Modifier l'article" href="/admin/post/update/?id={{ post.post_id }}" class="btn btn-lg" tabindex="-1" role="button" aria-disabled="true">
+              <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="#52BE80" class="bi bi-pencil" viewBox="0 0 16 16">
+                <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"/>
+              </svg>
+            </a>
+            <a title="Supprimer l'article" href="/admin/posts/{{ page }}?delete={{ post.post_id }}" class="btn btn-lg" tabindex="-1" role="button" aria-disabled="true">
+              <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="#EC7063" class="bi bi-trash" viewBox="0 0 16 16">
+                <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+                <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item"><span class="fw-bolder">Titre</span> : {{ post.title }}</li>
+            <li class="list-group-item"><span class="fw-bolder">Auteur</span> : {{ post.author }}</li>
+            <li class="list-group-item"><span class="fw-bolder">Date d'ajout</span> : {{ post.date_add }}</li>
+            <li class="list-group-item"><span class="fw-bolder">Date de modification</span> : {{ post.date_upd }}</li>
+            <li class="list-group-item">
+              <span class="fw-bolder">Statut</span> : 
+              {% if post.is_publish %}
+              <a title="Mettre en attente l'article" href="/admin/posts/{{ page }}/?publish={{ post.post_id }}" class="" tabindex="-1" role="button" aria-disabled="true">
+                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-toggle-on" viewBox="0 0 16 16">
+                  <path d="M5 3a5 5 0 0 0 0 10h6a5 5 0 0 0 0-10H5zm6 9a4 4 0 1 1 0-8 4 4 0 0 1 0 8z"/>
+                </svg>
+              </a>
+              {% else %}
+              <a title="Publier l'article" href="/admin/posts/{{ page }}/?publish={{ post.post_id }}" class="" tabindex="-1" role="button" aria-disabled="true">
+                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-toggle-off" viewBox="0 0 16 16">
+                  <path d="M11 4a4 4 0 0 1 0 8H8a4.992 4.992 0 0 0 2-4 4.992 4.992 0 0 0-2-4h3zm-6 8a4 4 0 1 1 0-8 4 4 0 0 1 0 8zM0 8a5 5 0 0 0 5 5h6a5 5 0 0 0 0-10H5a5 5 0 0 0-5 5z"/>
+                </svg>
+              </a>
+              {% endif %}
+            </li>
+        </ul>
+    </div>
+    {% endfor %}
   </div>
 
   <!-- paging -->

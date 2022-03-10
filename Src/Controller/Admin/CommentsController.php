@@ -58,8 +58,6 @@ class CommentsController extends Controller
      */
     private function commentsManagement()
     {
-        $this->addStatutWaiting();
-
         $comments = $this->commentsModel->fetchAll(true, 'comment_id', $this->page, $this->filters, 'DESC', 12);
         if (!empty($comments)) {
             $this->addDatasNbrsPages($this->commentsModel);

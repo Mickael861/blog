@@ -24,6 +24,5 @@ $router->map('admin_comments', 'admin/comments/:page', 'comments', 'comments', '
 $router->map('view_comments', 'admin/getcontentcommentid', 'comments', 'getcontentcommentid', 'Admin');
 
 $router->map('admin_accounts', 'admin/accounts/:page', 'accounts', 'accounts', 'Admin', array('page'));
-$router->map('view_accounts', 'admin/getcontentaccountid', 'comments', 'getcontentaccountid', 'Admin');
 
 $router->run();

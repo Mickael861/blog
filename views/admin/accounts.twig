@@ -1,11 +1,13 @@
 {% extends "layout.twig" %}
 
 {% block content %}
-
-    <h2 class="text-center">Filtres</h2>
-    <form action="" method="POST">
-        <div class="d-flex flex-row align-items-center justify-content-around card" style="padding:10px 5px 10px 5px; margin-bottom: 60px">
-            <button type="submit" class="btn btn-primary">Filtrer</button>
+<form action="" method="POST">
+    <div class="dropdown">
+      <button class="btn btn-success dropdown-toggle btn-filters" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+        Filtrer
+      </button>
+      <ul class="dropdown-menu p-3" aria-labelledby="dropdownMenuButton1">
+        <li>
             <div class="form-check">
                 <input class="form-check-input" name="new" type="checkbox" value="{{ today }}" id="new" {% if new %} checked {% endif %}>
                 <label class="form-check-label" for="nouveau">
@@ -15,6 +17,8 @@
                     {{ users_new }}
                 </span>
             </div>
+        </li>
+        <li>
             <div class="form-check">
                 <input class="form-check-input" name='statut_valide' type="checkbox" value="valider" id="valide" {% if statut_valide %} checked {% endif %}>
                 <label class="form-check-label" for="valide">
@@ -24,6 +28,8 @@
                     {{ users_valider }}
                 </span>
             </div>
+        </li>
+        <li>
             <div class="form-check">
                 <input class="form-check-input" name="statut_refuse" type="checkbox" value="refuser" id="refuse" {% if statut_refuse %} checked {% endif %}>
                 <label class="form-check-label" for="refuse">
@@ -33,6 +39,8 @@
                     {{ users_refuser }}
                 </span>
             </div>
+        </li>
+        <li>
             <div class="form-check">
                 <input class="form-check-input" name="statut_en_attente" type="checkbox" value="en_attente" id="attente" {% if statut_en_attente %} checked {% endif %}>
                 <label class="form-check-label" for="attente">
@@ -42,13 +50,17 @@
                     {{ users_en_attente }}
                 </span>
             </div>
-        </div>
-    </form>
+        </li>
+        <button type="submit" class="btn btn-primary btn-send-filter">Filtrer</button>
+      </ul>
+    </div>
+</form>
+
 {% if accounts %}
 
-    <div class="d-flex justify-content-between flex-wrap align-items-start">
+    <div class="d-flex justify-content-center flex-wrap align-items-start">
         {% for account in accounts %}
-        <div class="card mb-5" style="width: 18rem;">
+        <div class="card m-4" style="width: 18rem;">
             <div class="card-body">
                 <h5 class="card-title">
                     Statut 
@@ -69,7 +81,7 @@
                 <li class="list-group-item"><span class="fw-bolder">Email</span> : {{ account.email }}</li>
                 <li class="list-group-item"><span class="fw-bolder">Date d'ajout</span> : {{ account.date_add }}</li>
             </ul>
-            <div class="card-body d-flex justify-content-evenly">
+            <div class="card-body d-flex justify-content-evenly align-items-center">
                 {% if account.statut == 'Refuser' or account.statut == 'En attente' %}
                     <a href="/admin/accounts/{{ page }}/?valide={{ account.user_id }}" class="text-decoration-none btn-accept">Accepter</a>
                 {% if account.statut == 'En attente' %}

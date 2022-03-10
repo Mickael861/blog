@@ -281,11 +281,8 @@ class Controller
             $filters = array(
                 'date_add' => date('Y-m-d')
             );
-            if ($statut === 'new') {
-                $filters['statut'] = 'en_attente';
-            }
         }
-        
+
         $this->datas[$model->getTable() . '_' . $statut] = '+ ' . sizeof($model->getAllWithParams($filters));
     }
     
@@ -363,18 +360,6 @@ class Controller
         $item->new = false;
         if ($item->date_add === date('Y-m-d') && $item->statut !== 'refuser' && $item->statut !== 'valider') {
             $item->new = true;
-        }
-    }
-    
-    /**
-     * Add an additional condition for new items
-     *
-     * @return void
-     */
-    protected function addStatutWaiting()
-    {
-        if (!empty($this->datas_post['new'])) {
-            $this->filters['en_attente'] = 'statut';
         }
     }
 }
