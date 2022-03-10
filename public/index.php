@@ -19,7 +19,11 @@ $router->map('signup', 'signup', 'signup', 'signup');
 $router->map('admin_home', 'admin/home', 'home', 'home', 'Admin');
 $router->map('admin_posts', 'admin/posts/:page', 'posts', 'posts', 'Admin', array('page'));
 $router->map('admin_post', 'admin/post/:action', 'post', 'post', 'Admin', array('action'));
+
 $router->map('admin_comments', 'admin/comments/:page', 'comments', 'comments', 'Admin', array('page'));
+$router->map('view_comments', 'admin/getcontentcommentid', 'comments', 'getcontentcommentid', 'Admin');
+
 $router->map('admin_accounts', 'admin/accounts/:page', 'accounts', 'accounts', 'Admin', array('page'));
+$router->map('view_accounts', 'admin/getcontentaccountid', 'comments', 'getcontentaccountid', 'Admin');
 
 $router->run();

@@ -293,27 +293,29 @@ class Controller
      * record new statuses
      *
      * @param  objet $model
+     * @param  array $message the message of refusal or acceptance
      * @return void
      */
-    protected function addSaveAccount($model): void
+    protected function changeStatusItem($model, array $message): void
     {
-        $this->saveRefusAccount($model);
+        $this->saveRefusAccount($model, $message['refus']);
 
-        $this->saveValideAccount($model);
+        $this->saveValideAccount($model, $message['accept']);
     }
 
     /**
      * save refus account
      *
      * @param  objet $model
+     * @param  string $message_refus the rejection message
      * @return void
      */
-    private function saveRefusAccount($model): void
+    private function saveRefusAccount($model, string $message_refus): void
     {
         if (!empty($this->datas_get['refuse'])) {
             $datas_save['statut'] = 'refuser';
             $model->save($datas_save, $this->datas_get['refuse']);
-            $_SESSION['success'] = 'Compte refusé';
+            $_SESSION['success'] = $message_refus;
 
             header('Location: /admin/' . $this->view . '/' . $this->page);
             exit();
@@ -324,14 +326,15 @@ class Controller
      * save valide account
      *
      * @param  objet $model
+     * @param  string $message_accept the validation message
      * @return void
      */
-    private function saveValideAccount($model): void
+    private function saveValideAccount($model, string $message_accept): void
     {
         if (!empty($this->datas_get['valide'])) {
             $datas_save['statut'] = 'valider';
             $model->save($datas_save, (int) $this->datas_get['valide']);
-            $_SESSION['success'] = 'Compte accepté';
+            $_SESSION['success'] = $message_accept;
             
             header('Location: /admin/' . $this->view . '/' . $this->page);
             exit();

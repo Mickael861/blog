@@ -42,13 +42,35 @@ body {
    height: 60px;
 }
 
-.btn-accept:hover {
-   transform: scale(1.4);
+.btn-refus {
+   color:white;
+   background-color: #F5B7B1;
+   padding: 2px 10px 2px 10px;
+   border-radius: 3px;
+   transform: .2s;
 }
 
-.btn-refus {
-   transform: rotate(45deg);
-}
 .btn-refus:hover {
-   transform: scale(1.4) rotate(45deg);
+   background-color: #F1948A;
+   color: white;
+}
+
+.btn-accept {
+   color:white;
+   background-color: #A9DFBF;
+   padding: 2px 10px 2px 10px;
+   border-radius: 3px;
+   transform: .2s;
+}
+
+.btn-accept:hover {
+   background-color: #7DCEA0;
+   color: white;
+}
+
+.more_view_comment {
+   border:none;
+   background-color: white;
+   color: black;
+   text-decoration: underline;
 }

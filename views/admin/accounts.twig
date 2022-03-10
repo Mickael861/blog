@@ -45,6 +45,54 @@
         </div>
     </form>
 {% if accounts %}
+
+<div class="d-flex justify-content-between flex-wrap align-items-start">
+    {% for account in accounts %}
+    <div class="card mb-5" style="width: 18rem;">
+        <div class="card-body">
+            <h5 class="card-title">
+                Statut 
+            </h5>
+            <p class="card-text" style='color:{{ account.color_statut }}; font-weight:600;'>
+                {{ account.statut }}
+                {% if account.new %}
+                <span title="Nouveau commentaire" class="badge rounded-pill bg-primary" style="font-size:0.7em">
+                    New
+                </span>
+                {% endif %}
+            </p>
+        </div>
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item"><span class="fw-bolder">Rôle</span> : {{ account.role }}</li>
+            <li class="list-group-item"><span class="fw-bolder">Pseudo</span> : {{ account.pseudo }}</li>
+            <li class="list-group-item"><span class="fw-bolder">
+                Commentaire</span> : </br> {{ comment.content|raw }} 
+                {% if comment.with_btn_content %}
+                <button type="button" class="btn btn-primary more_view_comment" data-comment_id="{{ comment.comment_id }}" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-double-right" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M3.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L9.293 8 3.646 2.354a.5.5 0 0 1 0-.708z"/>
+                        <path fill-rule="evenodd" d="M7.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L13.293 8 7.646 2.354a.5.5 0 0 1 0-.708z"/>
+                    </svg>
+                </button>
+                {% endif %}
+            </li>
+        </ul>
+        <div class="card-body d-flex justify-content-evenly">
+            {% if comment.statut == 'Refuser' or comment.statut == 'En attente' %}
+            <a href="/admin/comments/{{ page }}/?valide={{ comment.comment_id }}" class="text-decoration-none btn-accept">Accepter</a>
+            {% if comment.statut == 'En attente' %}
+                <a href="/admin/comments/{{ page }}?refuse={{ comment.comment_id }}" class="text-decoration-none btn-refus">Refuser</a>
+            {% endif %}
+            {% else %}
+            <a href="/admin/comments/{{ page }}?refuse={{ comment.comment_id }}" class="text-decoration-none btn-refus">Refuser</a>
+            {% endif %}
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+
+
     <!-- Posts -->
     <div>
         <table class="table table-striped">
@@ -114,4 +162,5 @@
     </nav>
     {% endif %}
 {% endif %}
+
 {% endblock content %}

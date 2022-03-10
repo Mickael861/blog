@@ -44,67 +44,61 @@
         </div>
     </form>
 {% if comments %}
-    {% for comment in comments %}
-    <div class="card" style="width: 18rem;">
-        <div class="card-body">
-            <h5 class="card-title">{{ comment.title_post }}</h5>
-            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+    <div class="d-flex justify-content-between flex-wrap align-items-start">
+        {% for comment in comments %}
+        <div class="card mb-5" style="width: 18rem;">
+            <div class="card-body">
+                <h5 class="card-title">
+                    Statut 
+                </h5>
+                <p class="card-text" style='color:{{ comment.color_statut }}; font-weight:600;'>
+                    {{ comment.statut }}
+                    {% if comment.new %}
+                    <span title="Nouveau commentaire" class="badge rounded-pill bg-primary" style="font-size:0.7em">
+                        New
+                    </span>
+                    {% endif %}
+                </p>
+            </div>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item"><span class="fw-bolder">Auteur</span> : {{ comment.pseudo }}</li>
+                <li class="list-group-item"><span class="fw-bolder">Date d'ajout</span> : {{ comment.date_add }}</li>
+                <li class="list-group-item"><span class="fw-bolder">
+                    Commentaire</span> : </br> {{ comment.content|raw }} 
+                    {% if comment.with_btn_content %}
+                    <button type="button" class="btn btn-primary more_view_comment" data-comment_id="{{ comment.comment_id }}" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-double-right" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M3.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L9.293 8 3.646 2.354a.5.5 0 0 1 0-.708z"/>
+                            <path fill-rule="evenodd" d="M7.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L13.293 8 7.646 2.354a.5.5 0 0 1 0-.708z"/>
+                        </svg>
+                    </button>
+                    {% endif %}
+                </li>
+            </ul>
+            <div class="card-body d-flex justify-content-evenly">
+                {% if comment.statut == 'Refuser' or comment.statut == 'En attente' %}
+                <a href="/admin/comments/{{ page }}/?valide={{ comment.comment_id }}" class="text-decoration-none btn-accept">Accepter</a>
+                {% if comment.statut == 'En attente' %}
+                    <a href="/admin/comments/{{ page }}?refuse={{ comment.comment_id }}" class="text-decoration-none btn-refus">Refuser</a>
+                {% endif %}
+                {% else %}
+                <a href="/admin/comments/{{ page }}?refuse={{ comment.comment_id }}" class="text-decoration-none btn-refus">Refuser</a>
+                {% endif %}
+            </div>
         </div>
-        <ul class="list-group list-group-flush">
-            <li class="list-group-item">An item</li>
-            <li class="list-group-item">A second item</li>
-            <li class="list-group-item">A third item</li>
-        </ul>
-        <div class="card-body">
-            <a href="#" class="card-link">Card link</a>
-            <a href="#" class="card-link">Another link</a>
-        </div>
+        {% endfor %}
     </div>
-    {% endfor %}
-    <!-- Posts -->
-    <div>
-        <table class="table table-striped">
-            <thead>
-                <tr class="text-center">
-                    <th style="width:150px"></th>
-                    <th>Utilisateur</th>
-                    <th>Titre de l'article</th>
-                    <th>Commentaire</th>
-                    <th>Date d'ajout</th>
-                    <th>statut</th>
-                </tr>
-            </thead>
-            <tbody class="text-break">
-                {% for comment in comments %}
-                <tr class="table-active text-center">
-                    <td>
-                        <a title="Valider le commentaire" href="/admin/comments/{{ page }}/?valide={{ comment.comment_id }}" class="btn btn-lg" tabindex="-1" role="button" aria-disabled="true">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="#52BE80" class="bi bi-patch-check-fill btn-accept" viewBox="0 0 16 16">
-                                <path d="M10.067.87a2.89 2.89 0 0 0-4.134 0l-.622.638-.89-.011a2.89 2.89 0 0 0-2.924 2.924l.01.89-.636.622a2.89 2.89 0 0 0 0 4.134l.637.622-.011.89a2.89 2.89 0 0 0 2.924 2.924l.89-.01.622.636a2.89 2.89 0 0 0 4.134 0l.622-.637.89.011a2.89 2.89 0 0 0 2.924-2.924l-.01-.89.636-.622a2.89 2.89 0 0 0 0-4.134l-.637-.622.011-.89a2.89 2.89 0 0 0-2.924-2.924l-.89.01-.622-.636zm.287 5.984-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7 8.793l2.646-2.647a.5.5 0 0 1 .708.708z"/>
-                            </svg>
-                        </a>
-                        <a title="Refuser le commentaire" href="/admin/comments/{{ page }}?refuse={{ comment.comment_id }}" class="btn btn-lg" tabindex="-1" role="button" aria-disabled="true">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="#EC7063" class="bi bi-patch-plus-fill btn-refus" viewBox="0 0 16 16">
-                                <path d="M10.067.87a2.89 2.89 0 0 0-4.134 0l-.622.638-.89-.011a2.89 2.89 0 0 0-2.924 2.924l.01.89-.636.622a2.89 2.89 0 0 0 0 4.134l.637.622-.011.89a2.89 2.89 0 0 0 2.924 2.924l.89-.01.622.636a2.89 2.89 0 0 0 4.134 0l.622-.637.89.011a2.89 2.89 0 0 0 2.924-2.924l-.01-.89.636-.622a2.89 2.89 0 0 0 0-4.134l-.637-.622.011-.89a2.89 2.89 0 0 0-2.924-2.924l-.89.01-.622-.636zM8.5 6v1.5H10a.5.5 0 0 1 0 1H8.5V10a.5.5 0 0 1-1 0V8.5H6a.5.5 0 0 1 0-1h1.5V6a.5.5 0 0 1 1 0z"/>
-                            </svg>
-                        </a>
-                    </td>
-                    <td>{{ comment.pseudo }}</td>
-                    <td>{{ comment.title_post }}</td>
-                    <td style="max-width: 300px">{{ comment.content|raw }}</td>
-                    <td>{{ comment.date_add }}</td>
-                    <td style='color:{{ comment.color_statut }}; font-weight:600;'>
-                        {{ comment.statut }}
-                        {% if comment.new %}
-                        <span title="Nouveau commentaire" class="badge rounded-pill bg-primary" style="font-size:0.7em">
-                            New
-                        </span>
-                        {% endif %}
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+
+    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel">Commentaire complet</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="content_comment"></div>
+            </div>
+        </div>
     </div>
 
     <!-- paging -->
@@ -126,4 +120,34 @@
     </nav>
     {% endif %}
 {% endif %}
+
+{% block javascripts %}
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('.more_view_comment').on('click', function() {
+            $('.modal-staticBackdrop').attr('display', 'block');
+            var comment_id = $(this).data('comment_id');
+
+            $.ajax({
+                type: 'POST',
+                data: {comment_id : comment_id},
+                async: false,
+                dataType: 'json',
+                url: '/admin/getcontentcommentid',
+                success: function (response) {
+                    var content_comment = response.content_comment || '';
+
+                    if (content_comment.length !== 0) {
+                        $('#content_comment').html(content_comment)
+                    }
+                    
+                }
+            });
+
+            return false;
+        })
+    });
+</script>
+{% endblock %}
+
 {% endblock content %}

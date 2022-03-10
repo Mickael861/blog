@@ -59,6 +59,7 @@ class PostController extends Controller
 
         if ($is_update) {
             $this->item_post = $this->modelPosts->fetchId($this->datas_get['id']);
+
             if (!empty($this->item_post) && empty($this->datas_post)) {
                 $is_valide = false;
 
@@ -75,7 +76,7 @@ class PostController extends Controller
             "author" => 'Auteur',
             "content" => 'Contenu'
         );
-
+        
         $action = '';
         $this->formLogin = new Form($action, 'POST', $this->datas_post);
 
@@ -156,7 +157,7 @@ class PostController extends Controller
         $fields = $formPost->addInputText('title', 'title', 'Titre', 'text', true);
         $fields .= $formPost->addInputText('chapo', 'chapo', 'Chapô', 'text', true);
         $fields .= $formPost->addInputText('author', 'author', 'Auteur', 'text', true);
-        $fields .= $formPost->addTextArea('content', 'content', 'Message', true);
+        $fields .= $formPost->addTextArea('content', 'content', 'Contenu', true);
         $fields .= $formPost->addButton('Enregistrer', 'margin-btn-form');
 
         return $formPost->createForm($fields);
