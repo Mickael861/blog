@@ -1,167 +1,162 @@
 {% extends "/twig-template/layout.twig" %}
 
 {% block content %}
-
-<form action="" method="POST">
-    <div class="dropdown">
-      <button class="btn btn-success dropdown-toggle btn-filters" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-        Filtrer
-      </button>
-      <ul class="dropdown-menu p-3" aria-labelledby="dropdownMenuButton1">
-        <li>
-            <div class="form-check">
-                <input class="form-check-input" name="new" type="checkbox" value="{{ today }}" id="new" {% if new %} checked {% endif %}>
-                <label class="form-check-label" for="nouveau">
-                Nouveau
-                </label>
-                <span title="Nouveaux commentaires" class="badge rounded-pill bg-primary">
-                    {{ comments_new }}
-                </span>
-            </div>
-        </li>
-        <li>
-            <div class="form-check">
-                <input class="form-check-input" name='statut_valide' type="checkbox" value="valider" id="valide" {% if statut_valide %} checked {% endif %}>
-                <label class="form-check-label" for="valide">
-                Validé
-                </label>
-                <span title="Commentaires validés" class="badge rounded-pill bg-success">
-                    {{ comments_valider }}
-                </span>
-            </div>
-        </li>
-        <li>
-            <div class="form-check">
-                <input class="form-check-input" name="statut_refuse" type="checkbox" value="refuser" id="refuse" {% if statut_refuse %} checked {% endif %}>
-                <label class="form-check-label" for="refuse">
-                Refusé
-                </label>
-                <span title="Commentaires refusés" class="badge rounded-pill bg-danger">
-                    {{ comments_refuser }}
-                </span>
-            </div>
-        </li>
-        <li>
-            <div class="form-check">
-                <input class="form-check-input" name="statut_en_attente" type="checkbox" value="en_attente" id="attente" {% if statut_en_attente %} checked {% endif %}>
-                <label class="form-check-label" for="attente">
-                En attente
-                </label>
-                <span title="Commentaires en attentes" class="badge rounded-pill bg-warning">
-                    {{ comments_en_attente }}
-                </span>
-            </div>
-        </li>
-        <button type="submit" class="btn btn-primary btn-send-filter">Filtrer</button>
-      </ul>
-    </div>
-</form>
-
-{% if comments %}
-    <div class="d-flex justify-content-center flex-wrap align-items-left">
-        {% for comment in comments %}
-        <div class="card m-4" style="width: 18rem;">
-            <div class="card-body">
-                <h5 class="card-title">
-                    Statut 
-                </h5>
-                <p class="card-text" style='color:{{ comment.color_statut }}; font-weight:600;'>
-                    {{ comment.statut }}
-                    {% if comment.new %}
-                    <span title="Nouveau commentaire" class="badge rounded-pill bg-primary" style="font-size:0.7em">
-                        New
+    <form action="" method="POST">
+        <div class="dropdown">
+        <button class="btn btn-success dropdown-toggle btn-filters" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+            Filtrer
+        </button>
+        <ul class="dropdown-menu p-3" aria-labelledby="dropdownMenuButton1">
+            <li>
+                <div class="form-check">
+                    <input class="form-check-input" name="new" type="checkbox" value="{{ today }}" id="new" {% if new %} checked {% endif %}>
+                    <label class="form-check-label" for="nouveau">
+                    Nouveau
+                    </label>
+                    <span title="Nouveaux commentaires" class="badge rounded-pill bg-primary">
+                        {{ comments_new }}
                     </span>
-                    {% endif %}
-                </p>
+                </div>
+            </li>
+            <li>
+                <div class="form-check">
+                    <input class="form-check-input" name='statut_valide' type="checkbox" value="valider" id="valide" {% if statut_valide %} checked {% endif %}>
+                    <label class="form-check-label" for="valide">
+                    Validé
+                    </label>
+                    <span title="Commentaires validés" class="badge rounded-pill bg-success">
+                        {{ comments_valider }}
+                    </span>
+                </div>
+            </li>
+            <li>
+                <div class="form-check">
+                    <input class="form-check-input" name="statut_refuse" type="checkbox" value="refuser" id="refuse" {% if statut_refuse %} checked {% endif %}>
+                    <label class="form-check-label" for="refuse">
+                    Refusé
+                    </label>
+                    <span title="Commentaires refusés" class="badge rounded-pill bg-danger">
+                        {{ comments_refuser }}
+                    </span>
+                </div>
+            </li>
+            <li>
+                <div class="form-check">
+                    <input class="form-check-input" name="statut_en_attente" type="checkbox" value="en_attente" id="attente" {% if statut_en_attente %} checked {% endif %}>
+                    <label class="form-check-label" for="attente">
+                    En attente
+                    </label>
+                    <span title="Commentaires en attentes" class="badge rounded-pill bg-warning">
+                        {{ comments_en_attente }}
+                    </span>
+                </div>
+            </li>
+            <button type="submit" class="btn btn-primary btn-send-filter">Filtrer</button>
+        </ul>
+        </div>
+    </form>
+    {% if comments %}
+        <div class="d-flex justify-content-center flex-wrap align-items-left">
+            {% for comment in comments %}
+                <div class="card m-4" style="width: 18rem;">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            Statut 
+                        </h5>
+                        <p class="card-text" style='color:{{ comment.color_statut }}; font-weight:600;'>
+                            {{ comment.statut }}
+                            {% if comment.new %}
+                                <span title="Nouveau commentaire" class="badge rounded-pill bg-primary" style="font-size:0.7em">
+                                    New
+                                </span>
+                            {% endif %}
+                        </p>
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item"><span class="fw-bolder">Auteur</span> : {{ comment.pseudo }}</li>
+                        <li class="list-group-item"><span class="fw-bolder">Date d'ajout</span> : {{ comment.date_add }}</li>
+                        <li class="list-group-item "><span class="fw-bolder">
+                                Commentaire</span> : </br> {{ comment.content|raw }} 
+                            {% if comment.with_btn_content %}
+                                <button type="button" class="btn btn-primary more_view_comment" data-comment_id="{{ comment.comment_id }}" data-bs-toggle="modal" data-bs-target="#staticBackdrop" title="Voir plus">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-chat-left-dots" viewBox="0 0 16 16">
+                                        <path d="M14 1a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H4.414A2 2 0 0 0 3 11.586l-2 2V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12.793a.5.5 0 0 0 .854.353l2.853-2.853A1 1 0 0 1 4.414 12H14a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/>
+                                        <path d="M5 6a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"/>
+                                    </svg>
+                                </button>
+                            {% endif %}
+                        </li>
+                    </ul>
+                    <div class="card-body d-flex justify-content-evenly align-items-center">
+                        {% if comment.statut == 'Refuser' or comment.statut == 'En attente' %}
+                            <a href="/admin/comments/{{ page }}/?valide={{ comment.comment_id }}" class="text-decoration-none btn-accept">Accepter</a>
+                            {% if comment.statut == 'En attente' %}
+                                <a href="/admin/comments/{{ page }}?refuse={{ comment.comment_id }}" class="text-decoration-none btn-refus">Refuser</a>
+                            {% endif %}
+                        {% else %}
+                            <a href="/admin/comments/{{ page }}?refuse={{ comment.comment_id }}" class="text-decoration-none btn-refus">Refuser</a>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="staticBackdropLabel">Commentaire complet</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body" id="content_comment"></div>
+                </div>
             </div>
-            <ul class="list-group list-group-flush">
-                <li class="list-group-item"><span class="fw-bolder">Auteur</span> : {{ comment.pseudo }}</li>
-                <li class="list-group-item"><span class="fw-bolder">Date d'ajout</span> : {{ comment.date_add }}</li>
-                <li class="list-group-item "><span class="fw-bolder">
-                        Commentaire</span> : </br> {{ comment.content|raw }} 
-                    {% if comment.with_btn_content %}
-                    <button type="button" class="btn btn-primary more_view_comment" data-comment_id="{{ comment.comment_id }}" data-bs-toggle="modal" data-bs-target="#staticBackdrop" title="Voir plus">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-chat-left-dots" viewBox="0 0 16 16">
-                            <path d="M14 1a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H4.414A2 2 0 0 0 3 11.586l-2 2V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12.793a.5.5 0 0 0 .854.353l2.853-2.853A1 1 0 0 1 4.414 12H14a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/>
-                            <path d="M5 6a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"/>
-                        </svg>
-                    </button>
-                    {% endif %}
+        </div>
+
+        {% if not errors %}
+            <nav aria-label="navigation pagination" style='margin-top:100px'>
+            <ul class="pagination justify-content-center">
+                <li class="page-item {{ pagination_before }}">
+                <a class="page-link" href="/admin/comments/{{ page - 1}}">Précédent</a>
+                </li>
+                {% for page in 1 .. nbrs_page %}
+                    <li class="page-item">
+                        <a class="page-link" href="/admin/comments/{{ page }}">{{ page }}</a>
+                    </li>
+                {% endfor %}
+                <li class="page-item {{ pagination_next }}">
+                <a class="page-link" href="/admin/comments/{{ page + 1 }}">Suivant</a>
                 </li>
             </ul>
-            <div class="card-body d-flex justify-content-evenly align-items-center">
-                {% if comment.statut == 'Refuser' or comment.statut == 'En attente' %}
-                <a href="/admin/comments/{{ page }}/?valide={{ comment.comment_id }}" class="text-decoration-none btn-accept">Accepter</a>
-                {% if comment.statut == 'En attente' %}
-                    <a href="/admin/comments/{{ page }}?refuse={{ comment.comment_id }}" class="text-decoration-none btn-refus">Refuser</a>
-                {% endif %}
-                {% else %}
-                <a href="/admin/comments/{{ page }}?refuse={{ comment.comment_id }}" class="text-decoration-none btn-refus">Refuser</a>
-                {% endif %}
-            </div>
-        </div>
-        {% endfor %}
-    </div>
-
-    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="staticBackdropLabel">Commentaire complet</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body" id="content_comment"></div>
-            </div>
-        </div>
-    </div>
-
-    <!-- paging -->
-    {% if not errors %}
-    <nav aria-label="navigation pagination" style='margin-top:100px'>
-    <ul class="pagination justify-content-center">
-        <li class="page-item {{ pagination_before }}">
-        <a class="page-link" href="/admin/comments/{{ page - 1}}">Précédent</a>
-        </li>
-        {% for page in 1 .. nbrs_page %}
-        <li class="page-item">
-            <a class="page-link" href="/admin/comments/{{ page }}">{{ page }}</a>
-        </li>
-        {% endfor %}
-        <li class="page-item {{ pagination_next }}">
-        <a class="page-link" href="/admin/comments/{{ page + 1 }}">Suivant</a>
-        </li>
-    </ul>
-    </nav>
+            </nav>
+        {% endif %}
     {% endif %}
-{% endif %}
+    {% block javascripts %}
+        <script type="text/javascript">
+            $(document).ready(function() {
+                $('.more_view_comment').on('click', function() {
+                    $('.modal-staticBackdrop').attr('display', 'block');
+                    var comment_id = $(this).data('comment_id');
 
-{% block javascripts %}
-<script type="text/javascript">
-    $(document).ready(function() {
-        $('.more_view_comment').on('click', function() {
-            $('.modal-staticBackdrop').attr('display', 'block');
-            var comment_id = $(this).data('comment_id');
+                    $.ajax({
+                        type: 'POST',
+                        data: {comment_id : comment_id},
+                        async: false,
+                        dataType: 'json',
+                        url: '/admin/getcontentcommentid',
+                        success: function (response) {
+                            var content_comment = response.content_comment || '';
 
-            $.ajax({
-                type: 'POST',
-                data: {comment_id : comment_id},
-                async: false,
-                dataType: 'json',
-                url: '/admin/getcontentcommentid',
-                success: function (response) {
-                    var content_comment = response.content_comment || '';
+                            if (content_comment.length !== 0) {
+                                $('#content_comment').html(content_comment)
+                            }
+                            
+                        }
+                    });
 
-                    if (content_comment.length !== 0) {
-                        $('#content_comment').html(content_comment)
-                    }
-                    
-                }
+                    return false;
+                })
             });
-
-            return false;
-        })
-    });
-</script>
-{% endblock %}
-
+        </script>
+    {% endblock %}
 {% endblock content %}

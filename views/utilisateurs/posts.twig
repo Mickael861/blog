@@ -1,46 +1,41 @@
 {% extends "/twig-template/layout.twig" %}
 
 {% block content %}
-
-<!-- Posts -->
-<div class='row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4'>
-    {% for post in posts %}
-    <div>
-      <div class="col">
-        <div class="card shadow-sm">
-            <div class="">
-                <div class="card-body">
-                    <h5 class="card-title">{{ post.title }}</h5>
-                    <p class="card-text">{{ post.chapo }}</p>
-                    <div class='d-flex justify-content-end'>
-                      <a href="/post/{{ post.slug }}/{{ post.post_id }}" class="btn btn-primary align-right">Voir plus</a>
+  <div class='row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4'>
+      {% for post in posts %}
+        <div>
+          <div class="col">
+            <div class="card shadow-sm">
+                <div class="">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ post.title }}</h5>
+                        <p class="card-text">{{ post.chapo }}</p>
+                        <div class='d-flex justify-content-end'>
+                          <a href="/post/{{ post.slug }}/{{ post.post_id }}" class="btn btn-primary align-right">Voir plus</a>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="d-flex justify-content-between align-items-end bg-light text-dark h-25 p-3">
-              <p class="text-muted m-0">Mise à jour le : {{ post.date_upd }}</p>
+                <div class="d-flex justify-content-between align-items-end bg-light text-dark h-25 p-3">
+                  <p class="text-muted m-0">Mise à jour le : {{ post.date_upd }}</p>
+                </div>
             </div>
         </div>
-    </div>
-    </div>
-    {% endfor %}
-</div>
-
-<!-- paging -->
-{% if not errors %}
-<nav aria-label="navigation pagination" style='margin-top:100px'>
-  <ul class="pagination justify-content-center">
-    <li class="page-item {{ pagination_before }}">
-      <a class="page-link" href="/posts/{{ page - 1}}">Précédent</a>
-    </li>
-    {% for page in 1 .. nbrs_page %}
-      <li class="page-item"><a class="page-link" href="/posts/{{ page }}">{{ page }}</a></li>
-    {% endfor %}
-    <li class="page-item {{ pagination_next }}">
-      <a class="page-link" href="/posts/{{ page + 1 }}">Suivant</a>
-    </li>
-  </ul>
-</nav>
-{% endif %}
-
+        </div>
+      {% endfor %}
+  </div>
+  {% if not errors %}
+    <nav aria-label="navigation pagination" style='margin-top:100px'>
+      <ul class="pagination justify-content-center">
+        <li class="page-item {{ pagination_before }}">
+          <a class="page-link" href="/posts/{{ page - 1}}">Précédent</a>
+        </li>
+        {% for page in 1 .. nbrs_page %}
+          <li class="page-item"><a class="page-link" href="/posts/{{ page }}">{{ page }}</a></li>
+        {% endfor %}
+        <li class="page-item {{ pagination_next }}">
+          <a class="page-link" href="/posts/{{ page + 1 }}">Suivant</a>
+        </li>
+      </ul>
+    </nav>
+  {% endif %}
 {% endblock content %}
