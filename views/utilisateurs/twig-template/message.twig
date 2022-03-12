@@ -1,0 +1,16 @@
+<div style="margin: 50px 0 50px 0">
+
+    <h1 class='text-center border-bottom'>{{ title }}</h1>
+    
+    {% if errors %}
+    <div class="alert alert-danger text-center" role="alert">
+        {{ errors|raw }}
+    </div>
+    {% endif %}
+
+    {% if success %}
+    <div class="alert alert-success text-center" role="alert">
+        {{ success|raw }}
+    </div>
+    {% endif %}
+  </div>
