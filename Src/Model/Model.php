@@ -155,7 +155,15 @@ abstract class Model
             $this->primary_key => $item_id
         );
 
-        return self::request($query, $params)->fetch();
+        $result = self::request($query, $params)->fetch();
+
+        foreach ($this->fields as $key_field => $field) {
+            if (!empty($result[$key_field])) {
+                $result[$key_field] = htmlspecialchars_decode($result[$key_field]);
+            }
+        }
+        
+        return $result;
     }
     
     /**
@@ -174,7 +182,17 @@ abstract class Model
         
         $query .= implode(' AND ', $str_params);
 
-        return self::request($query, $params)->fetchAll(PDO::FETCH_CLASS, $this->class);
+        $results = self::request($query, $params)->fetchAll(PDO::FETCH_CLASS, $this->class);
+
+        foreach ($this->fields as $key_field => $field) {
+            foreach ($results as &$result) {
+                if (!empty($result->$key_field)) {
+                    $result->$key_field = htmlspecialchars_decode($result->$key_field);
+                }
+            }
+        }
+
+        return $results;
     }
     
         
@@ -218,7 +236,6 @@ abstract class Model
                     $where .= $column . ' = "' . $value . '"';
 
                     if ($and !== $size_filter - 1) {
-
                         if ($column === 'date_add') {
                             $where .= ' AND ';
                         } else {
@@ -256,7 +273,18 @@ abstract class Model
             $query = 'SELECT * FROM ' . $this->table;
         }
         
-        return self::request($query)->fetchAll(PDO::FETCH_CLASS, $this->class);
+        $results = self::request($query)->fetchAll(PDO::FETCH_CLASS, $this->class);
+
+        
+        foreach ($this->fields as $key_field => $field) {
+            foreach ($results as &$result) {
+                if (!empty($result->$key_field)) {
+                    $result->$key_field = htmlspecialchars_decode($result->$key_field);
+                }
+            }
+        }
+
+        return $results;
     }
     
     /**
@@ -325,7 +353,7 @@ abstract class Model
 
             return $query;
         }
-
+        
         return $pdo->query($query);
     }
     

@@ -1,76 +1,70 @@
-{% extends "layout.twig" %}
+{% extends "/twig-template/layout.twig" %}
 
 {% block content %}
-
-<!-- Post -->
-{% if not errors %}
-<div class='row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4 justify-content-center'>
-  <div>
-    <div class="col">
-      <div class="card shadow-sm">
-          <div class="">
-              <div class="card-body">
-                  <h5 class="card-title">{{ post.title }}</h5>
-                  <p class="card-text">{{ post.chapo }}</p>
-                  <p class="card-text">{{ post.content|raw }}</p>
+  {% if not errors %}
+    <div class='row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4 justify-content-center'>
+      <div>
+        <div class="col">
+          <div class="card shadow-sm">
+              <div class="">
+                  <div class="card-body">
+                      <h5 class="card-title">{{ post.title }}</h5>
+                      <p class="card-text">{{ post.chapo }}</p>
+                      <p class="card-text">{{ post.content|raw }}</p>
+                  </div>
+              </div>
+              <div class="d-flex justify-content-between align-items-end bg-light text-dark h-25 p-3">
+                <p class="text-muted m-0">Auteur : {{ post.author }}</p>
+                <p class="text-muted m-0">Mise à jour le : {{ post.date_upd }}</p>
               </div>
           </div>
-          <div class="d-flex justify-content-between align-items-end bg-light text-dark h-25 p-3">
-            <p class="text-muted m-0">Auteur : {{ post.author }}</p>
-            <p class="text-muted m-0">Mise à jour le : {{ post.date_upd }}</p>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin: 50px 0 50px 0"></div>
+      <h2 class='text-center border-bottom'>Espace commentaires</h2>
+      {% if not comments %}
+        <div class="text-center mt-5">
+          <p class='card-text'> Soyez le premier à commenter ...</p>
+        </div>
+      {% endif %}
+
+      {% if errors_comment %}
+        <div class="alert alert-danger text-center" role="alert">
+            {{ errors_comment }}
+        </div>
+      {% endif %}
+
+      {% if success_comment %}
+        <div class="alert alert-success text-center" role="alert">
+            {{ success_comment }}
+        </div>
+      {% endif %}
+    </div>
+
+    <div class="container mt-5">
+      <div class="row d-flex justify-content-center">
+          <div class="col-md-8">
+            {% for comment in comments %}
+              <div class="d-flex flex-row comment-row block-comment">
+                <div class="comment-text w-100 text-break">
+                  <h6 class="font-medium">{{ comment.pseudo }}</h6> 
+                  <span class="m-b-15 d-block">{{ comment.content|raw }}</span>
+                  <div class="comment-footer"> 
+                    <span class="text-muted">Ajouté le : {{ comment.date_add }}</span> 
+                  </div>
+                </div>
+              </div>
+            {% endfor %}
           </div>
       </div>
     </div>
-  </div>
-</div>
 
-<div style="margin: 50px 0 50px 0"></div>
-  <h2 class='text-center border-bottom'>Espace commentaires</h2>
-  {% if not comments %}
-    <div class="text-center mt-5">
-      <p class='card-text'> Soyez le premier à commenter ...</p>
-    </div>
+    {% if user_session %}
+      <div id='comment_form' style="max-width:650px" class="m-auto p-3">
+        {{ formCommentPost|raw }}
+      </div>
+    {% endif %}
   {% endif %}
-
-  <!-- comment success -->
-  {% if errors_comment %}
-  <div class="alert alert-danger text-center" role="alert">
-      {{ errors_comment }}
-  </div>
-  {% endif %}
-
-  <!-- comment success -->
-  {% if success_comment %}
-  <div class="alert alert-success text-center" role="alert">
-      {{ success_comment }}
-  </div>
-  {% endif %}
-  </div>
-
-  <div class="container mt-5">
-    <div class="row d-flex justify-content-center">
-        <div class="col-md-8">
-          {% for comment in comments %}
-          <div class="d-flex flex-row comment-row block-comment">
-            <div class="comment-text w-100 text-break">
-              <h6 class="font-medium">{{ comment.pseudo }}</h6> 
-              <span class="m-b-15 d-block">{{ comment.content|raw }}</span>
-              <div class="comment-footer"> 
-                <span class="text-muted">Ajouté le : {{ comment.date_add }}</span> 
-              </div>
-            </div>
-          </div>
-          {% endfor %}
-        </div>
-    </div>
-  </div>
-
-  <!-- comment form -->
-  {% if user_session %}
-  <div id='comment_form' style="max-width:650px" class="m-auto">
-    {{ formCommentPost|raw }}
-  </div>
-  {% endif %}
-{% endif %}
-  
 {% endblock content %}

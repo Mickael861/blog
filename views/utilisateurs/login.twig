@@ -1,10 +1,7 @@
-{% extends "layout.twig" %}
+{% extends "/twig-template/layout.twig" %}
 
 {% block content %}
-
-<div style="max-width:350px;" class="m-auto {% if errors %} errors_login {% endif %}">
-  <!-- comment form -->
-  {{ formLogin|raw }}
-</div>
-
+  <div style="max-width:350px;" class="m-auto {% if errors %} errors_login {% endif %}">
+    {{ formLogin|raw }}
+  </div>
 {% endblock content %}

@@ -67,7 +67,7 @@ class Form
     ): string {
         $required = $required ? '*' : '';
         $errors_field = !empty($this->errorsForm[$name]) ? 'errors-field' : '';
-        $valueField = !empty($this->datas_post[$name]) ? $this->datas_post[$name] : '';
+        $valueField = !empty($this->datas_post[$name]) ? htmlspecialchars($this->datas_post[$name]) : '';
 
         $field = '';
         if ($with_label) {
@@ -103,7 +103,7 @@ class Form
     ): string {
         $required = $required ? '*' : '';
         $errors_field = !empty($this->errorsForm[$name]) ? 'errors-field' : '';
-        $valueField = !empty($this->datas_post[$name]) ? $this->datas_post[$name] : '';
+        $valueField = !empty($this->datas_post[$name]) ? htmlspecialchars($this->datas_post[$name]) : '';
  
         $field = '';
         if ($with_label) {
@@ -136,7 +136,7 @@ class Form
     {
         $required = $required ? '*' : '';
         $errors_field = !empty($this->errorsForm[$name]) ? 'errors-field' : '';
-        $valueField = !empty($this->datas_post[$name]) ? $this->datas_post[$name] : '';
+        $valueField = !empty($this->datas_post[$name]) ? htmlspecialchars($this->datas_post[$name]) : '';
 
         $field = '';
         if ($with_label) {

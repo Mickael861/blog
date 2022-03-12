@@ -58,20 +58,18 @@ class CommentsController extends Controller
      */
     private function commentsManagement()
     {
-        $this->addStatutWaiting();
-
-        //Je gére plus les filtres
-        $comments = $this->commentsModel->fetchAll(true, 'comment_id', $this->page, $this->filters, 'DESC');
+        $comments = $this->commentsModel->fetchAll(true, 'comment_id', $this->page, $this->filters, 'DESC', 12);
         if (!empty($comments)) {
             $this->addDatasNbrsPages($this->commentsModel);
     
             $this->addDatasComments($comments);
 
-            $this->addSaveAccount($this->commentsModel);
+            $this->changeStatusItem($this->commentsModel, array(
+                'accept' => 'Commentaire accepté',
+                'refus' => 'Commentaire refusé'
+            ));
         } else {
-            $_SESSION['errors'] = 'Aucun commentaire trouvé';
-            header('Location: /admin/comments/1');
-            exit();
+            $this->datas['errors'] = 'Aucun commentaire trouvé';
         }
     }
     
@@ -96,11 +94,20 @@ class CommentsController extends Controller
 
             $this->addDatasStatutItem($comment);
 
-            $itemPost = $postsModel->fetchId($comment->post_id);
-            if (!empty($itemPost)) {
-                $comment->title_post = $itemPost['title'];
-                $comment->date_add = (new Utils())::dbToDate($comment->date_add);
+            $maxlen = 100;
+            $comment->date_add = (new Utils())::dbToDate($comment->date_add);
+            
+            $strlen = strlen($comment->content);
+            $with_btn_content = false;
+            if ($strlen > $maxlen) {
+                $with_btn_content = true;
+                $chaine = substr($comment->content, 0, $maxlen);
+                $last_space = strrpos($chaine, " ");
+                $comment->content = substr($chaine, 0, $last_space)."...";
             }
+
+            $comment->with_btn_content = $with_btn_content;
+            
 
             $comment->content = nl2br($comment->content);
         }
@@ -108,5 +115,32 @@ class CommentsController extends Controller
         $this->datas['today'] = date('Y-m-d');
 
         $this->datas['comments'] = $comments;
+    }
+    
+    /**
+     * Manage the display of comment content in the modal
+     *
+     * @param  array $datas POST|GET
+     * @return json|array Data sent to ajax
+     */
+    public function getcontentcommentidAction($datas)
+    {
+        $this->init($datas);
+
+        $modelComments = new CommentsModel;
+
+        $comment_id = empty($this->datas_post['comment_id']) ? '' : $this->datas_post['comment_id'] ;
+
+        if (!empty($comment_id)) {
+            $itemComment = $modelComments->fetchId($comment_id);
+
+            if (!empty($itemComment)) {
+                $response['content_comment'] = nl2br($itemComment['content']);
+            } else {
+                $response['content_comment'] = 'Le contenu est introuvable';
+            }
+        }
+
+        echo json_encode($response);
     }
 }

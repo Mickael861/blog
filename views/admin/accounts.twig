@@ -1,117 +1,111 @@
-{% extends "layout.twig" %}
+{% extends "/twig-template/layout.twig" %}
 
 {% block content %}
-
-    <h2 class="text-center">Filtres</h2>
     <form action="" method="POST">
-        <div class="d-flex flex-row align-items-center justify-content-around card" style="padding:10px 5px 10px 5px; margin-bottom: 60px">
-            <button type="submit" class="btn btn-primary">Filtrer</button>
-            <div class="form-check">
-                <input class="form-check-input" name="new" type="checkbox" value="{{ today }}" id="new" {% if new %} checked {% endif %}>
-                <label class="form-check-label" for="nouveau">
-                Nouveau
-                </label>
-                <span title="Nouveaux comptes" class="badge rounded-pill bg-primary">
-                    {{ users_new }}
-                </span>
-            </div>
-            <div class="form-check">
-                <input class="form-check-input" name='statut_valide' type="checkbox" value="valider" id="valide" {% if statut_valide %} checked {% endif %}>
-                <label class="form-check-label" for="valide">
-                Validé
-                </label>
-                <span title="compte validé" class="badge rounded-pill bg-success">
-                    {{ users_valider }}
-                </span>
-            </div>
-            <div class="form-check">
-                <input class="form-check-input" name="statut_refuse" type="checkbox" value="refuser" id="refuse" {% if statut_refuse %} checked {% endif %}>
-                <label class="form-check-label" for="refuse">
-                Refusé
-                </label>
-                <span title="Compte refusé" class="badge rounded-pill bg-danger">
-                    {{ users_refuser }}
-                </span>
-            </div>
-            <div class="form-check">
-                <input class="form-check-input" name="statut_en_attente" type="checkbox" value="en_attente" id="attente" {% if statut_en_attente %} checked {% endif %}>
-                <label class="form-check-label" for="attente">
-                En attente
-                </label>
-                <span title="Compte en attente" class="badge rounded-pill bg-warning">
-                    {{ users_en_attente }}
-                </span>
-            </div>
+        <div class="dropdown">
+        <button class="btn btn-success dropdown-toggle btn-filters" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+            Filtrer
+        </button>
+        <ul class="dropdown-menu p-3" aria-labelledby="dropdownMenuButton1">
+            <li>
+                <div class="form-check">
+                    <input class="form-check-input" name="new" type="checkbox" value="{{ today }}" id="new" {% if new %} checked {% endif %}>
+                    <label class="form-check-label" for="nouveau">
+                    Nouveau
+                    </label>
+                    <span title="Nouveaux comptes" class="badge rounded-pill bg-primary">
+                        {{ users_new }}
+                    </span>
+                </div>
+            </li>
+            <li>
+                <div class="form-check">
+                    <input class="form-check-input" name='statut_valide' type="checkbox" value="valider" id="valide" {% if statut_valide %} checked {% endif %}>
+                    <label class="form-check-label" for="valide">
+                    Validé
+                    </label>
+                    <span title="compte validé" class="badge rounded-pill bg-success">
+                        {{ users_valider }}
+                    </span>
+                </div>
+            </li>
+            <li>
+                <div class="form-check">
+                    <input class="form-check-input" name="statut_refuse" type="checkbox" value="refuser" id="refuse" {% if statut_refuse %} checked {% endif %}>
+                    <label class="form-check-label" for="refuse">
+                    Refusé
+                    </label>
+                    <span title="Compte refusé" class="badge rounded-pill bg-danger">
+                        {{ users_refuser }}
+                    </span>
+                </div>
+            </li>
+            <li>
+                <div class="form-check">
+                    <input class="form-check-input" name="statut_en_attente" type="checkbox" value="en_attente" id="attente" {% if statut_en_attente %} checked {% endif %}>
+                    <label class="form-check-label" for="attente">
+                    En attente
+                    </label>
+                    <span title="Compte en attente" class="badge rounded-pill bg-warning">
+                        {{ users_en_attente }}
+                    </span>
+                </div>
+            </li>
+            <button type="submit" class="btn btn-primary btn-send-filter">Filtrer</button>
+        </ul>
         </div>
     </form>
-{% if accounts %}
-    <!-- Posts -->
-    <div>
-        <table class="table table-striped">
-            <thead>
-                <tr class="text-center">
-                    <th style="width:150px"></th>
-                    <th>Rôle</th>
-                    <th>Pseudo</th>
-                    <th>firstname</th>
-                    <th>lastname</th>
-                    <th>email</th>
-                    <th>Date d'ajout</th>
-                    <th>Statut</th>
-                </tr>
-            </thead>
-            <tbody class="text-break">
-                {% for account in accounts %}
-                <tr class="table-active text-center">
-                    <td>
-                        <a title="Valider le compte" href="/admin/accounts/{{ page }}/?valide={{ account.user_id }}" class="btn btn-lg" tabindex="-1" role="button" aria-disabled="true">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="#52BE80" class="bi bi-patch-check-fill btn-accept" viewBox="0 0 16 16">
-                                <path d="M10.067.87a2.89 2.89 0 0 0-4.134 0l-.622.638-.89-.011a2.89 2.89 0 0 0-2.924 2.924l.01.89-.636.622a2.89 2.89 0 0 0 0 4.134l.637.622-.011.89a2.89 2.89 0 0 0 2.924 2.924l.89-.01.622.636a2.89 2.89 0 0 0 4.134 0l.622-.637.89.011a2.89 2.89 0 0 0 2.924-2.924l-.01-.89.636-.622a2.89 2.89 0 0 0 0-4.134l-.637-.622.011-.89a2.89 2.89 0 0 0-2.924-2.924l-.89.01-.622-.636zm.287 5.984-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7 8.793l2.646-2.647a.5.5 0 0 1 .708.708z"/>
-                            </svg>
-                        </a>
-                        <a title="Refuser le compte" href="/admin/accounts/{{ page }}?refuse={{ account.user_id }}" class="btn btn-lg" tabindex="-1" role="button" aria-disabled="true">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="#EC7063" class="bi bi-patch-plus-fill btn-refus" viewBox="0 0 16 16">
-                                <path d="M10.067.87a2.89 2.89 0 0 0-4.134 0l-.622.638-.89-.011a2.89 2.89 0 0 0-2.924 2.924l.01.89-.636.622a2.89 2.89 0 0 0 0 4.134l.637.622-.011.89a2.89 2.89 0 0 0 2.924 2.924l.89-.01.622.636a2.89 2.89 0 0 0 4.134 0l.622-.637.89.011a2.89 2.89 0 0 0 2.924-2.924l-.01-.89.636-.622a2.89 2.89 0 0 0 0-4.134l-.637-.622.011-.89a2.89 2.89 0 0 0-2.924-2.924l-.89.01-.622-.636zM8.5 6v1.5H10a.5.5 0 0 1 0 1H8.5V10a.5.5 0 0 1-1 0V8.5H6a.5.5 0 0 1 0-1h1.5V6a.5.5 0 0 1 1 0z"/>
-                            </svg>
-                        </a>
-                    </td>
-                <td>{{ account.role }}</td>
-                <td>{{ account.pseudo }}</td>
-                <td>{{ account.firstname }}</td>
-                <td>{{ account.lastname }}</td>
-                <td>{{ account.email }}</td>
-                <td>{{ account.date_add }}</td>
-                <td style='color:{{ account.color_statut }}; font-weight:600;'>
-                    {{ account.statut }}
-                    {% if account.new %}
-                    <span title="Nouveau commentaire" class="badge rounded-pill bg-primary" style="font-size:0.7em">
-                        New
-                    </span>
-                    {% endif %}
-                </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-
-    <!-- paging -->
-    {% if not errors %}
-    <nav aria-label="navigation pagination" style='margin-top:100px'>
-    <ul class="pagination justify-content-center">
-        <li class="page-item {{ pagination_before }}">
-        <a class="page-link" href="/admin/accounts/{{ page - 1}}">Précédent</a>
-        </li>
-        {% for page in 1 .. nbrs_page %}
-        <li class="page-item">
-            <a class="page-link" href="/admin/accounts/{{ page }}">{{ page }}</a>
-        </li>
-        {% endfor %}
-        <li class="page-item {{ pagination_next }}">
-        <a class="page-link" href="/admin/accounts/{{ page + 1 }}">Suivant</a>
-        </li>
-    </ul>
-    </nav>
+    {% if accounts %}
+        <div class="d-flex justify-content-center flex-wrap align-items-start">
+            {% for account in accounts %}
+                <div class="card m-4" style="width: 18rem;">
+                    <div class="card-body">
+                        <h5 class="card-title">Statut</h5>
+                        <p class="card-text" style='color:{{ account.color_statut }}; font-weight:600;'>
+                            {{ account.statut }}
+                            {% if account.new %}
+                                <span title="Nouveau commentaire" class="badge rounded-pill bg-primary" style="font-size:0.7em">
+                                    New
+                                </span>
+                            {% endif %}
+                        </p>
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item"><span class="fw-bolder">Rôle</span> : {{ account.role }}</li>
+                        <li class="list-group-item"><span class="fw-bolder">Pseudo</span> : {{ account.pseudo }}</li>
+                        <li class="list-group-item"><span class="fw-bolder">Identitée</span> : {{ account.firstname }} {{ account.lastname }}</li>
+                        <li class="list-group-item"><span class="fw-bolder">Email</span> : {{ account.email }}</li>
+                        <li class="list-group-item"><span class="fw-bolder">Date d'ajout</span> : {{ account.date_add }}</li>
+                    </ul>
+                    <div class="card-body d-flex justify-content-evenly align-items-center">
+                        {% if account.statut == 'Refuser' or account.statut == 'En attente' %}
+                            <a href="/admin/accounts/{{ page }}/?valide={{ account.user_id }}" class="text-decoration-none btn-accept">Accepter</a>
+                        {% if account.statut == 'En attente' %}
+                            <a href="/admin/accounts/{{ page }}?refuse={{ account.user_id }}" class="text-decoration-none btn-refus">Refuser</a>
+                        {% endif %}
+                        {% else %}
+                            <a href="/admin/accounts/{{ page }}?refuse={{ account.user_id }}" class="text-decoration-none btn-refus">Refuser</a>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        {% if not errors %}
+        <nav aria-label="navigation pagination" style='margin-top:100px'>
+            <ul class="pagination justify-content-center">
+                <li class="page-item {{ pagination_before }}">
+                <a class="page-link" href="/admin/accounts/{{ page - 1}}">Précédent</a>
+                </li>
+                    {% for page in 1 .. nbrs_page %}
+                        <li class="page-item">
+                            <a class="page-link" href="/admin/accounts/{{ page }}">{{ page }}</a>
+                        </li>
+                    {% endfor %}
+                <li class="page-item {{ pagination_next }}">
+                <a class="page-link" href="/admin/accounts/{{ page + 1 }}">Suivant</a>
+                </li>
+            </ul>
+        </nav>
+        {% endif %}
     {% endif %}
-{% endif %}
 {% endblock content %}

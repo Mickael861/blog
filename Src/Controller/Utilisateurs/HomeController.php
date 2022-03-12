@@ -70,36 +70,11 @@ class HomeController extends Controller
         if ($is_valide) {
             $is_send = $this->addMail();
             if ($is_send) {
-                $this->countEmailSend();
                 $this->datas['success_send_mail'] = 'L\'e-mail a été correctement envoyé';
             } else {
                 $this->datas['errors_send_mail'] = sprintf('Envoie de l\'e-mail impossible, Veuillez vérifier que
                     votre adresse "%s" est correcte', $this->datas_post['email']);
             }
-        }
-    }
-    
-    /**
-     * add a view counter for sending emails
-     *
-     * @return void
-     */
-    private function countEmailSend()
-    {
-        $path_dir = dirname(__DIR__, 3) . '/counter';
-        $path_file = dirname(__DIR__, 3) . '/counter/send_mail.txt';
-        if (!file_exists($path_dir)) {
-            mkdir($path_dir);
-        }
-
-
-        if (file_exists($path_file)) {
-            fopen($path_file, 'a+');
-            $nbrs_send = (int) file_get_contents($path_file) + 1;
-            file_put_contents($path_file, $nbrs_send);
-        } else {
-            fopen($path_file, 'a');
-            file_put_contents($path_file, 0);
         }
     }
     

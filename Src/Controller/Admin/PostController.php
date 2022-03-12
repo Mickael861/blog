@@ -4,6 +4,7 @@ namespace App\Controller\Admin;
 use App\Controller\Controller;
 use App\Model\PostsModel;
 use App\Utils\Form;
+use App\Utils\Utils;
 
 class PostController extends Controller
 {
@@ -58,6 +59,7 @@ class PostController extends Controller
 
         if ($is_update) {
             $this->item_post = $this->modelPosts->fetchId($this->datas_get['id']);
+
             if (!empty($this->item_post) && empty($this->datas_post)) {
                 $is_valide = false;
 
@@ -74,7 +76,7 @@ class PostController extends Controller
             "author" => 'Auteur',
             "content" => 'Contenu'
         );
-
+        
         $action = '';
         $this->formLogin = new Form($action, 'POST', $this->datas_post);
 
@@ -105,16 +107,18 @@ class PostController extends Controller
      */
     private function createUpdatePost($is_update): void
     {
+
+        $slug = (new Utils())::changeSlugCharacter($this->datas_post['title']);
         $datas_save = array(
             'title' => $this->datas_post['title'],
             'chapo' => $this->datas_post['chapo'],
             'content' => $this->datas_post['content'],
-            'slug' => str_replace(array(' ', '\''), array('-', ''), strtolower($this->datas_post['title'])),
+            'slug' => $slug,
             'author' => $this->datas_post['author'],
             'user_upd' => (int) $this->datas['user_session']['user_id'],
             'date_upd' => date('Y-m-d')
         );
-        
+
         if ($is_update) {
             $datas_save['user_id'] = (int) $this->item_post['user_id'];
             $datas_save['statut'] = $this->item_post['statut'];
@@ -153,7 +157,7 @@ class PostController extends Controller
         $fields = $formPost->addInputText('title', 'title', 'Titre', 'text', true);
         $fields .= $formPost->addInputText('chapo', 'chapo', 'Chapô', 'text', true);
         $fields .= $formPost->addInputText('author', 'author', 'Auteur', 'text', true);
-        $fields .= $formPost->addTextArea('content', 'content', 'Message', true);
+        $fields .= $formPost->addTextArea('content', 'content', 'Contenu', true);
         $fields .= $formPost->addButton('Enregistrer', 'margin-btn-form');
 
         return $formPost->createForm($fields);
