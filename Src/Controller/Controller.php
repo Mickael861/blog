@@ -31,7 +31,7 @@ class Controller
     /**
      * @var string
      */
-    private $no_access_session = false;
+    protected $no_access_session = false;
     
     /**
      *
@@ -114,12 +114,16 @@ class Controller
      */
     private function manageSessionRedirects(): void
     {
-        
         if ($this->no_access_session && $this->session::sessionIsStart()) {
+            $messageErrors = 'Vous devez étre connecté pour pouvoir créer un compte';
+            if ($this->view === 'login') {
+                $messageErrors = 'Vous êtes déjà connecté';
+            }
+            $_SESSION['errors'] = $messageErrors;
             header('Location: /');
             exit();
         }
-        //pb
+        
         if ($this->admin_access && !$this->session::userIsAdmin()) {
             $_SESSION['errors'] = 'Vous n\'avez pas accés à cette partie du blog';
             header('Location: /');

@@ -23,7 +23,6 @@ class SignupController extends Controller
      */
     protected $no_access_session = true;
 
-
     /**
      * view of action
      *
