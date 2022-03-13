@@ -37,8 +37,6 @@ class PostsController extends Controller
     public function postsAction(array $datas = array()): void
     {
         $this->init($datas);
-        
-        $this->addDatasPages();
 
         $this->postsManagement();
         
@@ -55,7 +53,14 @@ class PostsController extends Controller
         $this->modelPosts = new PostsModel;
         $this->addStatusManagement($this->modelPosts);
 
-        $posts = $this->modelPosts->fetchAll(true, 'post_id', $this->page, $this->filters, 'DESC');
+        $this->addDatasPages();
+        
+        $nbrs_article =  12;
+        if (!empty($this->filters)) {
+            $nbrs_article = 100;
+        }
+
+        $posts = $this->modelPosts->fetchAll(true, 'post_id', $this->page, $this->filters, 'DESC', $nbrs_article);
         if (!empty($posts)) {
             $this->addDatasNbrsPages($this->modelPosts);
 

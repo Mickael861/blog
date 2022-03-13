@@ -42,8 +42,6 @@ class CommentsController extends Controller
 
         $this->commentsModel = new CommentsModel;
 
-        $this->addDatasPages();
-
         $this->addStatusManagement($this->commentsModel);
 
         $this->commentsManagement();
@@ -58,7 +56,14 @@ class CommentsController extends Controller
      */
     private function commentsManagement()
     {
-        $comments = $this->commentsModel->fetchAll(true, 'comment_id', $this->page, $this->filters, 'DESC', 12);
+        $this->addDatasPages();
+        
+        $nbrs_article =  12;
+        if (!empty($this->filters)) {
+            $nbrs_article = 100;
+        }
+
+        $comments = $this->commentsModel->fetchAll(true, 'comment_id', $this->page, $this->filters, 'DESC', $nbrs_article);
         if (!empty($comments)) {
             $this->addDatasNbrsPages($this->commentsModel);
     
