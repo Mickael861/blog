@@ -154,7 +154,9 @@ class Form
                 $selected = 'selected';
             }
 
-            $field .= '<option ' . $selected . ' value="' . $data->user_id . '">' . $data->utilisateur_name . '</option>';
+            $field .= '<option ' . $selected . ' value="' . $data->user_id . '">'
+            . $data->utilisateur_name .
+            '</option>';
         }
 
         $field .= '</select>';

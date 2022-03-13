@@ -58,12 +58,12 @@ class CommentsController extends Controller
     {
         $this->addDatasPages();
         
-        $nbrs_article =  12;
+        $nbr_posts =  12;
         if (!empty($this->filters)) {
-            $nbrs_article = 100;
+            $nbr_posts = 100;
         }
 
-        $comments = $this->commentsModel->fetchAll(true, 'comment_id', $this->page, $this->filters, 'DESC', $nbrs_article);
+        $comments = $this->commentsModel->fetchAll(true, 'comment_id', $this->page, $this->filters, 'DESC', $nbr_posts);
         if (!empty($comments)) {
             $this->addDatasNbrsPages($this->commentsModel);
     

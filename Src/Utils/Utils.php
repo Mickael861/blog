@@ -25,9 +25,11 @@ class Utils
      */
     public static function changeSlugCharacter(string $string): string
     {
-        $crct = array('é', 'è', '"', 'ç', 'à', ',', ';', ':', ' ', '\'', 'ù', 'ê', 'â', 'î', 'ô', 'ä', 'ë', 'ï', 'ö', '&');
+        $crct = array('é', 'è', '"', 'ç', 'à', ',', ';', ':', ' ', '\'',
+            'ù', 'ê', 'â', 'î', 'ô', 'ä', 'ë', 'ï', 'ö', '&');
 
-        $replace = array('e', 'e',  '', 'c', 'a', '-', '-', '-', '-',  '', 'u', 'e', 'a', 'i', 'o', 'a', 'e', 'i', 'o', 'et');
+        $replace = array('e', 'e',  '', 'c', 'a', '-', '-', '-', '-',  '',
+            'u', 'e', 'a', 'i', 'o', 'a', 'e', 'i', 'o', 'et');
 
         return str_replace($crct, $replace, $string);
     }

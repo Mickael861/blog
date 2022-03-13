@@ -120,7 +120,9 @@ class SignupController extends Controller
     private function getErrorsFormSave(): string
     {
         $error_password = strlen($this->datas_post['password']) < 15;
-        $same_errors = $this->modelUtilisateurs->getErrorsSameDatas($this->datas_post['pseudo'], $this->datas_post['email']);
+        $pseudo = $this->datas_post['pseudo'];
+        $email = $this->datas_post['email'];
+        $same_errors = $this->modelUtilisateurs->getErrorsSameDatas($pseudo, $email);
         if ($error_password) {
             $set_br = !empty($same_errors) ? '</br>' : '';
             $same_errors .= $set_br . 'Le mot de passe doit contenir 15 caractéres minimum';
