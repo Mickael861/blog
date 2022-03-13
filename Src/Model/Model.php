@@ -126,7 +126,7 @@ abstract class Model
      */
     public function delete(int $item_id)
     {
-        $query = 'DELETE FROM ' . $this->table . ' WHERE ' . $this->primary_key . ' = :' . $this->primary_key;
+        $query = "DELETE FROM $this->table WHERE $this->primary_key = :$this->primary_key";
 
         $params[$this->primary_key] = $item_id;
 
