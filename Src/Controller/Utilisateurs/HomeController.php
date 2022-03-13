@@ -70,7 +70,9 @@ class HomeController extends Controller
         if ($is_valide) {
             $is_send = $this->addMail();
             if ($is_send) {
-                $this->datas['success_send_mail'] = 'L\'e-mail a été correctement envoyé';
+                $_SESSION['success'] = 'L\'e-mail a été correctement envoyé';
+                header('Location: /#');
+                exit();
             } else {
                 $this->datas['errors_send_mail'] = sprintf('Envoie de l\'e-mail impossible, Veuillez vérifier que
                     votre adresse "%s" est correcte', $this->datas_post['email']);

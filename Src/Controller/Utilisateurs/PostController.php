@@ -62,7 +62,9 @@ class PostController extends Controller
             }
             
             if (!empty($this->datas_get['success'])) {
-                $this->datas['success_comment'] = 'Commentaire enregistré et en attente de validation';
+                $_SESSION['success'] = 'Commentaire enregistré et en attente de validation';
+                header('Location: /post/' . $slug_post . '/' . $post_id . '/#');
+                exit();
             }
             
             $this->getDatasComments();

@@ -63,9 +63,9 @@ class CommentsModel extends Model
      */
     public function getCommentsUser(int $post_id)
     {
-        $query = 'SELECT *, u.pseudo AS pseudo, c.date_add AS date_add FROM ' . $this->table . ' AS c'.
-        ' LEFT JOIN users AS u ON c.user_id = u.user_id' .
-        ' WHERE c.post_id = :post_id AND c.statut = "valider"';
+        $query = "SELECT *, u.pseudo AS pseudo, c.date_add AS date_add FROM $this->table AS c 
+            LEFT JOIN users AS u ON c.user_id = u.user_id
+            WHERE c.post_id = :post_id AND c.statut = 'valider'";
     
         $params = array(
             'post_id' => $post_id

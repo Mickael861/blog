@@ -55,8 +55,12 @@ class AccountsController extends Controller
     private function accountsManagement(): void
     {
         $this->addDatasPages();
+        $nbrs_article =  12;
+        if (!empty($this->filters)) {
+            $nbrs_article = 100;
+        }
         
-        $accounts = $this->userModel->fetchAll(true, 'user_id', $this->page, $this->filters, 'DESC', 12);
+        $accounts = $this->userModel->fetchAll(true, 'user_id', $this->page, $this->filters, 'DESC', $nbrs_article);
         if (!empty($accounts)) {
             $this->addDatasNbrsPages($this->userModel);
 

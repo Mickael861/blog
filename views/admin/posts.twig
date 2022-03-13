@@ -40,7 +40,7 @@
             </span>
         </div>
         </li>
-        <button type="submit" class="btn btn-primary btn-send-filter">Filtrer</button>
+        <button type="submit" class='d-none btn-filter'></button>
       </ul>
     </div>
   </form>
@@ -122,4 +122,16 @@
       </nav>
     {% endif %}
   {% endif %}
+
+  {% block javascripts %}
+  <script type="text/javascript">
+      $(document).ready(function() {
+          $('.btn-filters').on('click', function() {
+              $('.dropdown-menu').on('mouseleave', function(){
+                  $('.btn-filter').click()
+              });
+          });
+      });
+  </script>
+  {% endblock %}
 {% endblock content %}

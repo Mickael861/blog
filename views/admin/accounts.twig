@@ -1,10 +1,11 @@
 {% extends "/twig-template/layout.twig" %}
 
 {% block content %}
+
     <form action="" method="POST">
         <div class="dropdown">
         <button class="btn btn-success dropdown-toggle btn-filters" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-            Filtrer
+            Filtres
         </button>
         <ul class="dropdown-menu p-3" aria-labelledby="dropdownMenuButton1">
             <li>
@@ -51,7 +52,7 @@
                     </span>
                 </div>
             </li>
-            <button type="submit" class="btn btn-primary btn-send-filter">Filtrer</button>
+            <button type="submit" class='d-none btn-filter'></button>
         </ul>
         </div>
     </form>
@@ -108,4 +109,16 @@
         </nav>
         {% endif %}
     {% endif %}
+
+    {% block javascripts %}
+        <script type="text/javascript">
+            $(document).ready(function() {
+                $('.btn-filters').on('click', function() {
+                    $('.dropdown-menu').on('mouseleave', function(){
+                        $('.btn-filter').click()
+                    });
+                });
+            });
+        </script>
+    {% endblock %}
 {% endblock content %}

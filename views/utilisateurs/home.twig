@@ -53,11 +53,6 @@
     </div>
     <div style="margin: 50px 0 50px 0">
         <h2 id='contact_form' class='text-center border-bottom'>Voulez-vous me contacter ?</h2>
-        {% if success_send_mail %}
-        <div class="alert alert-success text-center" role="alert">
-            {{ success_send_mail }}
-        </div>
-        {% endif %}
         {% if errors_send_mail %}
         <div class="alert alert-danger text-center" role="alert">
             {{ errors_send_mail }}
