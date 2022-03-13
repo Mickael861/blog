@@ -73,14 +73,14 @@ abstract class Model
     private function update(array $params, int $item_id)
     {
         foreach ($params as $field => $value) {
-            $str_params[] = $field . ' = :' . $field;
+            $str_params[] = "$field = :$field";
         }
  
         $params[$this->primary_key] = $item_id;
 
-        $query = 'UPDATE ' . $this->table . ' SET ';
+        $query = "UPDATE $this->table SET ";
         $query .= implode(', ', $str_params);
-        $query .= ' WHERE ' . $this->primary_key . ' = :' . $this->primary_key;
+        $query .= " WHERE $this->primary_key = :$this->primary_key ";
         
         $result = self::request($query, $params);
 
