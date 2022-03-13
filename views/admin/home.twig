@@ -257,16 +257,18 @@
             $(document).ready(function() {
                 $('.btn-home-filters').on('mouseenter', function() {
                     $(this).addClass('btn-stretch');
-                    var color = $(this).parent().data('color');
+                    
+                    var color = $(this).parents('li').data('color');
                     if (typeof color == 'undefined') {
                         color = '#F5F5F5';
                     }
-                    $(this).parent().css('background', 'linear-gradient(to left, '+ color+', white)');
+                    console.log($(this).parent());
+                    $(this).parents('li').css('background', 'linear-gradient(to left, '+ color+', white)');
                     $(this).children('svg').show();
                 })
                 $('.btn-home-filters').on('mouseleave', function() {
                     $(this).removeClass('btn-stretch');
-                    $(this).parent().css('background', '');
+                    $(this).parents('li').css('background', '');
                     $('.svg-link').hide();
                 })
             });
