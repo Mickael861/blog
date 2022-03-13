@@ -117,8 +117,8 @@ class UserModel extends Model
      */
     private function getSamePseudo(string $pseudo)
     {
-        $query_pseudo = 'SELECT ' . $this->primary_key . ' FROM ' . $this->table .
-        ' WHERE pseudo = :pseudo';
+        $query_pseudo = "SELECT $this->primary_key FROM $this->table
+            WHERE pseudo = :pseudo";
 
         $params = array(
             'pseudo' => $pseudo
@@ -135,8 +135,8 @@ class UserModel extends Model
      */
     private function getSameEmail(string $email)
     {
-        $query_email = 'SELECT ' . $this->primary_key . ' FROM ' . $this->table .
-        ' WHERE email = :email';
+        $query_email = "SELECT $this->primary_key FROM $this->table
+            WHERE email = :email";
 
         $params = array(
             'email' => $email
