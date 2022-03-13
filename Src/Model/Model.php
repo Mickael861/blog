@@ -147,9 +147,9 @@ abstract class Model
      */
     public function fetchId(int $item_id)
     {
-        $query = 'SELECT * FROM ' . $this->table . ' WHERE ';
+        $query = "SELECT * FROM $this->table WHERE ";
 
-        $query .= $this->primary_key . ' = :' . $this->primary_key;
+        $query .= "$this->primary_key = :$this->primary_key";
 
         $params = array(
             $this->primary_key => $item_id
@@ -174,7 +174,7 @@ abstract class Model
      */
     public function getAllWithParams(array $params): array
     {
-        $query = 'SELECT * FROM ' . $this->table . ' WHERE ';
+        $query = "SELECT * FROM $this->table WHERE ";
 
         foreach ($params as $field => $value) {
             $str_params[] = $field . ' = :' . $field;
@@ -227,7 +227,7 @@ abstract class Model
                 return false;
             }
 
-            $query = 'SELECT count(*) FROM ' . $this->table;
+            $query = "SELECT count(*) FROM $this->table";
             if (!empty($filters)) {
                 $where = '';
                 $and = 0;
@@ -246,7 +246,7 @@ abstract class Model
                     $and++;
                 }
                 
-                $query .= ' WHERE ' . $where;
+                $query .= " WHERE $where";
             }
             
             $nbrs_items = (int) self::request($query)->fetch()[0];
@@ -261,16 +261,16 @@ abstract class Model
 
             $page_view = ($page - 1) *  $item_per_page;
             
-            $query = 'SELECT * FROM ' . $this->table;
+            $query = "SELECT * FROM $this->table";
 
             if (!empty($filters)) {
-                $query .= ' WHERE ' . $where;
+                $query .= " WHERE $where";
             }
 
-            $query .= ' ORDER BY ' . $field . ' ' . $order .
-                ' LIMIT ' . $page_view . ',' . $item_per_page;
+            $query .= " ORDER BY $field $order";
+            $query .= " LIMIT $page_view,$item_per_page";
         } else {
-            $query = 'SELECT * FROM ' . $this->table;
+            $query = "SELECT * FROM $this->table";
         }
         
         $results = self::request($query)->fetchAll(PDO::FETCH_CLASS, $this->class);
@@ -366,7 +366,7 @@ abstract class Model
      */
     protected function getCountItemsWithFilter(string $alias, array $filters = array()): int
     {
-        $query = 'SELECT count(*) AS ' . $alias . ' FROM ' . $this->table;
+        $query = "SELECT count(*) AS $alias FROM $this->table";
 
         if (!empty($filters)) {
             $query .= ' WHERE ';
@@ -406,9 +406,11 @@ abstract class Model
      */
     public function getCountNewItems():int
     {
-        $query = 'SELECT count(*) AS new FROM ' . $this->table .
-            ' WHERE statut <> "valider" AND statut != "refuser"' .
-            ' AND date_add = "' . date('Y-m-d') . '"';
+        $date_today = "'" . date('Y-m-d') . "'";
+        
+        $query = "SELECT count(*) AS new FROM $this->table
+            WHERE statut <> 'valider' AND statut != 'refuser'
+            AND date_add = $date_today";
 
         return (int) $this->request($query)->fetch()['new'];
     }
