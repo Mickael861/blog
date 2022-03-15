@@ -68,10 +68,7 @@ class CommentsController extends Controller
     
             $this->addDatasComments($comments);
 
-            $this->changeStatusItem($this->commentsModel, array(
-                'accept' => 'Commentaire accepté',
-                'refus' => 'Commentaire refusé'
-            ));
+            $this->changeStatusItem($this->commentsModel);
         } else {
             $this->datas['errors'] = 'Aucun commentaire trouvé';
         }

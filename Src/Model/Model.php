@@ -444,4 +444,14 @@ abstract class Model
     {
         return $this->table;
     }
+
+    /**
+     * Get the value of table
+     *
+     * @return  string
+     */
+    public function getTableName(): string
+    {
+        return $this->table;
+    }
 }

@@ -296,38 +296,38 @@ class Controller
      * record new statuses
      *
      * @param  objet $model
-     * @param  array $message the message of refusal or acceptance
      * @return void
      */
-    protected function changeStatusItem($model, array $message): void
+    protected function changeStatusItem($model): void
     {
-        $this->saveRefusItem($model, $message['refus']);
+        $this->saveRefusItem($model);
 
-        $this->saveValideItem($model, $message['accept']);
+        $this->saveValideItem($model);
     }
 
     /**
      * save refus item
      *
      * @param  objet $model
-     * @param  string $message_refus the rejection message
      * @return void
      */
-    private function saveRefusItem($model, string $message_refus): void
+    private function saveRefusItem($model): void
     {
         if (!empty($this->datas_get['refuse'])) {
             $item = $model->fetchId($this->datas_get['refuse']);
             if (!empty($item)) {
                 $datas_save['statut'] = 'refuser';
                 $model->save($datas_save, $this->datas_get['refuse']);
-                
+
+                $this->typeModel = $model->getTableName() === 'users' ? 'compte' : 'commentaire';
                 $this->getUserId($item);
+
                 $is_send = $this->sendMail('refusé');
                 if (!$is_send) {
                     $_SESSION['errors'] = 'Erreur lors de l\'envoi du mail à l\'utilisateur, e-mail non envoyé';
                 }
                 
-                $_SESSION['success'] = $message_refus;
+                $_SESSION['success'] = 'Le ' . $this->typeModel . ' a été refusé';
                 header('Location: /admin/' . $this->view . '/' . $this->page);
                 exit();
             }
@@ -342,10 +342,9 @@ class Controller
      * save valide item
      *
      * @param  objet $model
-     * @param  string $message_accept the validation message
      * @return void
      */
-    private function saveValideItem($model, string $message_accept): void
+    private function saveValideItem($model): void
     {
         if (!empty($this->datas_get['valide'])) {
             $item = $model->fetchId($this->datas_get['valide']);
@@ -354,6 +353,7 @@ class Controller
                 $datas_save['statut'] = 'valider';
                 $model->save($datas_save, (int) $this->datas_get['valide']);
     
+                $this->typeModel = $model->getTableName() === 'users' ? 'compte' : 'commentaire';
                 $this->getUserId($item);
                 
                 $is_send = $this->sendMail('accepté');
@@ -361,7 +361,7 @@ class Controller
                     $_SESSION['errors'] = 'Erreur lors de l\'envoi du mail à l\'utilisateur, e-mail non envoyé';
                 }
                 
-                $_SESSION['success'] = $message_accept;
+                $_SESSION['success'] = 'Le ' . $this->typeModel . ' a été accepté';
                 header('Location: /admin/' . $this->view . '/' . $this->page);
                 exit();
             }
@@ -371,8 +371,14 @@ class Controller
             exit();
         }
     }
-
-    private function getUserId($item)
+    
+    /**
+     * getUserId
+     *
+     * @param  array $item
+     * @return void
+     */
+    private function getUserId(array $item)
     {
         if (empty($this->item['email'])) {
             $modelUsers = new UserModel;
@@ -386,9 +392,9 @@ class Controller
     }
     
     /**
-     * Send email for acceptance of an account
+     * Send email for acceptance of a item
      *
-     * @param string $type_action
+     * @param string $type_action 'refus' or 'accept'
      * @return bool
      */
     private function sendMail(string $type_action): bool
@@ -398,7 +404,8 @@ class Controller
             'FromMail' => 'mickael.sayer.dev@gmail.com',
             'ToMail' => $this->item_id,
             'Subject' => 'Votre compte sur #nom du site',
-            'Body' => 'Votre compte sur #nom du site a été ' . $type_action . ' ' . date('d-m-Y à H:m:s')
+            'Body' => 'Votre ' . $this->typeModel . ' sur #nom du site a été ' .
+                $type_action . ' le ' . date('d-m-Y à H:m:s')
         );
         return $mailer->addDatasMail($datas_mail);
     }

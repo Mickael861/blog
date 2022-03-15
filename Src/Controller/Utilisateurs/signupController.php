@@ -4,6 +4,7 @@ namespace App\Controller\Utilisateurs;
 use App\Controller\Controller;
 use App\Model\UserModel;
 use App\Utils\Form;
+use App\Utils\PhpMailer;
 
 class SignupController extends Controller
 {
@@ -85,6 +86,17 @@ class SignupController extends Controller
         $is_save = $this->modelUtilisateurs->save($datas);
         if ($is_save) {
             $_SESSION['success'] = 'Compte crée avec succés et en attente d\'acceptation';
+
+            $mailer = new PhpMailer();
+            $datas_mail = array(
+                'FromMail' => 'mickael.sayer.dev@gmail.com',
+                'ToMail' => $datas['email'],
+                'Subject' => 'Votre compte sur #nom du site',
+                'Body' => 'Votre compte sur #nom du site a bien été envoyé et en attente de validation ' .
+                ' le ' . date('d-m-Y à H:m:s')
+            );
+            $mailer->addDatasMail($datas_mail);
+
             header('Location: /');
             exit();
         } else {
