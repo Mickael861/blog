@@ -3,7 +3,6 @@ namespace App\Controller\Admin;
 
 use App\Controller\Controller;
 use App\Model\CommentsModel;
-use App\Model\PostsModel;
 use App\Model\UserModel;
 use App\Utils\Utils;
 
@@ -87,7 +86,6 @@ class CommentsController extends Controller
     private function addDatasComments($comments)
     {
         $userModel = new UserModel;
-        $postsModel = new PostsModel;
 
         foreach ($comments as &$comment) {
             $itemUser = $userModel->fetchId($comment->user_id);

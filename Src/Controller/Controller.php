@@ -2,6 +2,8 @@
 namespace App\Controller;
 
 use App\Core\Access;
+use App\Model\UserModel;
+use App\Utils\PhpMailer;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 
@@ -299,47 +301,106 @@ class Controller
      */
     protected function changeStatusItem($model, array $message): void
     {
-        $this->saveRefusAccount($model, $message['refus']);
+        $this->saveRefusItem($model, $message['refus']);
 
-        $this->saveValideAccount($model, $message['accept']);
+        $this->saveValideItem($model, $message['accept']);
     }
 
     /**
-     * save refus account
+     * save refus item
      *
      * @param  objet $model
      * @param  string $message_refus the rejection message
      * @return void
      */
-    private function saveRefusAccount($model, string $message_refus): void
+    private function saveRefusItem($model, string $message_refus): void
     {
         if (!empty($this->datas_get['refuse'])) {
-            $datas_save['statut'] = 'refuser';
-            $model->save($datas_save, $this->datas_get['refuse']);
-            $_SESSION['success'] = $message_refus;
-
+            $item = $model->fetchId($this->datas_get['refuse']);
+            if (!empty($item)) {
+                $datas_save['statut'] = 'refuser';
+                $model->save($datas_save, $this->datas_get['refuse']);
+                
+                $this->getUserId($item);
+                $is_send = $this->sendMail('refusé');
+                if (!$is_send) {
+                    $_SESSION['errors'] = 'Erreur lors de l\'envoi du mail à l\'utilisateur, e-mail non envoyé';
+                }
+                
+                $_SESSION['success'] = $message_refus;
+                header('Location: /admin/' . $this->view . '/' . $this->page);
+                exit();
+            }
+ 
+            $_SESSION['errors'] = 'La sauvegarde a échouée';
             header('Location: /admin/' . $this->view . '/' . $this->page);
             exit();
         }
     }
     
     /**
-     * save valide account
+     * save valide item
      *
      * @param  objet $model
      * @param  string $message_accept the validation message
      * @return void
      */
-    private function saveValideAccount($model, string $message_accept): void
+    private function saveValideItem($model, string $message_accept): void
     {
         if (!empty($this->datas_get['valide'])) {
-            $datas_save['statut'] = 'valider';
-            $model->save($datas_save, (int) $this->datas_get['valide']);
-            $_SESSION['success'] = $message_accept;
-            
+            $item = $model->fetchId($this->datas_get['valide']);
+
+            if (!empty($item)) {
+                $datas_save['statut'] = 'valider';
+                $model->save($datas_save, (int) $this->datas_get['valide']);
+    
+                $this->getUserId($item);
+                
+                $is_send = $this->sendMail('accepté');
+                if (!$is_send) {
+                    $_SESSION['errors'] = 'Erreur lors de l\'envoi du mail à l\'utilisateur, e-mail non envoyé';
+                }
+                
+                $_SESSION['success'] = $message_accept;
+                header('Location: /admin/' . $this->view . '/' . $this->page);
+                exit();
+            }
+ 
+            $_SESSION['errors'] = 'La sauvegarde a échouée';
             header('Location: /admin/' . $this->view . '/' . $this->page);
             exit();
         }
+    }
+
+    private function getUserId($item)
+    {
+        if (empty($this->item['email'])) {
+            $modelUsers = new UserModel;
+            $itemUser = $modelUsers->fetchId($item['user_id']);
+            if (!empty($itemUser)) {
+                $this->item_id = $itemUser['email'];
+            }
+        } else {
+            $this->item_id = $this->item['email'];
+        }
+    }
+    
+    /**
+     * Send email for acceptance of an account
+     *
+     * @param string $type_action
+     * @return bool
+     */
+    private function sendMail(string $type_action): bool
+    {
+        $mailer = new PhpMailer(true);
+        $datas_mail = array(
+            'FromMail' => 'mickael.sayer.dev@gmail.com',
+            'ToMail' => $this->item_id,
+            'Subject' => 'Votre compte sur #nom du site',
+            'Body' => 'Votre compte sur #nom du site a été ' . $type_action . ' ' . date('d-m-Y à H:m:s')
+        );
+        return $mailer->addDatasMail($datas_mail);
     }
     
     /**
