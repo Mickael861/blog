@@ -373,7 +373,7 @@ class Controller
     }
     
     /**
-     * getUserId
+     * getUserId get user id
      *
      * @param  array $item
      * @return void
