@@ -69,9 +69,8 @@ class HomeController extends Controller
         if ($is_valide) {
             $is_send = $this->addMail();
             if ($is_send) {
-                $_SESSION['success'] = 'L\'e-mail a été correctement envoyé';
-                header('Location: /#');
-                exit();
+                $this->utils::setSuccessSession('L\'e-mail a été correctement envoyé');
+                $this->utils::redirect("/#");
             } else {
                 $this->datas['errors_send_mail'] = 'Le serveur d\'envoi d\'email est indisponible';
             }

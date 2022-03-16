@@ -81,7 +81,7 @@ abstract class Model
         $query = "UPDATE $this->table SET ";
         $query .= implode(', ', $str_params);
         $query .= " WHERE $this->primary_key = :$this->primary_key ";
-        
+
         $result = self::request($query, $params);
 
         if (empty($result)) {

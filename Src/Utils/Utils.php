@@ -33,4 +33,38 @@ class Utils
 
         return str_replace($crct, $replace, $string);
     }
+    
+    /**
+     * redirect
+     *
+     * @param  string $url
+     * @return void
+     */
+    public static function redirect(string $url = '/'): void
+    {
+        header('Location: ' . trim($url));
+        exit();
+    }
+
+    /**
+     * Add errors session
+     *
+     * @param  string $error
+     * @return void
+     */
+    public static function setErrorsSession(string $error = null): void
+    {
+        $_SESSION['errors'] = $error;
+    }
+
+    /**
+     * Add success session
+     *
+     * @param  string $success
+     * @return void
+     */
+    public static function setSuccessSession(string $success = null): void
+    {
+        $_SESSION['success'] = $success;
+    }
 }

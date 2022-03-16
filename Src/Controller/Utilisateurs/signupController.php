@@ -85,7 +85,7 @@ class SignupController extends Controller
 
         $is_save = $this->modelUtilisateurs->save($datas);
         if ($is_save) {
-            $_SESSION['success'] = 'Compte crée avec succés et en attente d\'acceptation';
+            $this->utils::setSuccessSession('Compte crée avec succés et en attente d\'acceptation');
 
             $mailer = new PhpMailer();
             $datas_mail = array(
@@ -97,8 +97,7 @@ class SignupController extends Controller
             );
             $mailer->addDatasMail($datas_mail);
 
-            header('Location: /');
-            exit();
+            $this->utils::redirect('/');
         } else {
             $this->datas['errors'] = implode('<br>', $this->modelUtilisateurs->getErrors());
         }

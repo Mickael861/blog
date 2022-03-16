@@ -4,6 +4,7 @@ namespace App\Controller;
 use App\Core\Access;
 use App\Model\UserModel;
 use App\Utils\PhpMailer;
+use App\Utils\Utils;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 
@@ -79,6 +80,7 @@ class Controller
     protected function init(array $datas): void
     {
         $this->session = new Access;
+        $this->utils = new Utils;
 
         $this->datas['user_session'] = $this->session::getSession();
         $this->datas['title'] = $this->title;
@@ -121,15 +123,13 @@ class Controller
             if ($this->view === 'login') {
                 $messageErrors = 'Vous êtes déjà connecté';
             }
-            $_SESSION['errors'] = $messageErrors;
-            header('Location: /');
-            exit();
+            $this->utils::setErrorsSession($messageErrors);
+            $this->utils::redirect("/");
         }
         
         if ($this->admin_access && !$this->session::userIsAdmin()) {
-            $_SESSION['errors'] = 'Vous n\'avez pas accés à cette partie du blog';
-            header('Location: /');
-            exit();
+            $this->utils::setErrorsSession('Vous n\'avez pas accés à cette partie du blog');
+            $this->utils::redirect("/");
         }
     }
 
@@ -324,17 +324,17 @@ class Controller
 
                 $is_send = $this->sendMail('refusé');
                 if (!$is_send) {
-                    $_SESSION['errors'] = 'Erreur lors de l\'envoi du mail à l\'utilisateur, e-mail non envoyé';
+                    $this->utils::setErrorsSession(
+                        'Erreur lors de l\'envoi du mail à l\'utilisateur, e-mail non envoyé'
+                    );
                 }
                 
-                $_SESSION['success'] = 'Le ' . $this->typeModel . ' a été refusé';
-                header('Location: /admin/' . $this->view . '/' . $this->page);
-                exit();
+                $this->utils::setSuccessSession('Le ' . $this->typeModel . ' a été refusé');
+                $this->utils::redirect("/admin/$this->view/$this->page");
             }
  
-            $_SESSION['errors'] = 'La sauvegarde a échouée';
-            header('Location: /admin/' . $this->view . '/' . $this->page);
-            exit();
+            $this->utils::setErrorsSession('La sauvegarde a échouée');
+            $this->utils::redirect("/admin/$this->view/$this->page");
         }
     }
     
@@ -358,17 +358,17 @@ class Controller
                 
                 $is_send = $this->sendMail('accepté');
                 if (!$is_send) {
-                    $_SESSION['errors'] = 'Erreur lors de l\'envoi du mail à l\'utilisateur, e-mail non envoyé';
+                    $this->utils::setErrorsSession(
+                        'Erreur lors de l\'envoi du mail à l\'utilisateur, e-mail non envoyé'
+                    );
                 }
                 
-                $_SESSION['success'] = 'Le ' . $this->typeModel . ' a été accepté';
-                header('Location: /admin/' . $this->view . '/' . $this->page);
-                exit();
+                $this->utils::setSuccessSession('Le ' . $this->typeModel . ' a été accepté');
+                $this->utils::redirect("/admin/$this->view/$this->page");
             }
  
-            $_SESSION['errors'] = 'La sauvegarde a échouée';
-            header('Location: /admin/' . $this->view . '/' . $this->page);
-            exit();
+            $this->utils::setErrorsSession('La sauvegarde a échouée');
+            $this->utils::redirect("/admin/$this->view/$this->page");
         }
     }
     
