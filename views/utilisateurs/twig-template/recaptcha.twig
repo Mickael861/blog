@@ -1,10 +1,8 @@
-<button class="g-recaptcha" 
-data-sitekey="6LegOuYeAAAAALfBDMMTr8l3kqxROUDJxgsLDQTX" 
-data-callback='onSubmit' 
-data-action='submit'>Submit</button>
-
+<script src="https://www.google.com/recaptcha/api.js?render=6LegOuYeAAAAALfBDMMTr8l3kqxROUDJxgsLDQTX"></script>
 <script>
-    function onSubmit(token) {
-      document.getElementById("demo-form").submit();
-    }
+  grecaptcha.ready(function() {
+    grecaptcha.execute('6LegOuYeAAAAALfBDMMTr8l3kqxROUDJxgsLDQTX', {action: 'submit'}).then(function(token) {
+        $('input#recaptchaResponse').val(token);
+    });
+  });
 </script>

@@ -1,0 +1,32 @@
+{% block javascripts %}
+    <script type="text/javascript">
+        resetErrorForm = function(elt) {
+            if (elt.hasClass('errors-field')) {
+                elt.removeClass('errors-field');
+                elt.next().html('').hide();
+            }
+        };
+
+        resetErrorsForm = function(elts) {
+            $.each(elts, function( key, value ) {
+                if (value.hasClass('errors-field')) {
+                    value.removeClass('errors-field');
+                    value.next().html('').hide();
+                }
+            });
+        };
+
+        $( document ).ready(function() {
+            $('input, textarea').on('click', function () {
+                resetErrorsForm($(this));
+            });
+
+            var elts = [];
+            $('input, textarea').on('change', function () {
+                elts.push($(this));
+
+                resetErrorsForm(elts)
+            });
+        });
+    </script>
+{% endblock %}

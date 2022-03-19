@@ -24,11 +24,17 @@ class Form
      */
     private $errorsForm = array();
 
-    public function __construct($action, $method, $datas_post)
+    /**
+     * @var bool
+     */
+    private $with_captcha;
+
+    public function __construct(string $action, string $method, array $datas_post, bool $with_captcha = false)
     {
         $this->action = $action;
         $this->method = $method;
         $this->datas_post = $datas_post;
+        $this->with_captcha = $with_captcha;
     }
     
     /**
@@ -37,10 +43,13 @@ class Form
      * @param  string $fields fields of the form
      * @return string form in HTML
      */
-    public function createForm($fields): string
+    public function createForm(string $fields): string
     {
         $form = '<form action="' . $this->action . ' " method="' . $this->method . '"> ';
         $form .= $fields;
+        if ($this->with_captcha) {
+            $form .= '<input type="hidden" id="recaptchaResponse" value="" name="recaptcha-response">';
+        }
         $form .= '</form>';
 
         return $form;
@@ -172,25 +181,33 @@ class Form
      * Verification of data passed in POST
      *
      * @param  array $keysExpected Expected datas
-     * @return array|bool un tableau de données, false si un champ est manquant
+     * @return bool true if datas is complete, false otherwise
      */
-    public function verifDatasForm(array $keysExpected)
+    public function verifDatasForm(array $keysExpected): bool
     {
-        $datasForm = array();
-        $errors = array();
-
-        foreach ($this->datas_post as $field => $data) {
-            if (!empty($keysExpected[$field]) && !empty($data)) {
-                $datasForm[$field] = $data;
-            } else {
-                $errors[$field] = sprintf('Le champ "%s" est obligatoire', $keysExpected[$field]);
-            }
+        if ($this->with_captcha) {
+            $keysExpected['recaptcha-response'] = true;
         }
-        
-        if (!empty($errors)) {
-            $this->errorsForm = $errors;
 
-            return false;
+        $datasForm = false;
+        if (!empty($this->datas_post)) {
+            $errors = array();
+            foreach ($this->datas_post as $field => $data) {
+                if (!empty($keysExpected[$field]) && empty($data)) {
+                    $errors[$field] = sprintf('Le champ "%s" est obligatoire', $keysExpected[$field]);
+                }
+            }
+            
+            $datasForm = true;
+            if (!empty($errors)) {
+                $this->errorsForm = $errors;
+                
+                $datasForm = false;
+            }
+    
+            if ($this->with_captcha && empty($errors)) {
+                $this->isRobotReCaptcha();
+            }
         }
 
         return $datasForm;
@@ -206,8 +223,54 @@ class Form
     public function addButton($buttonValue = 'Envoyer', $class = ''): string
     {
         $button = '<div class="text-center">';
-        $button .= '<button type="submit" class="btn btn-primary ' . $class . '">' . $buttonValue . '</button></div>';
+        $button .= '<button type="submit" class="btn btn-primary btn-send ' . $class . '">' . $buttonValue . '</button></div>';
         
         return $button;
+    }
+    
+    /**
+     * handle redirect if recaptcha return false
+     *
+     * @return void
+     */
+    private function isRobotReCaptcha(): void
+    {
+        $is_robot = $this->addRecaptcha();
+
+        if (!$is_robot) {
+            (new Utils)::setErrorsSession('Vous ne pouvez pas soumettre ce formulaire');
+            (new Utils)::redirect('/#');
+        }
+    }
+
+    /**
+     * Add verif recaptcha
+     *
+     * @return bool true if it's a robot, false otherwise
+     */
+    private function addRecaptcha(): bool
+    {
+        $datasCaptcha = false;
+        if (!empty($this->datas_post['recaptcha-response'])) {
+            $url = 'https://www.google.com/recaptcha/api/siteverify?' .
+            'secret=6LegOuYeAAAAAKJqsOa_qNEbDXuJQWgPilExxn6D' .
+            '&response=' . $this->datas_post['recaptcha-response'];
+            
+            if (function_exists('curl_version')) {
+                $curl = curl_init($url);
+                curl_setopt($curl, CURLOPT_HEADER, false);
+                curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+                curl_setopt($curl, CURLOPT_TIMEOUT, 1);
+                curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+
+                $captcha_response = json_decode(curl_exec($curl));
+
+                if (!empty($captcha_response)) {
+                    $datasCaptcha = $captcha_response->success;
+                }
+            }
+        }
+
+        return $datasCaptcha;
     }
 }

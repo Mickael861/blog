@@ -118,7 +118,7 @@ class SignupController extends Controller
             "password" => 'Mot de passe'
         );
         $action = '/signup';
-        $this->formSignup = new Form($action, 'POST', $this->datas_post);
+        $this->formSignup = new Form($action, 'POST', $this->datas_post, true);
 
         return $this->formSignup->verifDatasForm($datasContactExpected);
     }

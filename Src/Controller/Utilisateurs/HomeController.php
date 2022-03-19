@@ -55,7 +55,7 @@ class HomeController extends Controller
      */
     private function emailManagement(): void
     {
-        $this->formContactHome = new Form('/#contact_form', 'POST', $this->datas_post);
+        $this->formContactHome = new Form('/#contact_form', 'POST', $this->datas_post, true);
         
         $datasContactExpected = array(
             "first_name" => 'Prénom',
@@ -66,6 +66,7 @@ class HomeController extends Controller
         );
 
         $is_valide = $this->formContactHome->verifDatasForm($datasContactExpected);
+
         if ($is_valide) {
             $is_send = $this->addMail();
             if ($is_send) {
@@ -102,7 +103,7 @@ class HomeController extends Controller
     private function addMail(): bool
     {
         $mailer = new PhpMailer(true);
-
+        
         $datas_mail = array(
             'FromMail' => $this->datas_post['email'],
             'ToMail' => 'mickael.sayer.dev@gmail.com',
