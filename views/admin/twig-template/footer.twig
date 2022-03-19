@@ -1,5 +1,5 @@
-<footer class="row row-cols-5 py-5 my-5 border-top justify-content-around">
-  <div class="col">
+<footer class="d-flex border-top justify-content-around p-2 mt-5">
+  <div class="p-3">
     <h5>Blog</h5>
     <ul class="nav flex-column">
       <li class="nav-link mb-2"><a href="/" class="nav-link p-0 text-muted">Home</a></li>
@@ -9,7 +9,7 @@
 
   {% if user_session.user_id %}
     {% if user_session.role == 'admin' %}
-      <div class="col">
+      <div class="p-3">
         <h5>Administration</h5>
         <ul class="nav flex-column">
           <li class="nav-link mb-2"><a href="/admin/home" class="nav-link p-0 text-muted">Dashboard</a></li>
