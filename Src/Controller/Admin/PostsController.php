@@ -87,9 +87,8 @@ class PostsController extends Controller
     {
         if (!empty($this->datas_get['delete'])) {
             $this->modelPosts->delete($this->datas_get['delete']);
-            $_SESSION['success'] = 'Article supprimé avec succés';
-            header('Location: /admin/posts/' . $this->page);
-            exit();
+            $this->utils::setSuccessSession('Article supprimé avec succés');
+            $this->utils::redirect("/admin/posts/$this->page");
         }
     }
     
@@ -103,7 +102,7 @@ class PostsController extends Controller
         if (!empty($this->datas_get['publish'])) {
             $post_id = $this->datas_get['publish'];
             $post_publish = $this->modelPosts->fetchId($post_id);
-            
+
             $is_publish = $post_publish['statut'] === 'publier' ? 'en_attente' : 'publier';
 
             $datas_publish = array(
@@ -111,8 +110,8 @@ class PostsController extends Controller
             );
 
             $this->modelPosts->save($datas_publish, $post_id);
-            header('Location: /admin/posts/' . $this->page);
-            exit();
+            $this->utils->setSuccessSession('L\'article a bien été modifié');
+            $this->utils::redirect("/admin/posts/$this->page");
         }
     }
 

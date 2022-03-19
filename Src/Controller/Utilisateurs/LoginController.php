@@ -57,7 +57,7 @@ class LoginController extends Controller
      */
     private function loginManagement(): void
     {
-        $this->formLogin = new Form('/login', 'POST', $this->datas_post);
+        $this->formLogin = new Form('/login', 'POST', $this->datas_post, true);
 
         $is_valide = $this->getVerifDatasForm();
         if ($is_valide) {
@@ -83,14 +83,12 @@ class LoginController extends Controller
                     'user_pseudo' => $this->utilisateur[0]->pseudo
                 ));
                 if ($this->utilisateur[0]->role === 'admin') {
-                    $_SESSION['success'] = 'Vous êtes connecté';
-                    header('Location: /admin/home/');
-                    exit();
+                    $this->utils::setSuccessSession('Vous êtes connecté');
+                    $this->utils::redirect("/admin/home");
                 }
 
-                $_SESSION['success'] = 'Vous êtes connecté';
-                header('Location: /');
-                exit();
+                $this->utils::setSuccessSession('Vous êtes connecté');
+                $this->utils::redirect("/");
 
                 break;
             case 'refuser':
@@ -131,6 +129,7 @@ class LoginController extends Controller
 
         $utilisateur = $this->modelUtilisateurs->getAllWithParams($parameters);
         if (empty($utilisateur) || !password_verify($this->datas_post['password'], $utilisateur[0]->password)) {
+            $utilisateur = array();
             $this->datas['errors'] = 'Votre adresse E-mail ou votre mot de passe est incorrecte';
         }
 

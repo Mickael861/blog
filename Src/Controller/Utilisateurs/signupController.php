@@ -4,6 +4,7 @@ namespace App\Controller\Utilisateurs;
 use App\Controller\Controller;
 use App\Model\UserModel;
 use App\Utils\Form;
+use App\Utils\PhpMailer;
 
 class SignupController extends Controller
 {
@@ -84,9 +85,19 @@ class SignupController extends Controller
 
         $is_save = $this->modelUtilisateurs->save($datas);
         if ($is_save) {
-            $_SESSION['success'] = 'Compte crée avec succés et en attente d\'acceptation';
-            header('Location: /');
-            exit();
+            $this->utils::setSuccessSession('Compte crée avec succés et en attente d\'acceptation');
+
+            $mailer = new PhpMailer();
+            $datas_mail = array(
+                'FromMail' => 'mickael.sayer.dev@gmail.com',
+                'ToMail' => $datas['email'],
+                'Subject' => 'Votre compte sur #nom du site',
+                'Body' => 'Votre compte sur #nom du site a bien été envoyé et en attente de validation ' .
+                ' le ' . date('d-m-Y à H:m:s')
+            );
+            $mailer->addDatasMail($datas_mail);
+
+            $this->utils::redirect('/');
         } else {
             $this->datas['errors'] = implode('<br>', $this->modelUtilisateurs->getErrors());
         }
@@ -107,7 +118,7 @@ class SignupController extends Controller
             "password" => 'Mot de passe'
         );
         $action = '/signup';
-        $this->formSignup = new Form($action, 'POST', $this->datas_post);
+        $this->formSignup = new Form($action, 'POST', $this->datas_post, true);
 
         return $this->formSignup->verifDatasForm($datasContactExpected);
     }
@@ -120,7 +131,9 @@ class SignupController extends Controller
     private function getErrorsFormSave(): string
     {
         $error_password = strlen($this->datas_post['password']) < 15;
-        $same_errors = $this->modelUtilisateurs->getErrorsSameDatas($this->datas_post['pseudo'], $this->datas_post['email']);
+        $pseudo = $this->datas_post['pseudo'];
+        $email = $this->datas_post['email'];
+        $same_errors = $this->modelUtilisateurs->getErrorsSameDatas($pseudo, $email);
         if ($error_password) {
             $set_br = !empty($same_errors) ? '</br>' : '';
             $same_errors .= $set_br . 'Le mot de passe doit contenir 15 caractéres minimum';

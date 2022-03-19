@@ -5,9 +5,7 @@ use App\Controller\Controller;
 use App\Core\Access;
 use App\Model\CommentsModel;
 use App\Model\PostsModel;
-use App\Model\UserModel;
 use App\Utils\Form;
-use App\Utils\Utils;
 
 class PostController extends Controller
 {
@@ -62,9 +60,8 @@ class PostController extends Controller
             }
             
             if (!empty($this->datas_get['success'])) {
-                $_SESSION['success'] = 'Commentaire enregistré et en attente de validation';
-                header('Location: /post/' . $slug_post . '/' . $post_id . '/#');
-                exit();
+                $this->utils::setSuccessSession('Commentaire enregistré et en attente de validation');
+                $this->utils::redirect("/post/$slug_post/$post_id/#");
             }
             
             $this->getDatasComments();
@@ -83,7 +80,7 @@ class PostController extends Controller
     private function addDatasPost(): void
     {
         $this->itemPost['content'] = nl2br($this->itemPost['content']);
-        $this->itemPost['date_upd'] = (new Utils())::dbToDate($this->itemPost['date_upd']);
+        $this->itemPost['date_upd'] = $this->utils::dbToDate($this->itemPost['date_upd']);
 
         $this->datas['post'] = $this->itemPost;
     }
@@ -107,8 +104,7 @@ class PostController extends Controller
             
             $is_save = $this->ModelComments->save($datas);
             if ($is_save) {
-                header('Location: ' . $_SERVER['REQUEST_URI'] . '?success=1');
-                exit();
+                $this->utils::redirect($_SERVER['REQUEST_URI'] . '?success=1');
             } else {
                 $this->datas['errors_comment'] = implode('</br>', $this->ModelComments->getErrors());
             }
@@ -153,7 +149,7 @@ class PostController extends Controller
         $itemsComments = $this->ModelComments->getCommentsUser($this->itemPost['post_id']);
         if (!empty($itemsComments)) {
             foreach ($itemsComments as &$comment) {
-                $comment->date_add = (new Utils())::dbToDate($comment->date_add);
+                $comment->date_add = $this->utils::dbToDate($comment->date_add);
                 $comment->content = nl2br($comment->content);
             }
             $this->datas['comments'] = $itemsComments;

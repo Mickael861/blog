@@ -81,7 +81,7 @@ abstract class Model
         $query = "UPDATE $this->table SET ";
         $query .= implode(', ', $str_params);
         $query .= " WHERE $this->primary_key = :$this->primary_key ";
-        
+
         $result = self::request($query, $params);
 
         if (empty($result)) {
@@ -441,6 +441,16 @@ abstract class Model
      * @return  string
      */
     public function getTable(): string
+    {
+        return $this->table;
+    }
+
+    /**
+     * Get the value of table
+     *
+     * @return  string
+     */
+    public function getTableName(): string
     {
         return $this->table;
     }

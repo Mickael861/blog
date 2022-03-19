@@ -60,13 +60,18 @@ class PostController extends Controller
         if ($is_update) {
             $this->item_post = $this->modelPosts->fetchId($this->datas_get['id']);
 
-            if (!empty($this->item_post) && empty($this->datas_post)) {
-                $is_valide = false;
+            if (!empty($this->item_post)) {
+                if (empty($this->datas_post)) {
+                    $is_valide = false;
 
-                $this->datas_post['title'] = $this->item_post['title'];
-                $this->datas_post['chapo'] = $this->item_post['chapo'];
-                $this->datas_post['author'] = $this->item_post['author'];
-                $this->datas_post['content'] = $this->item_post['content'];
+                    $this->datas_post['title'] = $this->item_post['title'];
+                    $this->datas_post['chapo'] = $this->item_post['chapo'];
+                    $this->datas_post['author'] = $this->item_post['author'];
+                    $this->datas_post['content'] = $this->item_post['content'];
+                }
+            } else {
+                $this->utils::setErrorsSession('L\'article est introuvable');
+                $this->utils::redirect("/admin/posts/1");
             }
         }
 
@@ -118,7 +123,7 @@ class PostController extends Controller
             'user_upd' => (int) $this->datas['user_session']['user_id'],
             'date_upd' => date('Y-m-d')
         );
-
+        
         if ($is_update) {
             $datas_save['user_id'] = (int) $this->item_post['user_id'];
             $datas_save['statut'] = $this->item_post['statut'];
@@ -136,11 +141,12 @@ class PostController extends Controller
         }
 
         if ($is_save) {
-            $_SESSION['success'] = !empty($this->datas_get['id']) ?
+            $message_success = !empty($this->datas_get['id']) ?
                 'Modifications de l\'article éffectuées' :
                     'Création de l\'article effectuées';
-            header('Location: /admin/posts/1/');
-            exit();
+                    
+            $this->utils::setSuccessSession($message_success);
+            $this->utils::redirect("/admin/posts/1/");
         }
 
         $this->datas['errors'] = implode('</br>', $this->modelPosts->getErrors());

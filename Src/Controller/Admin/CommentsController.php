@@ -3,7 +3,6 @@ namespace App\Controller\Admin;
 
 use App\Controller\Controller;
 use App\Model\CommentsModel;
-use App\Model\PostsModel;
 use App\Model\UserModel;
 use App\Utils\Utils;
 
@@ -58,21 +57,18 @@ class CommentsController extends Controller
     {
         $this->addDatasPages();
         
-        $nbrs_article =  12;
+        $nbr_posts =  12;
         if (!empty($this->filters)) {
-            $nbrs_article = 100;
+            $nbr_posts = 100;
         }
 
-        $comments = $this->commentsModel->fetchAll(true, 'comment_id', $this->page, $this->filters, 'DESC', $nbrs_article);
+        $comments = $this->commentsModel->fetchAll(true, 'comment_id', $this->page, $this->filters, 'DESC', $nbr_posts);
         if (!empty($comments)) {
             $this->addDatasNbrsPages($this->commentsModel);
     
             $this->addDatasComments($comments);
 
-            $this->changeStatusItem($this->commentsModel, array(
-                'accept' => 'Commentaire accepté',
-                'refus' => 'Commentaire refusé'
-            ));
+            $this->changeStatusItem($this->commentsModel);
         } else {
             $this->datas['errors'] = 'Aucun commentaire trouvé';
         }
@@ -87,7 +83,6 @@ class CommentsController extends Controller
     private function addDatasComments($comments)
     {
         $userModel = new UserModel;
-        $postsModel = new PostsModel;
 
         foreach ($comments as &$comment) {
             $itemUser = $userModel->fetchId($comment->user_id);

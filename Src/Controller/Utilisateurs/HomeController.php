@@ -1,10 +1,9 @@
 <?php
 namespace App\Controller\Utilisateurs;
 
-use App\Controller\Controller;
 use App\Utils\Form;
-use PHPMailer\PHPMailer\Exception as PHPMailerException;
-use PHPMailer\PHPMailer\PHPMailer;
+use App\Controller\Controller;
+use App\Utils\PhpMailer;
 
 class HomeController extends Controller
 {
@@ -56,7 +55,7 @@ class HomeController extends Controller
      */
     private function emailManagement(): void
     {
-        $this->formContactHome = new Form('/#contact_form', 'POST', $this->datas_post);
+        $this->formContactHome = new Form('/#contact_form', 'POST', $this->datas_post, true);
         
         $datasContactExpected = array(
             "first_name" => 'Prénom',
@@ -67,15 +66,14 @@ class HomeController extends Controller
         );
 
         $is_valide = $this->formContactHome->verifDatasForm($datasContactExpected);
+
         if ($is_valide) {
             $is_send = $this->addMail();
             if ($is_send) {
-                $_SESSION['success'] = 'L\'e-mail a été correctement envoyé';
-                header('Location: /#');
-                exit();
+                $this->utils::setSuccessSession('L\'e-mail a été correctement envoyé');
+                $this->utils::redirect("/#");
             } else {
-                $this->datas['errors_send_mail'] = sprintf('Envoie de l\'e-mail impossible, Veuillez vérifier que
-                    votre adresse "%s" est correcte', $this->datas_post['email']);
+                $this->datas['errors_send_mail'] = 'Le serveur d\'envoi d\'email est indisponible';
             }
         }
     }
@@ -104,56 +102,26 @@ class HomeController extends Controller
      */
     private function addMail(): bool
     {
-        $is_send = $this->sendMailer();
-        if ($is_send) {
-            $this->sendMailer(true);
-        }
-
-        return $is_send;
-    }
-    
-    /**
-     * Send contact email
-     *
-     * @param  bool $is_send true, if the contact email is sent, false otherwise
-     * @return bool true, if the sending of the contact email was successful, false otherwise
-     */
-    private function sendMailer(bool $is_send = false): bool
-    {
-        $mailer = new PHPMailer(true);
-
-        $from = $is_send ? 'mickael.sayer.dev@gmail.com' : $this->datas_post['email'];
-        $to = !$is_send ? 'mickael.sayer.dev@gmail.com' : $this->datas_post['email'];
-        $subject = $is_send ? 'Réponse automatique' : $this->datas_post['subject'];
-        $messageAdmin = 'Votre message sur le site "blog" à correctement était envoyé le ' . date('Y-m-d à H:m:s');
-        $body = $is_send ? $messageAdmin  : $this->datas_post['message'];
+        $mailer = new PhpMailer(true);
         
-        try {
-            //SMTP Setup
-            $mailer->isSMTP();
-            $mailer->Host = "localhost";
-            $mailer->Port = 1025;
-
-            //Charset
-            $mailer->Charset = "UTF-8";
-
-            //Expediteur
-            $mailer->setFrom($from);
-
-            //receiver
-            $mailer->addAddress($to);
-
-            //Content
-            $mailer->Subject = '=?UTF-8?B?' . base64_encode($subject) . '?=';
-            $mailer->Body = wordwrap($body);
-
-            //send
-            $mailer->send();
-        } catch (PHPMailerException $e) {
-            return false;
+        $datas_mail = array(
+            'FromMail' => $this->datas_post['email'],
+            'ToMail' => 'mickael.sayer.dev@gmail.com',
+            'Subject' => 'Réponse automatique',
+            'Body' => $this->datas_post['message']
+        );
+        $is_send = $mailer->addDatasMail($datas_mail);
+        if ($is_send) {
+            $datas_mail = array(
+                'FromMail' => 'mickael.sayer.dev@gmail.com',
+                'ToMail' => $this->datas_post['email'],
+                'Subject' => $this->datas_post['subject'],
+                'Body' => 'Votre message sur le site "blog" à correctement était envoyé le ' . date('d-m-Y à H:m:s')
+            );
+            $mailer->addDatasMail($datas_mail);
         }
-
-        return true;
+        
+        return $is_send;
     }
         
     /**

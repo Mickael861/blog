@@ -76,10 +76,7 @@ class AccountsController extends Controller
 
             $this->datas['accounts'] = $accounts;
             
-            $this->changeStatusItem($this->userModel, array(
-                'accept' => 'Compte accepté',
-                'refus' => 'Compte refusé'
-            ));
+            $this->changeStatusItem($this->userModel);
         } else {
             $this->datas['errors'] = 'Aucun compte trouvé';
         }

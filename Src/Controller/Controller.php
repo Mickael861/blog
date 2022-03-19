@@ -2,6 +2,9 @@
 namespace App\Controller;
 
 use App\Core\Access;
+use App\Model\UserModel;
+use App\Utils\PhpMailer;
+use App\Utils\Utils;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 
@@ -77,6 +80,7 @@ class Controller
     protected function init(array $datas): void
     {
         $this->session = new Access;
+        $this->utils = new Utils;
 
         $this->datas['user_session'] = $this->session::getSession();
         $this->datas['title'] = $this->title;
@@ -119,15 +123,13 @@ class Controller
             if ($this->view === 'login') {
                 $messageErrors = 'Vous êtes déjà connecté';
             }
-            $_SESSION['errors'] = $messageErrors;
-            header('Location: /');
-            exit();
+            $this->utils::setErrorsSession($messageErrors);
+            $this->utils::redirect("/");
         }
         
         if ($this->admin_access && !$this->session::userIsAdmin()) {
-            $_SESSION['errors'] = 'Vous n\'avez pas accés à cette partie du blog';
-            header('Location: /');
-            exit();
+            $this->utils::setErrorsSession('Vous n\'avez pas accés à cette partie du blog');
+            $this->utils::redirect("/");
         }
     }
 
@@ -294,52 +296,118 @@ class Controller
      * record new statuses
      *
      * @param  objet $model
-     * @param  array $message the message of refusal or acceptance
      * @return void
      */
-    protected function changeStatusItem($model, array $message): void
+    protected function changeStatusItem($model): void
     {
-        $this->saveRefusAccount($model, $message['refus']);
+        $this->saveRefusItem($model);
 
-        $this->saveValideAccount($model, $message['accept']);
+        $this->saveValideItem($model);
     }
 
     /**
-     * save refus account
+     * save refus item
      *
      * @param  objet $model
-     * @param  string $message_refus the rejection message
      * @return void
      */
-    private function saveRefusAccount($model, string $message_refus): void
+    private function saveRefusItem($model): void
     {
         if (!empty($this->datas_get['refuse'])) {
-            $datas_save['statut'] = 'refuser';
-            $model->save($datas_save, $this->datas_get['refuse']);
-            $_SESSION['success'] = $message_refus;
+            $item = $model->fetchId($this->datas_get['refuse']);
+            if (!empty($item)) {
+                $datas_save['statut'] = 'refuser';
+                $model->save($datas_save, $this->datas_get['refuse']);
 
-            header('Location: /admin/' . $this->view . '/' . $this->page);
-            exit();
+                $this->typeModel = $model->getTableName() === 'users' ? 'compte' : 'commentaire';
+                $this->getUserId($item);
+
+                $is_send = $this->sendMail('refusé');
+                if (!$is_send) {
+                    $this->utils::setErrorsSession(
+                        'Erreur lors de l\'envoi du mail à l\'utilisateur, e-mail non envoyé'
+                    );
+                }
+                
+                $this->utils::setSuccessSession('Le ' . $this->typeModel . ' a été refusé');
+                $this->utils::redirect("/admin/$this->view/$this->page");
+            }
+ 
+            $this->utils::setErrorsSession('La sauvegarde a échouée');
+            $this->utils::redirect("/admin/$this->view/$this->page");
         }
     }
     
     /**
-     * save valide account
+     * save valide item
      *
      * @param  objet $model
-     * @param  string $message_accept the validation message
      * @return void
      */
-    private function saveValideAccount($model, string $message_accept): void
+    private function saveValideItem($model): void
     {
         if (!empty($this->datas_get['valide'])) {
-            $datas_save['statut'] = 'valider';
-            $model->save($datas_save, (int) $this->datas_get['valide']);
-            $_SESSION['success'] = $message_accept;
-            
-            header('Location: /admin/' . $this->view . '/' . $this->page);
-            exit();
+            $item = $model->fetchId($this->datas_get['valide']);
+
+            if (!empty($item)) {
+                $datas_save['statut'] = 'valider';
+                $model->save($datas_save, (int) $this->datas_get['valide']);
+    
+                $this->typeModel = $model->getTableName() === 'users' ? 'compte' : 'commentaire';
+                $this->getUserId($item);
+                
+                $is_send = $this->sendMail('accepté');
+                if (!$is_send) {
+                    $this->utils::setErrorsSession(
+                        'Erreur lors de l\'envoi du mail à l\'utilisateur, e-mail non envoyé'
+                    );
+                }
+                
+                $this->utils::setSuccessSession('Le ' . $this->typeModel . ' a été accepté');
+                $this->utils::redirect("/admin/$this->view/$this->page");
+            }
+ 
+            $this->utils::setErrorsSession('La sauvegarde a échouée');
+            $this->utils::redirect("/admin/$this->view/$this->page");
         }
+    }
+    
+    /**
+     * getUserId get user id
+     *
+     * @param  array $item
+     * @return void
+     */
+    private function getUserId(array $item)
+    {
+        if (empty($this->item['email'])) {
+            $modelUsers = new UserModel;
+            $itemUser = $modelUsers->fetchId($item['user_id']);
+            if (!empty($itemUser)) {
+                $this->item_id = $itemUser['email'];
+            }
+        } else {
+            $this->item_id = $this->item['email'];
+        }
+    }
+    
+    /**
+     * Send email for acceptance of a item
+     *
+     * @param string $type_action 'refus' or 'accept'
+     * @return bool
+     */
+    private function sendMail(string $type_action): bool
+    {
+        $mailer = new PhpMailer(true);
+        $datas_mail = array(
+            'FromMail' => 'mickael.sayer.dev@gmail.com',
+            'ToMail' => $this->item_id,
+            'Subject' => 'Votre compte sur #nom du site',
+            'Body' => 'Votre ' . $this->typeModel . ' sur #nom du site a été ' .
+                $type_action . ' le ' . date('d-m-Y à H:m:s')
+        );
+        return $mailer->addDatasMail($datas_mail);
     }
     
     /**
