@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ruleset name="blog">
+    <description>Blog formation rule</description>
+
+    <arg name="colors"/>
+    <arg value="p"/>
+
+    <file>C:\Users\Freaks\Desktop\blog\Src</file>
+
+    <rule ref="Internal.Tokenizer.Exception">
+        <type>error</type>
+    </rule>
+
+    <rule ref="PSR1.Classes.ClassDeclaration">
+        <severity>0</severity>
+    </rule>
+
+    <rule ref="Squiz.Classes.ValidClassName">
+        <severity>0</severity>
+    </rule>
+
+    <rule ref="Generic.Files.LineEndings">
+        <exclude name="Generic.Files.LineEndings.InvalidEOLChar"/>
+    </rule>
+
+    <rule ref="PSR2"></rule>
+    <rule ref="PSR1"></rule>
+</ruleset>
