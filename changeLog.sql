@@ -45,3 +45,7 @@ CREATE TABLE IF NOT EXISTS `users` (
         PRIMARY KEY (`user_id`)
 ) 
 ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+/* test local user admin */
+INSERT INTO `users` (`user_id`, `role`, `pseudo`, `firstname`, `lastname`, `email`, `password`, `statut`, `date_add`) 
+VALUES (NULL, 'admin', 'Admin', 'Admin', 'Admin', 'adminblog@admin.fr', '$argon2i$v=19$m=65536,t=4,p=1$YmVmS3JyT2w4YVBqNy9OUQ$UOir+HzuEpwwXXDHBDN26jjohZ5UzidP84UoFEG5WWs', 'valider', '2022-04-05');
