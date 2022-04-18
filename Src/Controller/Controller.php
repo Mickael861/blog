@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use App\Core\Access;
+use App\Model\Model;
 use App\Model\UserModel;
 use App\Utils\PhpMailer;
 use App\Utils\Utils;
@@ -156,7 +157,7 @@ class Controller
      * @param  objet $model
      * @return void
      */
-    protected function addDatasNbrsPages($model)
+    protected function addDatasNbrsPages(Model $model)
     {
         $this->nbrs_page = $model->getNbrsPage();
         $this->disabledPagination();

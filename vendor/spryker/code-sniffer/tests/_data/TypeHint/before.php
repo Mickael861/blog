@@ -11,6 +11,11 @@ class FixMe
     protected $securityRoutes = [];
 
     /**
+     * @var string|null|array<string|int, array<mixed, array<string>|string|null>|string|null>
+     */
+    protected $arrays;
+
+    /**
      * @return null|string[]
      */
     public function one(): ?array
@@ -82,6 +87,14 @@ class FixMe
      * @return array
      */
     public function merge($options): array
+    {
+        return [];
+    }
+
+    /**
+     * @return array<string, array<string, string|null>|string|null>|string|string
+     */
+    public function complexUnion(): array
     {
         return [];
     }
