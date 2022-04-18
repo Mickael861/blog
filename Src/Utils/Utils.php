@@ -43,7 +43,7 @@ class Utils
     public static function redirect(string $url = '/'): void
     {
         header('Location: ' . trim($url));
-        exit();
+        return;
     }
 
     /**
