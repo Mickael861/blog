@@ -85,10 +85,10 @@ class LoginController extends Controller
                 if ($this->utilisateur[0]->role === 'admin') {
                     $this->utils::setSuccessSession('Vous êtes connecté');
                     $this->utils::redirect("/admin/home");
+                } else {
+                    $this->utils::setSuccessSession('Vous êtes connecté');
+                    $this->utils::redirect("/");
                 }
-
-                $this->utils::setSuccessSession('Vous êtes connecté');
-                $this->utils::redirect("/");
 
                 break;
             case 'refuser':
