@@ -154,7 +154,7 @@ class Controller
     /**
      * Add datas numbers of page
      *
-     * @param  objet $model
+     * @param  Model $model
      * @return void
      */
     protected function addDatasNbrsPages(Model $model)
@@ -228,10 +228,10 @@ class Controller
     /**
      * Addition of statutes
      *
-     * @param  objet $model
+     * @param  Model $model
      * @return void
      */
-    protected function addStatusManagement($model): void
+    protected function addStatusManagement(Model $model): void
     {
         $this->statusManagement($model);
     }
@@ -239,10 +239,10 @@ class Controller
     /**
      * Status management
      *
-     * @param  objet $model
+     * @param  Model $model
      * @return void
      */
-    private function statusManagement($model): void
+    private function statusManagement(Model $model): void
     {
         $statut_expected = array(
             'valider',
@@ -276,10 +276,10 @@ class Controller
      * Count the number of elements
      *
      * @param  string $statut statut of item
-     * @param  objet $model
+     * @param  Model $model
      * @return void
      */
-    private function getNbrsItems(string $statut, $model): void
+    private function getNbrsItems(string $statut, Model $model): void
     {
         $filters = array(
             'statut' => $statut
@@ -296,10 +296,10 @@ class Controller
     /**
      * record new statuses
      *
-     * @param  objet $model
+     * @param  Model $model
      * @return void
      */
-    protected function changeStatusItem($model): void
+    protected function changeStatusItem(Model $model): void
     {
         $this->saveRefusItem($model);
 
@@ -309,10 +309,10 @@ class Controller
     /**
      * save refus item
      *
-     * @param  objet $model
+     * @param  Model  $model
      * @return void
      */
-    private function saveRefusItem($model): void
+    private function saveRefusItem(Model $model): void
     {
         if (!empty($this->datas_get['refuse'])) {
             $item = $model->fetchId($this->datas_get['refuse']);
@@ -342,10 +342,10 @@ class Controller
     /**
      * save valide item
      *
-     * @param  objet $model
+     * @param  Model  $model
      * @return void
      */
-    private function saveValideItem($model): void
+    private function saveValideItem(Model $model): void
     {
         if (!empty($this->datas_get['valide'])) {
             $item = $model->fetchId($this->datas_get['valide']);
