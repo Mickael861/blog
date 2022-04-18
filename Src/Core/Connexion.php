@@ -23,7 +23,7 @@ class Connexion extends PDO
             );
             parent::__construct($dsn, self::DBUSER, self::DBPASS, $options);
         } catch (Exception $e) {
-            exit($e->getMessage());
+            echo $e->getMessage();
         }
     }
     

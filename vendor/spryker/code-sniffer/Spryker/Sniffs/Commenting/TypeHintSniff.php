@@ -75,6 +75,7 @@ class TypeHintSniff extends AbstractSprykerSniff
         '\\ArrayAccess',
         '\\ArrayObject',
         '\\Stringable',
+        '\\Countable',
         '\\Generator',
         'mixed',
         'callable',
@@ -148,7 +149,7 @@ class TypeHintSniff extends AbstractSprykerSniff
                 continue;
             }
 
-            /** @phpstan-var \PHPStan\PhpDocParser\Ast\PhpDoc\PropertyTagValueNode|\PHPStan\PhpDocParser\Ast\PhpDoc\VarTagValueNode|\PHPStan\PhpDocParser\Ast\PhpDoc\ParamTagValueNode|\PHPStan\PhpDocParser\Ast\PhpDoc\ReturnTagValueNode $valueNode */
+            /** @phpstan-var \PHPStan\PhpDocParser\Ast\Type\GenericTypeNode|\PHPStan\PhpDocParser\Ast\PhpDoc\PropertyTagValueNode|\PHPStan\PhpDocParser\Ast\PhpDoc\VarTagValueNode|\PHPStan\PhpDocParser\Ast\PhpDoc\ParamTagValueNode|\PHPStan\PhpDocParser\Ast\PhpDoc\ReturnTagValueNode $valueNode */
             if ($valueNode->type instanceof UnionTypeNode) {
                 $types = $valueNode->type->types;
             } elseif ($valueNode->type instanceof ArrayTypeNode) {
@@ -354,20 +355,6 @@ class TypeHintSniff extends AbstractSprykerSniff
         $types = $this->makeUnique($types);
 
         return $this->renderUnionTypes($types);
-    }
-
-    /**
-     * @param array<\PHPStan\PhpDocParser\Ast\Type\TypeNode|string> $typeNodes type nodes
-     *
-     * @return string
-     */
-    protected function renderUnionTypes(array $typeNodes): string
-    {
-        return (string)preg_replace(
-            ['/ ([\|&]) /', '/<\(/', '/\)>/'],
-            ['${1}', '<', '>'],
-            implode('|', $typeNodes),
-        );
     }
 
     /**

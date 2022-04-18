@@ -131,10 +131,10 @@ class HomeController extends Controller
      */
     public function getFormContact(): string
     {
-        $fields = $this->formContactHome->addInputText('first_name', 'first_name', 'Prénom', true);
-        $fields .= $this->formContactHome->addInputText('last_name', 'last_name', 'Nom', true);
-        $fields .= $this->formContactHome->addInputText('email', 'email', 'Adresse e-mail', true);
-        $fields .= $this->formContactHome->addInputText('subject', 'subject', 'Objet', true);
+        $fields = $this->formContactHome->addInputText('first_name', 'first_name', 'Prénom', 'text', true);
+        $fields .= $this->formContactHome->addInputText('last_name', 'last_name', 'Nom', 'text', true);
+        $fields .= $this->formContactHome->addInputText('email', 'email', 'Adresse e-mail', 'email', true);
+        $fields .= $this->formContactHome->addInputText('subject', 'subject', 'Objet', 'text', true);
         $fields .= $this->formContactHome->addTextArea('message', 'message', 'Message', true);
         $fields .= $this->formContactHome->addButton('Envoyer', 'margin-btn-form');
 

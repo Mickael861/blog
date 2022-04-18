@@ -3,7 +3,12 @@
     "description": "Spryker Code Sniffer Standards",
     "type": "phpcodesniffer-standard",
     "license": "MIT",
-    "keywords": ["framework", "codesniffer", "phpcs", "standards"],
+    "keywords": [
+        "framework",
+        "codesniffer",
+        "phpcs",
+        "standards"
+    ],
     "homepage": "https://spryker.com",
     "authors": [
         {
@@ -56,6 +61,9 @@
     },
     "config": {
         "sort-packages": true,
-        "process-timeout": 900
+        "process-timeout": 900,
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        }
     }
 }
